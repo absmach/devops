@@ -1,3 +1,7 @@
+{{- /*
+Copyright (c) Mainflux
+SPDX-License-Identifier: Apache-2.0 
+*/ -}}
 {{- define "mainflux.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

@@ -1,3 +1,6 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -26,6 +29,9 @@ spec:
     - port: 1883
       protocol: TCP
       name: "1883"
+    - port: 8880
+      protocol: TCP
+      name: "8880"
   clusterIP: None
 ---
 apiVersion: v1
@@ -226,13 +232,11 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: MF_MQTT_ADAPTER_ES_URL
-              value: tcp://redis-mqtt-master:6379
-            # - name: MF_MQTT_ADAPTER_ES_ACTIVE
-            #   value: "false"
+              value: tcp://{{ .Release.Name }}-redis-mqtt-master:6379
             - name: MF_NATS_URL
-              value: nats://nats-client:4222
+              value: nats://{{ .Release.Name }}-nats-client:4222
             - name: MF_THINGS_AUTH_GRPC_URL
-              value: http://things:8183
+              value: http://{{ .Release.Name }}-things:8183
             - name: DOCKER_VERNEMQ_PLUGINS__VMQ_PASSWD
               value: "off"
             - name: DOCKER_VERNEMQ_PLUGINS__VMQ_ACL
@@ -249,6 +253,8 @@ spec:
               value: "on"
             - name: DOCKER_VERNEMQ_DISCOVERY_KUBERNETES
               value: "1"
+            - name: DOCKER_VERNEMQ_LISTENER__WS__MAINFLUX
+              value: "0.0.0.0:8880"
             - name: DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR
               value: "app={{ .Release.Name }},component=adapter-mqtt"
           # image: mainflux/mqtt-verne:0.9.1
@@ -259,6 +265,8 @@ spec:
             - containerPort: 1883
               protocol: TCP
             - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8880
               protocol: TCP
             - containerPort: 8888
               protocol: TCP

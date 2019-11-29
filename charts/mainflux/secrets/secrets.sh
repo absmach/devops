@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
 
 kubectl -n mf create secret tls nginx-internal-mtls-tls \
     --key nginx-internal-mtls.key \

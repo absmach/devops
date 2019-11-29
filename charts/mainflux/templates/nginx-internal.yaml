@@ -1,3 +1,6 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
 {{ if and (ne .Values.nginx_internal.mtls.tls "") (ne .Values.nginx_internal.mtls.intermediate_crt "") -}}
 apiVersion: v1
 data:
@@ -165,52 +168,6 @@ data:
             return 200;
           }
         }
-
-        # # Proxy pass to mainflux-mqtt-adapter over WS
-        # location /mqtt/ {
-        #     if ($ssl_client_verify != SUCCESS) {
-        #         return 403;
-        #     }
-        #     if ($auth_key = '') {
-        #         return 403;
-        #     }
-          
-        #     proxy_redirect off;
-        #     proxy_set_header Host $host;
-        #     proxy_set_header X-Real-IP $remote_addr;
-        #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        #     proxy_set_header X-Forwarded-Proto $scheme;
-        #     proxy_http_version 1.1;
-        #     proxy_set_header Upgrade $http_upgrade;
-        #     proxy_set_header Connection "Upgrade";
-        #     proxy_connect_timeout 7d;
-        #     proxy_send_timeout 7d;
-        #     proxy_read_timeout 7d;
-        #     proxy_pass http://{{ .Release.Name }}-adapter-mqtt:8880/;
-
-        #     # Allow OPTIONS method CORS
-        #     if ($request_method = OPTIONS ) {
-        #         add_header Content-Length 0;
-        #         add_header Content-Type text/plain;
-        #         return 200;
-        #     }
-        # }
-
-        # location / {
-        #     proxy_redirect off;
-        #     proxy_set_header Host $host;
-        #     proxy_set_header X-Real-IP $remote_addr;
-        #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        #     proxy_set_header X-Forwarded-Proto $scheme;
-        #     proxy_pass http://ui:3000/;
-
-        #     # Allow OPTIONS method CORS
-        #     if ($request_method = OPTIONS ) {
-        #         add_header Content-Length 0;
-        #         add_header Content-Type text/plain;
-        #         return 200;
-        #     }
-        # }
       }
 
       log_format access_log_format 'HTTP/WS '
@@ -252,34 +209,6 @@ data:
 
           proxy_pass {{ .Release.Name }}-envoy:1883;
       }
-
-      # # LoRa MQTT
-      # server {
-      #     listen 8884 ssl;
-      #     listen [::]:8884 ssl;
-
-      #     # These paths are set to its default values as
-      #     # a volume in the docker/docker-compose.yml file.
-      #     ssl_certificate /etc/ssl/certs/nginx-mtls/tls.crt;
-      #     ssl_certificate_key /etc/ssl/certs/nginx-mtls/tls.key;
-      #     ssl_client_certificate /etc/ssl/certs/nginx-mtls-intermediate/intermediate.crt;
-      #     # FIXME
-      #     # ssl_crl /etc/ssl/certs/crl.pem;
-      #     ssl_verify_client on;
-      #     ssl_verify_depth 2;
-      #     ssl_dhparam /etc/ssl/certs/dhparam.pem;
-
-      #     ssl_protocols TLSv1.2 TLSv1.3;
-      #     ssl_prefer_server_ciphers on;
-      #     ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
-      #     ssl_ecdh_curve secp384r1;
-      #     ssl_session_tickets off;
-      #     resolver 8.8.8.8 8.8.4.4 valid=300s;
-      #     resolver_timeout 5s;
-      #     js_preread authenticate;
-
-      #     proxy_pass {{ .Release.Name }}-mosquitto:1883;
-      # }
 
       log_format access_log_format '$protocol '
         '$remote_addr: '
@@ -524,12 +453,6 @@ spec:
               protocol: TCP
             - containerPort: 8884
               protocol: TCP
-          # FIXME nginx-reload
-          # securityContext:
-          #   capabilities:
-          #     add:
-          #       - SYS_PTRACE
-            # procMount: Default
           volumeMounts:
             - mountPath: /etc/ssl/certs/dhparam.pem
               name: dhparam
@@ -545,37 +468,6 @@ spec:
               subPath: intermediate.crt
             - mountPath: /etc/ssl/certs/nginx-mtls
               name: nginx-mtls-tls
-          env:
-            # FIXME nginx-reload
-            # - name: API_ENDPOINT
-            #   value: /reload
-            # - name: API_PORT
-            #   value: "8000"
-            # - name: CMD_TO_EXEC
-            #   value: ".*nginx: master.*"
-            # - name: CRL_FILE_PATH
-            #   value: /etc/nginx/crl/crl.pem
-            # - name: VAULT_API_URL
-            #   value: https://VAULT:8200
-            # - name: VAULT_SECRET_ROOT
-            #   value: mainflux_pki
-          # image: FIXME nginx-reload image
-          # imagePullPolicy: Always
-          # name: nginx-reload
-          # ports:
-          #   - containerPort: 8000
-          #     protocol: TCP
-          # resources: {}
-          # securityContext:
-          #   capabilities:
-          #     add:
-          #       - SYS_PTRACE
-          #   procMount: Default
-          # terminationMessagePath: /dev/termination-log
-          # terminationMessagePolicy: File
-          # volumeMounts:
-          #   - mountPath: /etc/nginx/crl
-          #     name: nginx-crl-volume
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       shareProcessNamespace: true

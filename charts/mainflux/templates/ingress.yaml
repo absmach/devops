@@ -1,3 +1,6 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -69,18 +72,10 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: 8185
-          # - backend:
-          #     serviceName: {{ .Release.Name }}-bootstrap
-          #     servicePort: 8200
-          #   path: /bs/?(.*)
           - path: /ws/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-ws
               servicePort: 8186
-          # - backend:
-          #     serviceName: {{ .Release.Name }}-mongodb-reader
-          #     servicePort: 8904
-          #   path: /mongodbreader/?(.*)
           - path: /version/users/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-users
@@ -97,10 +92,6 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-ws
               servicePort: 8186
-          # - backend:
-          #     serviceName: {{ .Release.Name }}-adapter-lora
-          #     servicePort: 8187
-          #   path: /version/lora/?(.*)
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
@@ -114,13 +105,5 @@ data:
   # MQTT adapter:
   "1883": "{{ .Release.Namespace }}/{{ .Release.Name }}-envoy:1883:PROXY"
   "8883": "{{ .Release.Namespace }}/{{ .Release.Name }}-nginx-internal:8883:PROXY"
-#   # Vault:
-#   # "8200": "mainflux/vault-ui:8200:PROXY"
-#   # LoRa adapter:
-#   # "8187": "mainflux/adapter-lora:8187:PROXY"
-#   # LoRa Server:
-#   # "1884": "mainflux/mosquitto:1883:PROXY"
-#   # "8884": "mainflux/nginx-mtls:8884:PROXY"
-#   # "8080": "mainflux/appserver:8080:PROXY"
 metadata:
   name: tcp-services

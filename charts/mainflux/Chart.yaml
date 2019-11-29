@@ -1,3 +1,6 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
 apiVersion: v2
 name: mainflux
 description: Mainflux IoT Platform
