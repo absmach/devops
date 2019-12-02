@@ -23,7 +23,7 @@ spec:
             - name: MF_THINGS_AUTH_GRPC_PORT
               value: "8183"
             - name: MF_THINGS_AUTH_HTTP_PORT
-              value: "8989"
+              value: "8189"
             - name: MF_THINGS_CACHE_URL
               value: {{ .Release.Name }}-redis-things-master:6379
             - name: MF_THINGS_DB
@@ -54,7 +54,7 @@ spec:
               protocol: TCP
             - containerPort: 8183
               protocol: TCP
-            - containerPort: 8989
+            - containerPort: 8189
               protocol: TCP
       dnsPolicy: ClusterFirst
       restartPolicy: Always
