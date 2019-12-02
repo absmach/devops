@@ -92,5 +92,5 @@ jaeger-operator:
   jaeger:
     create: true
   rbac:
-    pspEnabled: false
-    clusterRole: false
+    pspEnabled: true
+    clusterRole: true
