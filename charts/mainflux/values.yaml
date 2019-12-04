@@ -1,0 +1,96 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
+defaults:
+  logLevel: "debug"
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "mainflux"
+    tag: "0.9.1"
+
+ingress:
+  enabled: true
+  annotations: {}
+  labels: {}
+  # hostname: ""
+  # tls:
+  #   hostname: ""
+  #   secret: ""
+
+nginx_internal:
+  mtls:
+    tls: ""
+    intermediate_crt: ""
+
+adapter_http:
+  image: {}
+
+adapter_ws:
+  image: {}
+
+adapter_coap:
+  image: {}
+
+adapter_mqtt:
+  image: {}
+
+users:
+  image: {}
+
+things:
+  image: {}
+
+ui:
+  image: {}
+
+mqtt:
+  enabled: true
+
+nats:
+  auth:
+    enabled: false
+  clusterAuth:
+    enabled: false
+
+postgresql-users:
+  name: postgresql-users
+  postgresqlUsername: mainflux
+  postgresqlPassword: mainflux
+  postgresqlDatabase: users
+  resources:
+    requests:
+      cpu: 25m
+
+postgresql-things:
+  name: postgresql-things
+  postgresqlUsername: mainflux
+  postgresqlPassword: mainflux
+  postgresqlDatabase: things
+  resources:
+    requests:
+      cpu: 25m
+
+redis-streams:
+  cluster:
+    enabled: false
+  usePassword: false
+
+redis-mqtt:
+  cluster:
+    enabled: false
+  usePassword: false
+
+redis-things:
+  cluster:
+    enabled: false
+  usePassword: false
+  master:
+    persistence:
+      enabled: false
+
+jaeger-operator:
+  jaeger:
+    create: true
+  rbac:
+    pspEnabled: true
+    clusterRole: true
