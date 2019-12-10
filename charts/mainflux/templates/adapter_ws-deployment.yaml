@@ -23,7 +23,7 @@ spec:
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:4222
             - name: MF_THINGS_URL
-              value: {{ .Release.Name }}-things:8183
+              value: {{ .Release.Name }}-envoy:8183
             - name: MF_WS_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_ws.logLevel }}
             - name: MF_WS_ADAPTER_PORT

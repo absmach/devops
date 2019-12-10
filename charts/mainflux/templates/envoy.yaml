@@ -14,12 +14,50 @@ data:
         - filters:
           - name: envoy.tcp_proxy
             config:
-              stat_prefix: ingress_tcp
+              stat_prefix: adapter-mqtt
               cluster: adapter-mqtt
-              # access_log:
-              #   - name: envoy.file_access_log
-              #     config:
-              #       path: /dev/stdout
+      - address:
+          socket_address:
+            address: 0.0.0.0
+            port_value: 8181
+        filter_chains:
+        - filters:
+          - name: envoy.http_connection_manager
+            config:
+              codec_type: auto
+              stat_prefix: users
+              route_config:
+                name: users_route
+                virtual_hosts:
+                - name: users_service
+                  domains: ["*"]
+                  routes:
+                  - match: { prefix: "/" }
+                    route: { cluster: users }
+              http_filters:
+              - name: envoy.grpc_web
+              - name: envoy.router
+      - address:
+          socket_address:
+            address: 0.0.0.0
+            port_value: 8183
+        filter_chains:
+        - filters:
+          - name: envoy.http_connection_manager
+            config:
+              codec_type: auto
+              stat_prefix: things
+              route_config:
+                name: things_route
+                virtual_hosts:
+                - name: things_service
+                  domains: ["*"]
+                  routes:
+                  - match: { prefix: "/" }
+                    route: { cluster: things }
+              http_filters:
+              - name: envoy.grpc_web
+              - name: envoy.router
       clusters:
       - name: adapter-mqtt
         connect_timeout: 0.25s
@@ -29,6 +67,24 @@ data:
         - socket_address:
             address: {{ .Release.Name }}-adapter-mqtt
             port_value: 1883
+      - name: users
+        connect_timeout: 0.25s
+        type: strict_dns
+        lb_policy: round_robin
+        http2_protocol_options: {}
+        hosts:
+        - socket_address:
+            address: {{ .Release.Name }}-users-headless
+            port_value: 8181
+      - name: things
+        connect_timeout: 0.25s
+        type: strict_dns
+        lb_policy: round_robin
+        http2_protocol_options: {}
+        hosts:
+        - socket_address:
+            address: {{ .Release.Name }}-things-headless
+            port_value: 8183            
     admin:
       access_log_path: "/dev/null"
       address:
@@ -62,6 +118,10 @@ spec:
           ports:
             - containerPort: 1883 
               protocol: TCP
+            - containerPort: 8181 
+              protocol: TCP
+            - containerPort: 8183 
+              protocol: TCP
             - containerPort: 8001
               protocol: TCP
           volumeMounts:
@@ -87,6 +147,12 @@ spec:
     - port: 1883
       protocol: TCP
       name: mqtt
+    - port: 8181
+      protocol: TCP
+      name: users-grpc
+    - port: 8183
+      protocol: TCP
+      name: things-grpc
     - port: 8001
       protocol: TCP
       name: admin
