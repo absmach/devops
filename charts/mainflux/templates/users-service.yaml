@@ -16,3 +16,20 @@ spec:
     - protocol: TCP
       port: 8181
       name: {{ .Release.Name }}-users-grpc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-users-headless
+spec:
+  selector:
+    app: {{ .Release.Name }}
+    component: users
+  ports:
+    - protocol: TCP
+      port: 8180
+      name: {{ .Release.Name }}-users-http
+    - protocol: TCP
+      port: 8181
+      name: {{ .Release.Name }}-users-grpc
+  clusterIP: None
