@@ -27,7 +27,7 @@ spec:
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:4222
             - name: MF_THINGS_URL
-              value: {{ .Release.Name }}-things:8183
+              value: {{ .Release.Name }}-envoy:8183
           image: "{{ default .Values.defaults.image.repository .Values.adapter_http.image.repository }}/http:{{ default .Values.defaults.image.tag .Values.adapter_http.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_http.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-http

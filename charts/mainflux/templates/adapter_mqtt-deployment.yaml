@@ -236,7 +236,7 @@ spec:
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:4222
             - name: MF_THINGS_AUTH_GRPC_URL
-              value: http://{{ .Release.Name }}-things:8183
+              value: http://{{ .Release.Name }}-envoy:8183
             - name: DOCKER_VERNEMQ_PLUGINS__VMQ_PASSWD
               value: "off"
             - name: DOCKER_VERNEMQ_PLUGINS__VMQ_ACL
