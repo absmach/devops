@@ -19,4 +19,4 @@ helm install fluent-bit stable/fluent-bit \
     --set filter.mergeJSONLog=false
 
 helm install kibana stable/kibana \
-    --set env.ELASTICSEARCH_HOSTS=http://elasticsearch-client:9200 \
+    --set env.ELASTICSEARCH_HOSTS=http://elasticsearch-client:9200
