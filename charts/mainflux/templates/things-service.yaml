@@ -16,9 +16,9 @@ spec:
     - port: 8183
       protocol: TCP
       name: {{ .Release.Name }}-things-8183
-    - port: 8189
+    - port: 8989
       protocol: TCP
-      name: {{ .Release.Name }}-things-8189
+      name: {{ .Release.Name }}-things-8989
 ---
 apiVersion: v1
 kind: Service
@@ -35,7 +35,7 @@ spec:
     - port: 8183
       protocol: TCP
       name: {{ .Release.Name }}-things-8183
-    - port: 8189
+    - port: 8989
       protocol: TCP
-      name: {{ .Release.Name }}-things-8189
+      name: {{ .Release.Name }}-things-8989
   clusterIP: None
