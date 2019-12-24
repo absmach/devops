@@ -13,9 +13,6 @@ spec:
     - protocol: TCP
       port: 8180
       name: {{ .Release.Name }}-users-http
-    - protocol: TCP
-      port: 8181
-      name: {{ .Release.Name }}-users-grpc
 ---
 apiVersion: v1
 kind: Service
@@ -29,7 +26,4 @@ spec:
     - protocol: TCP
       port: 8180
       name: {{ .Release.Name }}-users-http
-    - protocol: TCP
-      port: 8181
-      name: {{ .Release.Name }}-users-grpc
   clusterIP: None

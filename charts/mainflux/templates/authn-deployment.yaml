@@ -1,0 +1,50 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-authn
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: authn
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: authn
+    spec:
+      containers:
+        - env:
+            - name: MF_JAEGER_URL
+              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:6831
+            - name: MF_AUTHN_DB
+              value: authn
+            - name: MF_AUTHN_DB_HOST
+              value: {{ .Release.Name }}-postgresql-authn
+            - name: MF_AUTHN_DB_PASS
+              value: mainflux
+            - name: MF_AUTHN_DB_PORT
+              value: "5432"
+            - name: MF_AUTHN_DB_USER
+              value: mainflux
+            - name: MF_AUTHN_GRPC_PORT
+              value: "8181"
+            - name: MF_AUTHN_HTTP_PORT
+              value: "8189"
+            - name: MF_AUTHN_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.users.logLevel }}
+            - name: MF_AUTHN_SECRET
+              value: c8ee60b5-1317-4b7c-adb3-c0d73f30959c
+          image: "{{ default .Values.defaults.image.repository .Values.authn.image.repository }}/authn:{{ default .Values.defaults.image.tag .Values.authn.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}
+          name: {{ .Release.Name }}-authn
+          ports:
+            - containerPort: 8189
+              protocol: TCP
+            - containerPort: 8181
+              protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

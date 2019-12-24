@@ -30,21 +30,17 @@ spec:
               value: "5432"
             - name: MF_USERS_DB_USER
               value: mainflux
-            - name: MF_USERS_GRPC_PORT
-              value: "8181"
             - name: MF_USERS_HTTP_PORT
               value: "8180"
             - name: MF_USERS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.users.logLevel }}
-            - name: MF_USERS_SECRET
-              value: c8ee60b5-1317-4b7c-adb3-c0d73f30959c
+            - name: MF_AUTHN_URL
+              value: {{ .Release.Name }}-envoy:8181
           image: "{{ default .Values.defaults.image.repository .Values.users.image.repository }}/users:{{ default .Values.defaults.image.tag .Values.users.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}
           name: {{ .Release.Name }}-users
           ports:
             - containerPort: 8180
-              protocol: TCP
-            - containerPort: 8181
               protocol: TCP
       dnsPolicy: ClusterFirst
       restartPolicy: Always
