@@ -6,7 +6,7 @@ defaults:
   image:
     pullPolicy: "IfNotPresent"
     repository: "mainflux"
-    tag: "0.9.1"
+    tag: "0.10.0"
 
 ingress:
   enabled: true
@@ -40,6 +40,9 @@ users:
 things:
   image: {}
 
+authn:
+  image: {}
+
 ui:
   image: {}
 
@@ -66,6 +69,15 @@ postgresql-things:
   postgresqlUsername: mainflux
   postgresqlPassword: mainflux
   postgresqlDatabase: things
+  resources:
+    requests:
+      cpu: 25m
+
+postgresql-authn:
+  name: postgresql-authn
+  postgresqlUsername: mainflux
+  postgresqlPassword: mainflux
+  postgresqlDatabase: authn
   resources:
     requests:
       cpu: 25m

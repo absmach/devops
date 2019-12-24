@@ -257,7 +257,7 @@ spec:
               value: "0.0.0.0:8880"
             - name: DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR
               value: "app={{ .Release.Name }},component=adapter-mqtt"
-          # image: mainflux/mqtt-verne:0.9.1
+          # image: mainflux/mqtt-verne:0.10.0
           image: "{{ default .Values.defaults.image.repository .Values.adapter_mqtt.image.repository }}/mqtt-verne:{{ default .Values.defaults.image.tag .Values.adapter_mqtt.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_mqtt.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-mqtt

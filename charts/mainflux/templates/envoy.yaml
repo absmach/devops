@@ -67,14 +67,14 @@ data:
         - socket_address:
             address: {{ .Release.Name }}-adapter-mqtt
             port_value: 1883
-      - name: users
+      - name: authn
         connect_timeout: 0.25s
         type: strict_dns
         lb_policy: round_robin
         http2_protocol_options: {}
         hosts:
         - socket_address:
-            address: {{ .Release.Name }}-users-headless
+            address: {{ .Release.Name }}-authn-headless
             port_value: 8181
       - name: things
         connect_timeout: 0.25s
@@ -147,12 +147,16 @@ spec:
     - port: 1883
       protocol: TCP
       name: mqtt
+    # - port: 8181
+    #   protocol: TCP
+    #   name: users-grpc
     - port: 8181
       protocol: TCP
-      name: users-grpc
+      name: authn-grpc
     - port: 8183
       protocol: TCP
       name: things-grpc
     - port: 8001
       protocol: TCP
       name: admin
+  type: LoadBalancer

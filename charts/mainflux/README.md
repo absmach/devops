@@ -20,7 +20,7 @@ The following table lists the configurable parameters and their default values.
 | `defaults.logLevel`                    | Log level                                                                  | `debug`        |
 | `defaults.image.pullPolicy`            | Docker Image Pull Policy                                                   | `IfNotPresent` |
 | `defaults.image.repository`            | Docker Image Repository                                                    | `mainflux`     |
-| `defaults.image.tag`                   | Docker Image Tag                                                           | `0.9.1`        |
+| `defaults.image.tag`                   | Docker Image Tag                                                           | `0.10.0`        |
 | `nginx_internal.mtls.tls`              | TLS secret which contains the server cert/key                              | `''`           |
 | `nginx_internal.mtls.intermediate_crt` | Generic secret which contains the intermediate cert used to verify clients | `''`           |
 | `ingress.enabled`                      | Should the Nginx Ingress be created                                        | `true`         |
@@ -37,5 +37,6 @@ All Mainflux services can have their `logLevel`, `image.pullPolicy`, `image.repo
 - things
 - ui
 - users
+- authn
 
 **Note:** make sure you run `helm install` with `--dependency-update` flag!

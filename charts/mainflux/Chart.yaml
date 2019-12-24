@@ -6,8 +6,8 @@ name: mainflux
 description: Mainflux IoT Platform
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
-version: 0.1.1
-appVersion: "0.9.1"
+version: 0.1.2
+appVersion: "0.10.0"
 home: https://www.mainflux.com
 sources:
   - https://hub.docker.com/u/mainflux/
@@ -27,6 +27,10 @@ dependencies:
     version: "7.4.0"
     repository: "@stable"
     alias: postgresql-users
+  - name: postgresql
+    version: "7.4.0"
+    repository: "@stable"
+    alias: postgresql-authn
   - name: redis
     version: "9.5.5"
     repository: "@stable"
