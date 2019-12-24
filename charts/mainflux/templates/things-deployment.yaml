@@ -44,7 +44,7 @@ spec:
               value: {{ default .Values.defaults.logLevel .Values.things.logLevel }}
             - name: MF_THINGS_SECRET
               value: c8ee60b5-1317-4b7c-adb3-c0d73f30959c
-            - name: MF_AUTHN_URL
+            - name: MF_AUTH_URL
               value: {{ .Release.Name }}-envoy:8181
           image: "{{ default .Values.defaults.image.repository .Values.things.image.repository }}/things:{{ default .Values.defaults.image.tag .Values.things.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.things.image.pullPolicy }}
