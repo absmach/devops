@@ -147,9 +147,6 @@ spec:
     - port: 1883
       protocol: TCP
       name: mqtt
-    # - port: 8181
-    #   protocol: TCP
-    #   name: users-grpc
     - port: 8181
       protocol: TCP
       name: authn-grpc
