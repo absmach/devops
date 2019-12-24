@@ -25,15 +25,15 @@ data:
           - name: envoy.http_connection_manager
             config:
               codec_type: auto
-              stat_prefix: users
+              stat_prefix: authn
               route_config:
-                name: users_route
+                name: authn_route
                 virtual_hosts:
-                - name: users_service
+                - name: authn_service
                   domains: ["*"]
                   routes:
                   - match: { prefix: "/" }
-                    route: { cluster: users }
+                    route: { cluster: authn }
               http_filters:
               - name: envoy.grpc_web
               - name: envoy.router
