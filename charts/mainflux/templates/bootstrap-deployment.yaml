@@ -1,0 +1,56 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-bootstrap
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: bootstrap
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: bootstrap
+    spec:
+      containers:
+        - env:
+            - name: MF_JAEGER_URL
+              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:6831
+            # - name: MF_THINGS_AUTH_GRPC_PORT
+            #   value: "8183"
+            # - name: MF_THINGS_AUTH_HTTP_PORT
+            #   value: "8989"
+            # - name: MF_THINGS_CACHE_URL
+            #   value: {{ .Release.Name }}-redis-things-master:6379
+            - name: MF_BOOTSTRAP_DB
+              value: bootstrap
+            - name: MF_BOOTSTRAP_DB_HOST
+              value: {{ .Release.Name }}-postgresql-bootstrap
+            - name: MF_BOOTSTRAP_DB_PASS
+              value: mainflux
+            - name: MF_BOOTSTRAP_DB_PORT
+              value: "5432"
+            - name: MF_BOOTSTRAP_DB_USER
+              value: mainflux
+            - name: MF_THINGS_ES_URL
+              value: {{ .Release.Name }}-redis-streams-master:6379
+            - name: MF_BOOTSTRAP_PORT
+              value: "8202"
+            - name: MF_BOOTSTRAP_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.bootstrap.logLevel }}
+            - name: MF_BOOTSTRAP_DB_SSL_MODE
+              value: disable
+            - name: MF_AUTH_URL
+              value: {{ .Release.Name }}-envoy:8181
+          image: "{{ default .Values.defaults.image.repository .Values.bootstrap.image.repository }}/bootstrap:{{ default .Values.defaults.image.tag .Values.bootstrap.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.bootstrap.image.pullPolicy }}
+          name: {{ .Release.Name }}-things
+          ports:
+            - containerPort: 8202
+              protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

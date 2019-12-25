@@ -43,6 +43,9 @@ things:
 authn:
   image: {}
 
+bootstrap:
+  image: {}
+
 ui:
   image: {}
 
@@ -78,6 +81,15 @@ postgresql-authn:
   postgresqlUsername: mainflux
   postgresqlPassword: mainflux
   postgresqlDatabase: authn
+  resources:
+    requests:
+      cpu: 25m
+
+postgresql-bootstrap:
+  name: postgresql-bootstrap
+  postgresqlUsername: mainflux
+  postgresqlPassword: mainflux
+  postgresqlDatabase: bootstrap
   resources:
     requests:
       cpu: 25m
