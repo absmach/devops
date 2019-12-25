@@ -32,6 +32,8 @@ spec:
               value: mainflux
             - name: MF_THINGS_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:6379
+            - name: MF_BOOTSTRAP_ES_URL
+              value: {{ .Release.Name }}-redis-streams-master:6379
             - name: MF_BOOTSTRAP_PORT
               value: "8202"
             - name: MF_BOOTSTRAP_LOG_LEVEL
