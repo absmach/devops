@@ -68,6 +68,10 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-things
               servicePort: 8182
+          - path: /(connect?.*)
+            backend:
+              serviceName: {{ .Release.Name }}-things
+              servicePort: 8182
           - path: /http/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
