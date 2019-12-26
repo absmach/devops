@@ -43,10 +43,10 @@ spec:
             - name: MF_AUTH_URL
               value: {{ .Release.Name }}-envoy:8181
             - name: MF_SDK_BASE_URL
-              value: {{ .Release.Name }}-envoy:8183
+              value: http://{{ .Release.Name }}-things:8182
           image: "{{ default .Values.defaults.image.repository .Values.bootstrap.image.repository }}/bootstrap:{{ default .Values.defaults.image.tag .Values.bootstrap.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.bootstrap.image.pullPolicy }}
-          name: {{ .Release.Name }}-things
+          name: {{ .Release.Name }}-bootstrap
           ports:
             - containerPort: 8202
               protocol: TCP
