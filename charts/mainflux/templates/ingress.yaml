@@ -80,7 +80,7 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-ws
               servicePort: 8186
-          - path: /(bs)/?(.*)
+          - path: /bs/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
               servicePort: 8202
