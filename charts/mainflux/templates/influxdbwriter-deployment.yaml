@@ -1,0 +1,67 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-influxdb-writer-config
+data:
+  channels.toml: |
+    # If you want to listen on all channels, just pass one element ["*"], otherwise
+    # pass the list of channels.
+    [channels]
+    filter = ["*"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-influxdb-writer
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: influxdb-writer
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: influxdb-writer
+    spec:
+      containers:
+        - env:
+            - name: MF_INFLUX_WRITER_LOG_LEVEL
+              value: debug
+            - name: MF_NATS_URL
+              value: nats://{{ .Release.Name }}-nats-client:4222
+            - name: MF_INFLUX_WRITER_PORT
+              value: "8900"
+            - name: MF_INFLUX_WRITER_BATCH_SIZE
+              value: "5000"
+            - name: MF_INFLUX_WRITER_BATCH_TIMEOUT
+              value: "5"                            
+            - name: MF_INFLUX_WRITER_DB_NAME
+              value: mainflux           
+            - name: MF_INFLUX_WRITER_DB_HOST
+              value: influxdb.mf
+            - name: MF_INFLUX_WRITER_DB_PORT
+              value: "8086"
+              image: "{{ default .Values.defaults.image.repository .Values.influxdb-writer.image.repository }}/influxdb-writer:{{ default .Values.defaults.image.tag .Values.influxdb-writer.image.tag }}"
+              imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb-writer.image.pullPolicy }}
+              name: {{ .Release.Name }}-influxdb-writer
+          ports:
+            - containerPort: 8900
+              protocol: TCP
+          stdin: true
+          tty: true
+          volumeMounts:
+            - mountPath: /config/channels.toml
+              name: influxdb-writer-config
+              subPath: channels.toml
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            defaultMode: 256
+            name: {{ .Release.Name }}-influxdb-writer-config
+            optional: false
+          name: influxdb-writer-config

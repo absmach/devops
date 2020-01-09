@@ -118,3 +118,10 @@ jaeger-operator:
   rbac:
     pspEnabled: true
     clusterRole: true
+
+influxdb:
+  initScripts:
+    enabled: false
+    scripts:
+      init.iql: |+
+        CREATE DATABASE "mainflux" WITH DURATION 30d REPLICATION 1 NAME "rp_30d"
