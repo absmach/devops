@@ -1,0 +1,15 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-influxdb-writer
+spec:
+  selector:
+    app: {{ .Release.Name }}
+    component: influxdb-writer
+  ports:
+    - port: 8900
+      protocol: TCP
+      name: {{ .Release.Name }}-influxdb-writer-8900

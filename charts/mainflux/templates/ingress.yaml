@@ -100,6 +100,10 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-ws
               servicePort: 8186
+          - path: /reader/?(.*)
+            backend:
+              serviceName: {{ .Release.Name }}-influxdb-reader
+              servicePort: 8905 
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
