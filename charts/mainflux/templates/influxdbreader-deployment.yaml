@@ -31,7 +31,7 @@ spec:
             - name: MF_INFLUX_READER_DB_PASS
               value: mainflux              
             - name: MF_INFLUX_READER_DB_HOST
-              value: influxdb.mf
+              value: influxdb
             - name: MF_INFLUX_READER_DB_PORT
               value: "8086"
             - name: MF_JAEGER_URL
