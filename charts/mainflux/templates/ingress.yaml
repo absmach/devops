@@ -60,7 +60,7 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-users
               servicePort: 8180
-          - path: /password/?(.*)
+          - path: /(password?.*)
             backend:
               serviceName: {{ .Release.Name }}-users
               servicePort: 8180
