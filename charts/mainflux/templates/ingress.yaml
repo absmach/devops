@@ -52,6 +52,10 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
+          - path: /grafana/?(.*)
+            backend:
+              serviceName: grafana
+              servicePort: 3000
           - path: /(users)
             backend:
               serviceName: {{ .Release.Name }}-users
@@ -104,6 +108,10 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-influxdb-reader
               servicePort: 8905 
+          - path: /writer/?(.*)
+            backend:
+              serviceName: {{ .Release.Name }}-influxdb-writer
+              servicePort: 8900 
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
