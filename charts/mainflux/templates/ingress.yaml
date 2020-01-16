@@ -110,8 +110,8 @@ spec:
               servicePort: 8905 
           - path: /writer/?(.*)
             backend:
-              serviceName: {{ .Release.Name }}-influxdb-writer
-              servicePort: 8900 
+              serviceName: {{ .Release.Name }}-adapter-http
+              servicePort: 8185 
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
