@@ -60,6 +60,10 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-users
               servicePort: 8180
+          - path: /(password?.*)
+            backend:
+              serviceName: {{ .Release.Name }}-users
+              servicePort: 8180
           - path: /(tokens)
             backend:
               serviceName: {{ .Release.Name }}-users
@@ -88,6 +92,10 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
               servicePort: 8202
+          - path: /bootstrap/?(.*)
+            backend:
+              serviceName: {{ .Release.Name }}-bootstrap
+              servicePort: 8202
           - path: /version/users/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-users
@@ -110,8 +118,8 @@ spec:
               servicePort: 8905 
           - path: /writer/?(.*)
             backend:
-              serviceName: {{ .Release.Name }}-influxdb-writer
-              servicePort: 8900 
+              serviceName: {{ .Release.Name }}-adapter-http
+              servicePort: 8185 
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
