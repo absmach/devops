@@ -120,6 +120,10 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: 8185 
+          - path: /(mqtt?.*)
+            backend:
+              serviceName: {{ .Release.Name }}-adapter-mqtt
+              servicePort: 8080
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:

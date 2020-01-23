@@ -32,6 +32,9 @@ spec:
     - port: 8880
       protocol: TCP
       name: "8880"
+    - port: 8080
+      protocol: TCP
+      name: "8080"
   clusterIP: None
 ---
 apiVersion: v1
@@ -253,8 +256,8 @@ spec:
               value: "on"
             - name: DOCKER_VERNEMQ_DISCOVERY_KUBERNETES
               value: "1"
-            - name: DOCKER_VERNEMQ_LISTENER__WS__MAINFLUX
-              value: "0.0.0.0:8880"
+            # - name: DOCKER_VERNEMQ_LISTENER__WS__MAINFLUX
+            #   value: "0.0.0.0:8880"
             - name: DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR
               value: "app={{ .Release.Name }},component=adapter-mqtt"
           # image: mainflux/mqtt-verne:0.10.0
