@@ -49,6 +49,12 @@ bootstrap:
 ui:
   image: {}
 
+influxdb_writer:
+  image: {}
+
+influxdb_reader:
+  image: {}
+
 mqtt:
   enabled: true
 
