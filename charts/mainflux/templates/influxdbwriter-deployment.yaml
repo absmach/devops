@@ -45,9 +45,9 @@ spec:
               value: influxdb
             - name: MF_INFLUX_WRITER_DB_PORT
               value: "8086"
-              image: "{{ default .Values.defaults.image.repository .Values.influxdb-writer.image.repository }}/influxdb-writer:{{ default .Values.defaults.image.tag .Values.influxdb-writer.image.tag }}"
-              imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb-writer.image.pullPolicy }}
-              name: {{ .Release.Name }}-influxdb-writer
+          image: "{{ default .Values.defaults.image.repository .Values.influxdb-writer.image.repository }}/influxdb-writer:{{ default .Values.defaults.image.tag .Values.influxdb-writer.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb-writer.image.pullPolicy }}
+          name: {{ .Release.Name }}-influxdb-writer
           ports:
             - containerPort: 8900
               protocol: TCP
