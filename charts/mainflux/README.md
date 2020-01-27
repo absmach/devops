@@ -38,5 +38,7 @@ All Mainflux services can have their `logLevel`, `image.pullPolicy`, `image.repo
 - ui
 - users
 - authn
+- influxdb_writer
+- infuxdb_reader
 
 **Note:** make sure you run `helm install` with `--dependency-update` flag!
