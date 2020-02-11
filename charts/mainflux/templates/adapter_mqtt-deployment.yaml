@@ -26,18 +26,21 @@ spec:
     app: {{ .Release.Name }}
     component: adapter-mqtt
   ports:
-    - port: 1883
+    - port: {{ .Values.mqtt.broker.mqtt_port }}
       protocol: TCP
-      name: "1883"
-    - port: 8880
+      name: "{{ .Values.mqtt.broker.mqtt_port }}"
+    - port: {{ .Values.mqtt.broker.ws_port }}
       protocol: TCP
-      name: "8880"
+      name: "{{ .Values.mqtt.broker.ws_port }}"
+    - port: {{ .Values.mqtt.proxy.mqtt_port }}
+      protocol: TCP
+      name: "{{ .Values.mqtt.proxy.mqtt_port }}"
   clusterIP: None
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-adapter-mqtt
+  name: {{ .Release.Name }}-mqtt-verne
 data:
   start_vernemq: |
     #!/usr/bin/env bash
@@ -207,14 +210,16 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Release.Name}}
         component: adapter-mqtt
     spec:
       volumes:
         - name: start-vernemq
           configMap:
-            name: {{ .Release.Name }}-adapter-mqtt
+            name: {{ .Release.Name }}-mqtt-verne
             defaultMode: 0755
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
       containers:
         - volumeMounts:
             - name: start-vernemq
@@ -222,7 +227,7 @@ spec:
               subPath: start_vernemq
           env:
             - name: MF_MQTT_ADAPTER_LOG_LEVEL
-              value: debug
+              value: {{ .Values.mqtt.broker.logLevel }}
             - name: MY_POD_NAME
               valueFrom:
                 fieldRef:
@@ -246,7 +251,7 @@ spec:
             - name: DOCKER_VERNEMQ_PLUGINS__MFX_AUTH__PATH
               value: /mainflux/_build/default
             - name: DOCKER_VERNEMQ_LOG__CONSOLE__LEVEL
-              value: {{ default .Values.defaults.logLevel .Values.adapter_mqtt.logLevel }}
+              value: {{ default .Values.defaults.logLevel .Values.mqtt.broker.logLevel }}
             - name: MF_MQTT_VERNEMQ_GRPC_POOL_SIZE
               value: "1000"
             - name: DOCKER_VERNEMQ_ALLOW_ANONYMOUS
@@ -257,9 +262,8 @@ spec:
               value: "0.0.0.0:8880"
             - name: DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR
               value: "app={{ .Release.Name }},component=adapter-mqtt"
-          # image: mainflux/mqtt-verne:0.10.0
-          image: "{{ default .Values.defaults.image.repository .Values.adapter_mqtt.image.repository }}/mqtt-verne:{{ default .Values.defaults.image.tag .Values.adapter_mqtt.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_mqtt.image.pullPolicy }}
+          image: "{{ default .Values.defaults.image.repository .Values.mqtt.broker.image.repository }}/mqtt-verne:{{ default .Values.defaults.image.tag .Values.mqtt.broker.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.broker.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-mqtt
           ports:
             - containerPort: 1883
@@ -299,7 +303,35 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 44053
-            initialDelaySeconds: 10
-            periodSeconds: 5
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
+            initialDelaySeconds: 90
+            periodSeconds: 10
+          #mproxy
+        - name: {{ .Release.Name }}-mqtt-proxy
+          image: "{{ default .Values.defaults.image.repository .Values.mqtt.proxy.image.repository }}/mproxy:{{ default .Values.defaults.image.tag .Values.mqtt.proxy.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy }}
+          ports:
+          - containerPort: {{ .Values.mqtt.proxy.mqtt_port }}
+            protocol: TCP
+          - containerPort: {{ .Values.mqtt.proxy.ws_port }}
+            protocol: TCP
+          stdin: true
+          tty: true
+          env:
+            - name: MF_MQTT_ADAPTER_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.mqtt.proxy.logLevel }}
+            - name: MF_MQTT_ADAPTER_MQTT_PORT
+              value: "{{ .Values.mqtt.proxy.mqtt_port }}"
+            - name: MF_MQTT_ADAPTER_W_MQTTS_PORT 
+              value: "{{ .Values.mqtt.proxy.ws_port }}"
+            - name: MF_MQTT_ADAPTER_ES_HOST
+              value: {{ .Release.Name }}-redis-streams-master:6379
+            - name: MF_NATS_URL
+              value: nats://{{ .Release.Name }}-nats-client:4222
+            - name: MF_THINGS_URL
+              value: {{ .Release.Name }}-envoy:8183
+            - name: MF_JAEGER_URL
+              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:6831
+            - name: MF_MQTT_ADAPTER_MQTT_TARGET_HOST
+              value: {{ .Release.Name }}-adapter-mqtt
+            - name: MF_MQTT_ADAPTER_MQTT_TARGET_PORT
+              value: "{{ .Values.mqtt.broker.mqtt_port }}"
