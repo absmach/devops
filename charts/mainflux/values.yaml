@@ -40,10 +40,12 @@ mqtt:
     ws_port: 7777
     logLevel: "debug"
   broker:
-    image: {}
+    image: 
+      repository: "vernemq/vernemq"
+      tag: "1.10.1-alpine"
     mqtt_port: 1883
-    ws_port: 8881
-    logLevel: "debug"
+    ws_port: 8080
+    logLevel: "error"
 
 users:
   image: {}
