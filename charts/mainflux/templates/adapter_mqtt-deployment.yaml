@@ -248,6 +248,8 @@ spec:
               value: "app={{ .Release.Name }},component=adapter-mqtt"
             - name: DOCKER_VERNEMQ_ACCEPT_EULA
               value: "yes"
+            - name: DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT
+              value: "on"
           image: "{{ default .Values.defaults.image.repository .Values.mqtt.broker.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.broker.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.broker.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-mqtt
@@ -291,10 +293,15 @@ spec:
               port: 44053
             initialDelaySeconds: 90
             periodSeconds: 10
+          resources:
+            limits:
+              memory: {{ .Values.mqtt.broker.limits.maxRam }}
+            requests:
+              memory: {{ .Values.mqtt.broker.limits.reqRam }}
           #mproxy
         - name: {{ .Release.Name }}-mqtt-proxy
           image: "{{ default .Values.defaults.image.repository .Values.mqtt.proxy.image.repository }}/mproxy:{{ default .Values.defaults.image.tag .Values.mqtt.proxy.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy }}
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.proxy.image.imagePullPolicy}}
           ports:
           - containerPort: {{ .Values.mqtt.proxy.mqtt_port }}
             protocol: TCP
@@ -321,3 +328,5 @@ spec:
               value: {{ .Release.Name }}-adapter-mqtt
             - name: MF_MQTT_ADAPTER_MQTT_TARGET_PORT
               value: "{{ .Values.mqtt.broker.mqtt_port }}"
+            - name: MF_MQTT_ADAPTER_THINGS_TIMEOUT
+              value: "15"

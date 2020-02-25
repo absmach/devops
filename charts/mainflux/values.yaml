@@ -35,7 +35,9 @@ mqtt:
   enabled: true
   proxy: 
     image:
-      tag: "latest"
+      repository: "mainflux"
+      tag: "0.1.0"
+      pullPolicy: "Always"
     mqtt_port: 1884
     ws_port: 7777
     logLevel: "debug"
@@ -45,7 +47,10 @@ mqtt:
       tag: "1.10.1-alpine"
     mqtt_port: 1883
     ws_port: 8080
-    logLevel: "error"
+    logLevel: "info"
+    limits:
+      maxRam: "4Gi"
+      reqRam: "512Mi"
 
 users:
   image: {}
