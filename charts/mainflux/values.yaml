@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 defaults:
-  logLevel: "debug"
+  logLevel: "info"
   image:
     pullPolicy: "IfNotPresent"
     repository: "mainflux"
@@ -31,8 +31,26 @@ adapter_ws:
 adapter_coap:
   image: {}
 
-adapter_mqtt:
-  image: {}
+mqtt:
+  enabled: true
+  proxy: 
+    image:
+      repository: "mainflux"
+      tag: "0.1.0"
+      pullPolicy: "Always"
+    mqtt_port: 1884
+    ws_port: 7777
+    logLevel: "debug"
+  broker:
+    image: 
+      repository: "vernemq/vernemq"
+      tag: "1.10.1-alpine"
+    mqtt_port: 1883
+    ws_port: 8080
+    logLevel: "info"
+    limits:
+      maxRam: "4Gi"
+      reqRam: "512Mi"
 
 users:
   image: {}
@@ -54,9 +72,6 @@ influxdb_writer:
 
 influxdb_reader:
   image: {}
-
-mqtt:
-  enabled: true
 
 nats:
   auth:
