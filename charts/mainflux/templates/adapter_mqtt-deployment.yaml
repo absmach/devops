@@ -246,8 +246,6 @@ spec:
               value: "1"
             - name: DOCKER_VERNEMQ_KUBERNETES_LABEL_SELECTOR
               value: "app={{ .Release.Name }},component=adapter-mqtt"
-            - name: DOCKER_VERNEMQ_ACCEPT_EULA
-              value: "yes"
             - name: DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT
               value: "on"
           image: "{{ default .Values.defaults.image.repository .Values.mqtt.broker.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.broker.image.tag }}"
@@ -300,7 +298,7 @@ spec:
               memory: {{ .Values.mqtt.broker.limits.reqRam }}
           #mproxy
         - name: {{ .Release.Name }}-mqtt-proxy
-          image: "{{ default .Values.defaults.image.repository .Values.mqtt.proxy.image.repository }}/mproxy:{{ default .Values.defaults.image.tag .Values.mqtt.proxy.image.tag }}"
+          image: "{{ default .Values.defaults.image.repository .Values.mqtt.proxy.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.proxy.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.proxy.image.imagePullPolicy}}
           ports:
           - containerPort: {{ .Values.mqtt.proxy.mqtt_port }}
