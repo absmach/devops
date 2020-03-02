@@ -35,7 +35,7 @@ mqtt:
   enabled: true
   proxy: 
     image:
-      repository: "mainflux"
+      repository: "mainflux/mproxy"
       tag: "0.1.0"
       pullPolicy: "Always"
     mqtt_port: 1884
@@ -43,7 +43,7 @@ mqtt:
     logLevel: "debug"
   broker:
     image: 
-      repository: "vernemq/vernemq"
+      repository: "mainflux/vernemq"
       tag: "1.10.1-alpine"
     mqtt_port: 1883
     ws_port: 8080
