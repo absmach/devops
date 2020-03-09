@@ -51,6 +51,8 @@ spec:
               value: {{ default .Values.defaults.logLevel .Values.users.logLevel }}
             - name: MF_AUTHN_URL
               value: {{ .Release.Name }}-envoy:8181
+            - name: MF_TOKEN_RESET_ENDPOINT
+              value: "#/auth/reset-password"
           image: "{{ default .Values.defaults.image.repository .Values.users.image.repository }}/users:{{ default .Values.defaults.image.tag .Values.users.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}
           name: {{ .Release.Name }}-users
