@@ -78,6 +78,7 @@ nats:
     enabled: false
   clusterAuth:
     enabled: false
+  maxPayload: 268435456
 
 postgresql-users:
   name: postgresql-users
