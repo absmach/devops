@@ -12,6 +12,7 @@ ingress:
   enabled: true
   annotations: {}
   labels: {}
+  # Uncomment this block for TLS support in public ingress
   # hostname: ""
   # tls:
   #   hostname: ""
@@ -19,8 +20,13 @@ ingress:
 
 nginx_internal:
   mtls:
+    # By default mTLS is disabled. If you use mTLS, comment this block.
     tls: ""
     intermediate_crt: ""
+    # Uncomment this block for TLS and mTLS support.
+    # Use sh script from /secrets/secrets.sh to create config maps with your certs
+    # tls: "nginx-internal-mtls-tls"
+    # intermediate_crt: "nginx-internal-mtls-intermediate-crt"
 
 adapter_http:
   image: {}
@@ -35,11 +41,11 @@ mqtt:
   enabled: true
   proxy: 
     image:
-      repository: "mainflux/mproxy"
-      tag: "0.1.0"
+      repository: "mainflux/mqtt"
+      tag: "0.10.1"
       pullPolicy: "Always"
     mqtt_port: 1884
-    ws_port: 7777
+    ws_port: 8081
     logLevel: "debug"
   broker:
     image: 

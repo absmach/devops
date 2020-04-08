@@ -26,15 +26,12 @@ spec:
     app: {{ .Release.Name }}
     component: adapter-mqtt
   ports:
-    - port: {{ .Values.mqtt.broker.mqtt_port }}
-      protocol: TCP
-      name: "{{ .Values.mqtt.broker.mqtt_port }}"
-    - port: {{ .Values.mqtt.broker.ws_port }}
-      protocol: TCP
-      name: "{{ .Values.mqtt.broker.ws_port }}"
     - port: {{ .Values.mqtt.proxy.mqtt_port }}
       protocol: TCP
       name: "{{ .Values.mqtt.proxy.mqtt_port }}"
+    - port: {{ .Values.mqtt.proxy.ws_port }}
+      protocol: TCP
+      name: "{{ .Values.mqtt.proxy.ws_port }}"
   clusterIP: None
 ---
 apiVersion: v1
@@ -312,7 +309,7 @@ spec:
               value: {{ default .Values.defaults.logLevel .Values.mqtt.proxy.logLevel }}
             - name: MF_MQTT_ADAPTER_MQTT_PORT
               value: "{{ .Values.mqtt.proxy.mqtt_port }}"
-            - name: MF_MQTT_ADAPTER_W_MQTTS_PORT 
+            - name: MF_MQTT_ADAPTER_WS_PORT 
               value: "{{ .Values.mqtt.proxy.ws_port }}"
             - name: MF_MQTT_ADAPTER_ES_HOST
               value: {{ .Release.Name }}-redis-streams-master:6379
@@ -326,5 +323,11 @@ spec:
               value: {{ .Release.Name }}-adapter-mqtt
             - name: MF_MQTT_ADAPTER_MQTT_TARGET_PORT
               value: "{{ .Values.mqtt.broker.mqtt_port }}"
+            - name: MF_MQTT_ADAPTER_MQTT_TARGET_HOST
+              value: {{ .Release.Name }}-adapter-mqtt
+            - name: MF_MQTT_ADAPTER_WS_TARGET_HOST
+              value: {{ .Release.Name }}-adapter-mqtt
+            - name: MF_MQTT_ADAPTER_WS_TARGET_PORT    
+              value: "{{ .Values.mqtt.broker.ws_port }}"
             - name: MF_MQTT_ADAPTER_THINGS_TIMEOUT
               value: "15"
