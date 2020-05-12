@@ -149,8 +149,9 @@ data:
         echo "erlang.distribution.port_range.minimum = 9100" >> /vernemq/etc/vernemq.conf
         echo "erlang.distribution.port_range.maximum = 9109" >> /vernemq/etc/vernemq.conf
         # Localhost listeners so sidecar container inside pod have access to them
-        echo "listener.tcp.default = 127.0.0.1:1883" >> /vernemq/etc/vernemq.conf
-        echo "listener.ws.default = 127.0.0.1:8080" >> /vernemq/etc/vernemq.conf
+        LOCALHOST_IP_ADDRESS="--127.0.0.1"
+        echo "listener.tcp.default = ${LOCALHOST_IP_ADDRESS}:1883" >> /vernemq/etc/vernemq.conf
+        echo "listener.ws.default = ${LOCALHOST_IP_ADDRESS}:8080" >> /vernemq/etc/vernemq.conf
         echo "listener.vmq.clustering = ${IP_ADDRESS}:44053" >> /vernemq/etc/vernemq.conf
         echo "listener.http.metrics = ${IP_ADDRESS}:8888" >> /vernemq/etc/vernemq.conf
 
