@@ -54,9 +54,6 @@ mqtt:
     mqtt_port: 1883
     ws_port: 8080
     logLevel: "info"
-    limits:
-      maxRam: "4Gi"
-      reqRam: "512Mi"
 
 users:
   image: {}
