@@ -296,11 +296,20 @@ spec:
               port: 44053
             initialDelaySeconds: 90
             periodSeconds: 10
-          resources:
-            limits:
-              memory: {{ .Values.mqtt.broker.limits.maxRam }}
-            requests:
-              memory: {{ .Values.mqtt.broker.limits.reqRam }}
+          ## VerneMQ resources requests and limits
+          ## Ref: http://kubernetes.io/docs/user-guide/compute-resources
+          ## We usually recommend not to specify default resources and to leave this as a conscious
+          ## choice for the user. This also increases chances charts run on environments with little
+          ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+          ## lines, adjust them as necessary
+          # resources:
+          #   limits:
+          #     cpu: 0.25
+          #     memory: 1Gi
+          #   requests:
+          #     cpu: 0.25
+          #     memory: 512Mi
+
           #mproxy
         - name: {{ .Release.Name }}-mqtt-proxy
           image: "{{ default .Values.defaults.image.repository .Values.mqtt.proxy.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.proxy.image.tag }}"
