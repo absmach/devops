@@ -296,7 +296,6 @@ spec:
               port: 44053
             initialDelaySeconds: 90
             periodSeconds: 10
-
           #mproxy
         - name: {{ .Release.Name }}-mqtt-proxy
           image: "{{ default .Values.defaults.image.repository .Values.mqtt.proxy.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.proxy.image.tag }}"
