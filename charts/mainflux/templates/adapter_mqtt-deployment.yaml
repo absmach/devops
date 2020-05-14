@@ -155,6 +155,8 @@ data:
         echo "listener.vmq.clustering = ${IP_ADDRESS}:44053" >> /vernemq/etc/vernemq.conf
         echo "listener.http.metrics = ${IP_ADDRESS}:8888" >> /vernemq/etc/vernemq.conf
         echo "listener.nr_of_acceptors = 1000" >> /vernemq/etc/vernemq.conf
+        echo "plugins.vmq_passwd = off" >> /vernemq/etc/vernemq.conf
+        echo "plugins.vmq_acl = off" >> /vernemq/etc/vernemq.conf
 
         echo "########## End ##########" >> /vernemq/etc/vernemq.conf
     fi
