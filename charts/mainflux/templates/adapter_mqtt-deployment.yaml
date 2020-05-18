@@ -154,6 +154,7 @@ data:
         echo "listener.ws.default = ${LOCALHOST_IP_ADDRESS}:8080" >> /vernemq/etc/vernemq.conf
         echo "listener.vmq.clustering = ${IP_ADDRESS}:44053" >> /vernemq/etc/vernemq.conf
         echo "listener.http.metrics = ${IP_ADDRESS}:8888" >> /vernemq/etc/vernemq.conf
+        echo "listener.nr_of_acceptors = 1000" >> /vernemq/etc/vernemq.conf
 
         echo "########## End ##########" >> /vernemq/etc/vernemq.conf
     fi
