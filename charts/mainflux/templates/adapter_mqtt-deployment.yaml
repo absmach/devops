@@ -150,8 +150,8 @@ data:
         echo "erlang.distribution.port_range.maximum = 9109" >> /vernemq/etc/vernemq.conf
         # Localhost listeners so sidecar container inside pod have access to them
         LOCALHOST_IP_ADDRESS="127.0.0.1"
-        echo "listener.tcp.default = ${LOCALHOST_IP_ADDRESS}:1883" >> /vernemq/etc/vernemq.conf
-        echo "listener.ws.default = ${LOCALHOST_IP_ADDRESS}:8080" >> /vernemq/etc/vernemq.conf
+        echo "listener.tcp.default = ${IP_ADDRESS}:1883" >> /vernemq/etc/vernemq.conf
+        echo "listener.ws.default = ${IP_ADDRESS}:8080" >> /vernemq/etc/vernemq.conf
         echo "listener.vmq.clustering = ${IP_ADDRESS}:44053" >> /vernemq/etc/vernemq.conf
         echo "listener.http.metrics = ${IP_ADDRESS}:8888" >> /vernemq/etc/vernemq.conf
         echo "listener.nr_of_acceptors = 1000" >> /vernemq/etc/vernemq.conf
@@ -328,11 +328,11 @@ spec:
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:6831
             - name: MF_MQTT_ADAPTER_MQTT_TARGET_HOST
-              value: localhost
+              value: {{ .Release.Name }}-adapter-mqtt
             - name: MF_MQTT_ADAPTER_MQTT_TARGET_PORT
               value: "{{ .Values.mqtt.broker.mqtt_port }}"
             - name: MF_MQTT_ADAPTER_WS_TARGET_HOST
-              value: localhost
+              value: {{ .Release.Name }}-adapter-mqtt
             - name: MF_MQTT_ADAPTER_WS_TARGET_PORT    
               value: "{{ .Values.mqtt.broker.ws_port }}"
             - name: MF_MQTT_ADAPTER_THINGS_TIMEOUT
