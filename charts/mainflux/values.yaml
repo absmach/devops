@@ -82,6 +82,7 @@ nats:
   clusterAuth:
     enabled: false
   maxPayload: 268435456
+  replicaCount: 3
 
 postgresql-users:
   name: postgresql-users

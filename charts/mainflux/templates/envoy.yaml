@@ -101,6 +101,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-envoy
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: {{ .Release.Name }}

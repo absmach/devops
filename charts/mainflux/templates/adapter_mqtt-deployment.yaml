@@ -203,6 +203,7 @@ kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-adapter-mqtt
 spec:
+  replicas: 3
   serviceName: {{ .Release.Name }}-adapter-mqtt
   selector:
     matchLabels:
