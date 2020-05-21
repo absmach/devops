@@ -7,6 +7,8 @@ defaults:
     pullPolicy: "IfNotPresent"
     repository: "mainflux"
     tag: "0.10.0"
+  # Replicas of MQTT adapter, NATS, Things, Envoy and Authn
+  replicaCount: 3
 
 ingress:
   enabled: true

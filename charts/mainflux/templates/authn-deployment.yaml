@@ -6,7 +6,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-authn
 spec:
-  replicas: 3
+  replicas: {{ .Values.defaults.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
