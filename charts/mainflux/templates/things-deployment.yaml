@@ -6,6 +6,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-things
 spec:
+  replicas: {{ .Values.defaults.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
