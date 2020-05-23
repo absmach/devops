@@ -2,7 +2,7 @@
 DevOps scripts for Mainflux IoT platform.
 
 ## Install
-Follow the instructions in [`charts`](charts) directory.
+Follow the instructions in [`helm`](helm) directory.
 
 Detailed documentation can be found [here](https://mainflux.readthedocs.io/en/latest/kubernetes/).
 
