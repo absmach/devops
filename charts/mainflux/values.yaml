@@ -132,7 +132,7 @@ redis-mqtt:
     enabled: false
   usePassword: false
 
-redis-things:
+redis-auth:
   cluster:
     enabled: false
   usePassword: false

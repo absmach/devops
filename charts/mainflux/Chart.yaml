@@ -42,7 +42,7 @@ dependencies:
   - name: redis
     version: "9.5.5"
     repository: "@stable"
-    alias: redis-things
+    alias: redis-auth
   - name: redis
     version: "9.5.5"
     repository: "@stable"
