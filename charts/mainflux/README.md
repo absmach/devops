@@ -20,7 +20,7 @@ The following table lists the configurable parameters and their default values.
 | defaults.logLevel                    | Log level                                                                  | debug        |
 | defaults.image.pullPolicy            | Docker Image Pull Policy                                                   | IfNotPresent |
 | defaults.image.repository            | Docker Image Repository                                                    | mainflux     |
-| defaults.image.tag                   | Docker Image Tag                                                           | 0.10.0       |
+| defaults.image.tag                   | Docker Image Tag                                                           | 0.11.0       |
 | defaults.replicaCount                | Replicas of MQTT adapter, Things, Envoy and Authn                          | 3            |
 | nginx_internal.mtls.tls              | TLS secret which contains the server cert/key                              |              |
 | nginx_internal.mtls.intermediate_crt | Generic secret which contains the intermediate cert used to verify clients |              |

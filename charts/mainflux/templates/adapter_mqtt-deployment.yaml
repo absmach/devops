@@ -317,14 +317,10 @@ spec:
               value: "{{ .Values.mqtt.proxy.mqtt_port }}"
             - name: MF_MQTT_ADAPTER_WS_PORT 
               value: "{{ .Values.mqtt.proxy.ws_port }}"
-            - name: MF_MQTT_ADAPTER_ES_HOST
-              value: {{ .Release.Name }}-redis-streams-master:6379
             - name: MF_MQTT_ADAPTER_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:6379
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:4222
-            - name: MF_THINGS_URL
-              value: {{ .Release.Name }}-envoy:8183
             - name: MF_THINGS_AUTH_GRPC_URL
               value:  {{ .Release.Name }}-envoy:8183
             - name: MF_JAEGER_URL

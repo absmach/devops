@@ -20,7 +20,7 @@ spec:
         - env:
             - name: MF_INFLUX_READER_LOG_LEVEL
               value: debug
-            - name: MF_THINGS_URL
+            - name: MF_THINGS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:8183
             - name: MF_INFLUX_READER_PORT
               value: "8905"                         
