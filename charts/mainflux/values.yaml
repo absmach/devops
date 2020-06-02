@@ -52,7 +52,7 @@ mqtt:
   broker:
     image: 
       repository: "mainflux/vernemq"
-      tag: "1.11.0"
+      tag: "0.11.0"
     mqtt_port: 1883
     ws_port: 8080
     logLevel: "info"
