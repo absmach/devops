@@ -6,11 +6,11 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-influxdb-writer-config
 data:
-  channels.toml: |
-    # If you want to listen on all channels, just pass one element ["*"], otherwise
-    # pass the list of channels.
-    [channels]
-    filter = ["*"]
+  subjects.toml: |
+    # If you want to listen on all subjects, just pass one element ["channels.>"], otherwise
+    # pass the list of subjects (e.g ["channels.<channel_id>", "channels.<channel_id>.sub.topic.x", ...]).
+    [subjects]
+    filter = ["channels.>"]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -39,10 +39,12 @@ spec:
               value: "5000"
             - name: MF_INFLUX_WRITER_BATCH_TIMEOUT
               value: "5"                            
-            - name: MF_INFLUX_WRITER_DB_NAME
-              value: mainflux           
+            - name: MF_INFLUX_WRITER_DB
+              value: mainflux
+            - name: MF_INFLUX_WRITER_DB_USER
+              value: mainflux
             - name: MF_INFLUX_WRITER_DB_HOST
-              value: influxdb
+              value: {{ .Release.Name }}-influxdb
             - name: MF_INFLUX_WRITER_DB_PORT
               value: "8086"
           image: "{{ default .Values.defaults.image.repository .Values.influxdb_writer.image.repository }}/influxdb-writer:{{ default .Values.defaults.image.tag .Values.influxdb_writer.image.tag }}"
@@ -54,9 +56,9 @@ spec:
           stdin: true
           tty: true
           volumeMounts:
-            - mountPath: /config/channels.toml
+            - mountPath: /config/subjects.toml
               name: influxdb-writer-config
-              subPath: channels.toml
+              subPath: subjects.toml
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       volumes:
