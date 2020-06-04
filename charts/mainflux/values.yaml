@@ -41,6 +41,10 @@ adapter_coap:
 
 mqtt:
   enabled: true
+  securityContext:
+    runAsUser: 10000
+    runAsGroup: 10000
+    fsGroup: 10000
   proxy: 
     image:
       repository: "mainflux/mqtt"
@@ -56,6 +60,8 @@ mqtt:
     mqtt_port: 1883
     ws_port: 8080
     logLevel: "info"
+    persistentVolume:
+      size: 5Gi
 
 users:
   image: {}

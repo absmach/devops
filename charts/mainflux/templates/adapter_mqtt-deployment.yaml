@@ -222,11 +222,15 @@ spec:
             defaultMode: 0755
       dnsPolicy: ClusterFirst
       restartPolicy: Always
+      securityContext:
+        {{ toYaml .Values.mqtt.securityContext | nindent 8 }}      
       containers:
         - volumeMounts:
             - name: start-vernemq
               mountPath: /usr/sbin/start_vernemq
               subPath: start_vernemq
+            - name: data
+              mountPath: /vernemq/data
           env:
             - name: MF_MQTT_ADAPTER_LOG_LEVEL
               value: {{ .Values.mqtt.broker.logLevel }}
@@ -337,4 +341,12 @@ spec:
               value: "15"
             - name: MF_AUTH_CACHE_URL
               value: {{ .Release.Name }}-redis-auth-master:6379
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.mqtt.broker.persistentVolume.size }}              
 
