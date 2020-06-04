@@ -40,7 +40,7 @@ spec:
               value: {{ default .Values.defaults.logLevel .Values.bootstrap.logLevel }}
             - name: MF_BOOTSTRAP_DB_SSL_MODE
               value: disable
-            - name: MF_AUTH_URL
+            - name: MF_AUTHN_GRPC_URL
               value: {{ .Release.Name }}-envoy:8181
             - name: MF_SDK_BASE_URL
               value: http://{{ .Release.Name }}-things:8182

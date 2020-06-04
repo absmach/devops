@@ -84,10 +84,6 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: 8185
-          - path: /ws/?(.*)
-            backend:
-              serviceName: {{ .Release.Name }}-adapter-ws
-              servicePort: 8186
           - path: /bs/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
@@ -108,10 +104,6 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: 8185
-          - path: /version/ws/?(.*)
-            backend:
-              serviceName: {{ .Release.Name }}-adapter-ws
-              servicePort: 8186
           - path: /reader/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-influxdb-reader

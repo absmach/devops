@@ -6,7 +6,7 @@ defaults:
   image:
     pullPolicy: "IfNotPresent"
     repository: "mainflux"
-    tag: "0.10.0"
+    tag: "0.11.0"
   # Replicas of MQTT adapter, NATS, Things, Envoy and Authn
   replicaCount: 3
 
@@ -44,7 +44,7 @@ mqtt:
   proxy: 
     image:
       repository: "mainflux/mqtt"
-      tag: "0.10.1"
+      tag: "0.11.0"
       pullPolicy: "Always"
     mqtt_port: 1884
     ws_port: 8081
@@ -52,7 +52,7 @@ mqtt:
   broker:
     image: 
       repository: "mainflux/vernemq"
-      tag: "1.10.1-alpine"
+      tag: "0.11.0"
     mqtt_port: 1883
     ws_port: 8080
     logLevel: "info"
@@ -149,7 +149,7 @@ jaeger-operator:
 
 influxdb:
   initScripts:
-    enabled: false
+    enabled: true
     scripts:
       init.iql: |+
-        CREATE DATABASE "mainflux" WITH DURATION 30d REPLICATION 1 NAME "rp_30d"
+        CREATE DATABASE "mainflux"
