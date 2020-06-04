@@ -222,6 +222,8 @@ spec:
             defaultMode: 0755
       dnsPolicy: ClusterFirst
       restartPolicy: Always
+      securityContext:
+        {{ toYaml .Values.mqtt.securityContext | nindent 8 }}      
       containers:
         - volumeMounts:
             - name: start-vernemq
@@ -346,5 +348,5 @@ spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
-            storage: 5Gi
+            storage: {{ .Values.mqtt.broker.persistentVolume.size }}              
 
