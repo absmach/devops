@@ -31,7 +31,7 @@ The following table lists the configurable parameters and their default values.
 | nats.maxPayload                      | Maximum payload size in bytes that the NATS server will accept             | 268435456    |
 | nats.replicaCount                    | NATS replicas                                                              | 3            |
 | mqtt.broker.persistentVolume.size    | data Persistent Volume size                                                | 5Gi          |
-| influxdb.enabled                     | Should influxdb reader & writer be created                                 | false         |
+| influxdb.enabled                     | Enable influxdb reader & writer                                            | false        |
 
 All Mainflux services can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden. The names of the services are:
 
