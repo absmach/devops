@@ -104,6 +104,11 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: 8185
+          - path: /(mqtt)
+            backend:
+              serviceName: {{ .Release.Name }}-adapter-mqtt
+              servicePort: 8081
+{{- if .Values.influxdb.enabled }}
           - path: /reader/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-influxdb-reader
@@ -112,10 +117,7 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: 8185 
-          - path: /(mqtt)
-            backend:
-              serviceName: {{ .Release.Name }}-adapter-mqtt
-              servicePort: 8081
+{{- end }}              
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
