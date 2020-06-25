@@ -73,6 +73,7 @@ authn:
   image: {}
 
 bootstrap:
+  enabled: false
   image: {}
 
 ui:

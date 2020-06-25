@@ -35,6 +35,7 @@ dependencies:
     version: "7.4.0"
     repository: "@stable"
     alias: postgresql-bootstrap
+    condition: bootstrap.enabled
   - name: redis
     version: "9.5.5"
     repository: "@stable"

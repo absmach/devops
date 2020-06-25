@@ -88,10 +88,6 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
               servicePort: 8202
-          - path: /bootstrap/?(.*)
-            backend:
-              serviceName: {{ .Release.Name }}-bootstrap
-              servicePort: 8202
           - path: /version/users/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-users
@@ -109,6 +105,12 @@ spec:
               serviceName: {{ .Release.Name }}-adapter-mqtt
               servicePort: 8081
 {{- if .Values.influxdb.enabled }}
+          - path: /bootstrap/?(.*)
+            backend:
+              serviceName: {{ .Release.Name }}-bootstrap
+              servicePort: 8202
+{{- end }}
+{{- if .Values.influxdb.enabled }}
           - path: /reader/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-influxdb-reader
@@ -117,7 +119,7 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: 8185 
-{{- end }}              
+{{- end }}
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
