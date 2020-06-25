@@ -73,16 +73,23 @@ authn:
   image: {}
 
 bootstrap:
+  enabled: false
   image: {}
 
 ui:
   image: {}
 
-influxdb_writer:
-  image: {}
-
-influxdb_reader:
-  image: {}
+influxdb:
+  enabled: false
+  writer:
+    image: {}
+  reader:
+    image: {}
+  initScripts:
+    enabled: true
+    scripts:
+      init.iql: |+
+        CREATE DATABASE "mainflux"
 
 nats:
   auth:
@@ -152,10 +159,3 @@ jaeger-operator:
   rbac:
     pspEnabled: true
     clusterRole: true
-
-influxdb:
-  initScripts:
-    enabled: true
-    scripts:
-      init.iql: |+
-        CREATE DATABASE "mainflux"

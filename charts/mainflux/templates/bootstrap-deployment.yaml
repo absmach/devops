@@ -1,6 +1,7 @@
 # Copyright (c) Mainflux
 # SPDX-License-Identifier: Apache-2.0
 
+{{- if .Values.bootstrap.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,3 +53,4 @@ spec:
               protocol: TCP
       dnsPolicy: ClusterFirst
       restartPolicy: Always
+{{- end }}

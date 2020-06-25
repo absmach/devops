@@ -1,6 +1,7 @@
 # Copyright (c) Mainflux
 # SPDX-License-Identifier: Apache-2.0
 
+{{- if .Values.influxdb.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,8 +37,8 @@ spec:
               value: "8086"
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:6831
-          image: "{{ default .Values.defaults.image.repository .Values.influxdb_reader.image.repository }}/influxdb-reader:{{ default .Values.defaults.image.tag .Values.influxdb_reader.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb_reader.image.pullPolicy }}
+          image: "{{ default .Values.defaults.image.repository .Values.influxdb.reader.image.repository }}/influxdb-reader:{{ default .Values.defaults.image.tag .Values.influxdb.reader.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb.reader.image.pullPolicy }}
           name: {{ .Release.Name }}-influxdb-reader
           ports:
             - containerPort: 8905
@@ -46,3 +47,4 @@ spec:
           tty: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
+{{- end }}

@@ -1,6 +1,7 @@
 # Copyright (c) Mainflux
 # SPDX-License-Identifier: Apache-2.0
 
+{{- if .Values.influxdb.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -47,8 +48,8 @@ spec:
               value: {{ .Release.Name }}-influxdb
             - name: MF_INFLUX_WRITER_DB_PORT
               value: "8086"
-          image: "{{ default .Values.defaults.image.repository .Values.influxdb_writer.image.repository }}/influxdb-writer:{{ default .Values.defaults.image.tag .Values.influxdb_writer.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb_writer.image.pullPolicy }}
+          image: "{{ default .Values.defaults.image.repository .Values.influxdb.writer.image.repository }}/influxdb-writer:{{ default .Values.defaults.image.tag .Values.influxdb.writer.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb.writer.image.pullPolicy }}
           name: {{ .Release.Name }}-influxdb-writer
           ports:
             - containerPort: 8900
@@ -67,3 +68,4 @@ spec:
             name: {{ .Release.Name }}-influxdb-writer-config
             optional: false
           name: influxdb-writer-config
+{{- end }}

@@ -1,6 +1,7 @@
 # Copyright (c) Mainflux
 # SPDX-License-Identifier: Apache-2.0
 
+{{- if .Values.influxdb.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,3 +14,4 @@ spec:
     - port: 8905
       protocol: TCP
       name: {{ .Release.Name }}-influxdb-writer-8905
+{{- end }}

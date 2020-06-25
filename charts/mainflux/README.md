@@ -31,8 +31,12 @@ The following table lists the configurable parameters and their default values.
 | nats.maxPayload                      | Maximum payload size in bytes that the NATS server will accept             | 268435456    |
 | nats.replicaCount                    | NATS replicas                                                              | 3            |
 | mqtt.broker.persistentVolume.size    | data Persistent Volume size                                                | 5Gi          |
+| influxdb.enabled                     | Enable influxdb reader & writer                                            | false        |
+| bootstrap.enabled                    | Enable bootstrap service                                                   | false        |
 
-All Mainflux services can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden. The names of the services are:
+All Mainflux services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden. 
+
+Mainflux Core is a minimalistic set of required Mainflux services. They are all installed by default:
 
 - adapter_coap
 - adapter_http
@@ -42,8 +46,13 @@ All Mainflux services can have their `logLevel`, `image.pullPolicy`, `image.repo
 - ui
 - users
 - authn
-- influxdb_writer
-- infuxdb_reader
+
+Mainflux Add-ons are optional services that are disabled by default. Find in Configuration table paramaters for enabling them, i.e. to enable influxdb reader & writer you shoud run `helm install` with `--set influxdb=true`.
+List of add-ons services in charts:
+
+- bootstrap
+- influxdb.writer
+- influxdb.reader
 
 By default scale of MQTT adapter, Things, Envoy, Authn and NATS will be set to 3. It's recommended that you set this values to number of your nodes in Kubernetes cluster, i.e. `--set defaults.replicaCount=3 --set nats.replicaCount=3`
 
