@@ -52,7 +52,7 @@ dependencies:
     version: "9.5.5"
     repository: "@stable"
     alias: redis-opcua
-    condition: adapter_opcua.enabled    
+    condition: adapter_opcua.enabled
   - name: influxdb
     version: "4.3.2"
     repository: "@stable"
@@ -61,7 +61,4 @@ dependencies:
     version: "7.8.10"
     repository: "@stable"
     alias: twins-db
-<<<<<<< HEAD
-=======
     condition: twins.enabled
->>>>>>> 2a61cba... Add twins service

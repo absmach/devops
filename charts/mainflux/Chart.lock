@@ -29,13 +29,8 @@ dependencies:
 - name: influxdb
   repository: https://kubernetes-charts.storage.googleapis.com/
   version: 4.3.2
-<<<<<<< HEAD
-digest: sha256:456753681a6b5474eec340fb70a492af193a0f403aeb6ec3ae0892f63dd38b83
-generated: "2020-06-23T15:59:47.952690201+02:00"
-=======
 - name: mongodb
   repository: https://kubernetes-charts.storage.googleapis.com/
   version: 7.8.10
-digest: sha256:d9786324b088ba41116e4f8cbd8ff55f128035b384f5147dc554241d5aa52592
-generated: "2020-06-25T19:13:44.544557767+02:00"
->>>>>>> 2a61cba... Add twins service
+digest: sha256:9e872fb94942473bcf2c60d5a3f5ae4c75cdc6dd304363bc992a9332b422f2df
+generated: "2020-06-26T16:24:43.300728949+02:00"
