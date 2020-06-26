@@ -48,7 +48,17 @@ dependencies:
     version: "9.5.5"
     repository: "@stable"
     alias: redis-mqtt
+  - name: redis
+    version: "9.5.5"
+    repository: "@stable"
+    alias: redis-opcua
+    condition: adapter_opcua.enabled
   - name: influxdb
     version: "4.3.2"
     repository: "@stable"
     condition: influxdb.enabled
+  - name: mongodb
+    version: "7.8.10"
+    repository: "@stable"
+    alias: twins-db
+    condition: twins.enabled

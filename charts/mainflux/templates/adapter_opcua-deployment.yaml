@@ -1,0 +1,52 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.adapter_opcua.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-adapter-opcua
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: adapter-opcua
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: adapter-opcua
+    spec:
+      containers:
+        - env:
+            - name: MF_OPCUA_ADAPTER_HTTP_PORT
+              value: "8188"
+            - name: MF_OPCUA_ADAPTER_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.adapter_opcua.logLevel }}
+            - name: MF_NATS_URL
+              value: nats://{{ .Release.Name }}-nats-client:4222  
+            - name: MF_OPCUA_ADAPTER_POLICY
+              value: {{ .Values.adapter_opcua.policy }}
+            - name: MF_OPCUA_ADAPTER_MODE
+              value: {{ .Values.adapter_opcua.mode }}
+            - name: MF_OPCUA_ADAPTER_CERT_FILE
+              value: {{ .Values.adapter_opcua.certFile }}
+            - name: MF_OPCUA_ADAPTER_KEY_FILE
+              value: {{ .Values.adapter_opcua.keyFile }}
+            - name: MF_OPCUA_ADAPTER_ROUTE_MAP_URL
+              value: {{ .Release.Name }}-redis-opcua-master:6379
+            - name: MF_THINGS_ES_URL
+              value: {{ .Release.Name }}-redis-streams-master:6379
+            - name: MF_OPCUA_ADAPTER_EVENT_CONSUMER
+              value: {{ .Values.adapter_opcua.eventConsumer }}
+          image: "{{ default .Values.defaults.image.repository .Values.adapter_opcua.image.repository }}/opcua:{{ default .Values.defaults.image.tag .Values.adapter_opcua.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_opcua.image.pullPolicy }}
+          name: {{ .Release.Name }}-adapter-opcua
+          ports:
+            - containerPort: 8188
+              protocol: TCP
+          stdin: true
+          tty: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+{{- end }}

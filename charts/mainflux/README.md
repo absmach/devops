@@ -33,6 +33,8 @@ The following table lists the configurable parameters and their default values.
 | mqtt.broker.persistentVolume.size    | data Persistent Volume size                                                | 5Gi          |
 | influxdb.enabled                     | Enable influxdb reader & writer                                            | false        |
 | bootstrap.enabled                    | Enable bootstrap service                                                   | false        |
+| adapter_opcua.enabled                | Enable OPC-UA Adapter                                                      | false        |
+| twins.enabled                        | Enable twins service                                                       | false        |
 
 All Mainflux services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden. 
 
@@ -53,6 +55,8 @@ List of add-ons services in charts:
 - bootstrap
 - influxdb.writer
 - influxdb.reader
+- adapter_opcua
+- twins
 
 By default scale of MQTT adapter, Things, Envoy, Authn and NATS will be set to 3. It's recommended that you set this values to number of your nodes in Kubernetes cluster, i.e. `--set defaults.replicaCount=3 --set nats.replicaCount=3`
 
