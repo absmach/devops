@@ -1,16 +1,16 @@
 # Copyright (c) Mainflux
 # SPDX-License-Identifier: Apache-2.0
 
-{{- if .Values.adapter_opcua.enabled }}
+{{- if .Values.twins.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-adapter-opcua
+  name: {{ .Release.Name }}-twins
 spec:
   selector:
     app: {{ .Release.Name }}
-    component: adapter-opcua
+    component: twins
   ports:
-    - port: 8188
+    - port: 9021
       protocol: TCP
 {{- end }}

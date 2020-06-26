@@ -119,6 +119,25 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: 8185 
+          - path: /(mqtt)
+            backend:
+              serviceName: {{ .Release.Name }}-adapter-mqtt
+              servicePort: 8081
+{{- if .Values.twins.enabled }}
+          - path: /(twins?.*)
+            backend:
+              serviceName: {{ .Release.Name }}-twins
+              servicePort: 9021
+          - path: /(states?.*)
+            backend:
+              serviceName: {{ .Release.Name }}-twins
+              servicePort: 9021
+{{- end }}
+{{- if .Values.adapter_opcua.enabled }}
+          - path: /(browse?.*)
+            backend:
+              serviceName: {{ .Release.Name }}-adapter-opcua
+              servicePort: 8188
 {{- end }}
 {{- if .Values.ingress.tls }}
   tls:

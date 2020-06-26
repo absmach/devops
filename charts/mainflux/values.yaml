@@ -184,5 +184,10 @@ influxdb:
       init.iql: |+
         CREATE DATABASE "mainflux"
 
+twins:
+  enabled: false
+  image: {}
+  channelid: ""
+
 twins-db:
   usePassword: false
