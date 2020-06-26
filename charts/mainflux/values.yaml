@@ -177,13 +177,6 @@ jaeger-operator:
     pspEnabled: true
     clusterRole: true
 
-influxdb:
-  initScripts:
-    enabled: true
-    scripts:
-      init.iql: |+
-        CREATE DATABASE "mainflux"
-
 twins:
   enabled: false
   image: {}
