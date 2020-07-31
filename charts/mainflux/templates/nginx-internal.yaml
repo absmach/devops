@@ -447,9 +447,9 @@ spec:
             - mountPath: /etc/nginx/authorization.js
               name: nginx-authorization
               subPath: authorization.js
-            - mountPath: /etc/ssl/certs/ca.crt #lokacija gde da smesti secret
-              name: ca #naziv secret-a
-              subPath: ca.crt #key iz secret-a koji se koristi
+            - mountPath: /etc/ssl/certs/ca.crt
+              name: ca
+              subPath: ca.crt
             - mountPath: /etc/ssl/certs/mainflux-server
               name: mainflux-server
       dnsPolicy: ClusterFirst
