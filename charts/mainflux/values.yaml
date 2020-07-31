@@ -18,7 +18,7 @@ ingress:
   # hostname: ""
   # tls:
   #   hostname: ""
-  #   secret: ""
+  #   secret: "mainflux-server"
 
 nginx_internal:
   mtls:
@@ -27,8 +27,8 @@ nginx_internal:
     intermediate_crt: ""
     # Uncomment this block for TLS and mTLS support.
     # Use sh script from /secrets/secrets.sh to create config maps with your certs
-    # tls: "nginx-internal-mtls-tls"
-    # intermediate_crt: "nginx-internal-mtls-intermediate-crt"
+    # tls: "mainflux-server"
+    # intermediate_crt: "ca"
 
 adapter_http:
   image: {}

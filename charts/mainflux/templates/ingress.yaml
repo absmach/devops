@@ -22,7 +22,6 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-ui
               servicePort: 3000
-            path: /
           - path: /version
             backend:
               serviceName: {{ .Release.Name }}-things
