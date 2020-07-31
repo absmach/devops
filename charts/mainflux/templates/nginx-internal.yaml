@@ -48,11 +48,9 @@ data:
 
         # These paths are set to its default values as
         # a volume in the docker/docker-compose.yml file.
-        # Intermediate CA-issued cert:
-        ssl_certificate /etc/ssl/certs/nginx-mtls/tls.crt;
-        ssl_certificate_key /etc/ssl/certs/nginx-mtls/tls.key;
-        # Intermediate CA cert:
-        ssl_client_certificate /etc/ssl/certs/nginx-mtls-intermediate/intermediate.crt;
+        ssl_certificate /etc/ssl/certs/mainflux-server/tls.crt;
+        ssl_certificate_key /etc/ssl/certs/mainflux-server/tls.key;
+        ssl_client_certificate /etc/ssl/certs/ca.crt;
         # ssl_crl /etc/ssl/certs/crl.pem;
         ssl_verify_client optional;
         ssl_verify_depth 2;
@@ -189,9 +187,9 @@ data:
 
           # These paths are set to its default values as
           # a volume in the docker/docker-compose.yml file.
-          ssl_certificate /etc/ssl/certs/nginx-mtls/tls.crt;
-          ssl_certificate_key /etc/ssl/certs/nginx-mtls/tls.key;
-          ssl_client_certificate /etc/ssl/certs/nginx-mtls-intermediate/intermediate.crt;
+          ssl_certificate /etc/ssl/certs/mainflux-server/tls.crt;
+          ssl_certificate_key /etc/ssl/certs/mainflux-server/tls.key;
+          ssl_client_certificate /etc/ssl/certs/ca.crt;
           # FIXME
           # ssl_crl /etc/ssl/certs/crl.pem;
           ssl_verify_client on;
@@ -232,7 +230,7 @@ data:
       if (!s.variables.ssl_client_s_dn || !s.variables.ssl_client_s_dn.length ||
         !s.variables.ssl_client_verify || s.variables.ssl_client_verify != "SUCCESS") {
         s.deny();
-        return
+        return;
       }
 
       s.on('upload', function (data) {
@@ -263,7 +261,6 @@ data:
           return;
         }
         
-        s.error("This is allowed now: \nPASS: " + pass + " \nKEY: " + clientKey + ' \nDATA: ' + data)
         s.off('upload');
         s.allow();
       })
@@ -308,7 +305,6 @@ data:
         This method extracts Password field.
       */
 
-        s.error("THIS IS CONNECT PACKET: " + data)
       // Extract variable length header. It's 1-4 bytes. As long as continuation byte is
       // 1, there are more bytes in this header. This algorithm is explained here:
       // http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/errata01/os/mqtt-v3.1.1-errata01-os-complete.html#_Toc442180836
@@ -364,18 +360,6 @@ data:
       var auth = r.headersIn['Authorization'];
       if (auth && auth.length && auth != clientKey) {
         r.error('Authorization header does not match certificate');
-        return '';
-      }
-
-      if (r.uri.startsWith('/ws') && (!auth || !auth.length)) {
-        var a;
-        for (a in r.args) {
-          if (a == 'authorization' && r.args[a] === clientKey) {
-            return clientKey;
-          }
-        }
-
-        r.error('Authorization param does not match certificate');
         return '';
       }
 
@@ -443,7 +427,7 @@ spec:
         component: nginx-internal
     spec:
       containers:
-        - image: nginx:stable-alpine
+        - image: nginx:1.19.1-alpine
         # - image: busybox
         #   command: ["sleep", "3600"]
           imagePullPolicy: Always
@@ -463,11 +447,11 @@ spec:
             - mountPath: /etc/nginx/authorization.js
               name: nginx-authorization
               subPath: authorization.js
-            - mountPath: /etc/ssl/certs/nginx-mtls-intermediate/intermediate.crt
-              name: nginx-mtls-intermediate-cert
-              subPath: intermediate.crt
-            - mountPath: /etc/ssl/certs/nginx-mtls
-              name: nginx-mtls-tls
+            - mountPath: /etc/ssl/certs/ca.crt #lokacija gde da smesti secret
+              name: ca #naziv secret-a
+              subPath: ca.crt #key iz secret-a koji se koristi
+            - mountPath: /etc/ssl/certs/mainflux-server
+              name: mainflux-server
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       shareProcessNamespace: true
@@ -491,10 +475,10 @@ spec:
         - name: nginx-crl-volume
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-nginx-internal-crl-volume
-        - name: nginx-mtls-intermediate-cert
+        - name: ca
           secret:
             secretName: {{ .Values.nginx_internal.mtls.intermediate_crt }}
-        - name: nginx-mtls-tls
+        - name: mainflux-server
           secret:
             secretName: {{ .Values.nginx_internal.mtls.tls }}
 ---
