@@ -434,14 +434,10 @@ spec:
           ports:
             - containerPort: 8883
               protocol: TCP
-            - containerPort: 8185
-              protocol: TCP   
             - containerPort: 80
-              protocol: TCP   
-            - containerPort: 443
               protocol: TCP
             - containerPort: 8884
-              protocol: TCP           
+              protocol: TCP
           volumeMounts:
             - mountPath: /etc/ssl/certs/dhparam.pem
               name: dhparam
@@ -502,8 +498,5 @@ spec:
       name: mqtt
     - port: 80
       protocol: TCP
-      name: http
-    - port: 443
-      protocol: TCP
-      name: https             
+      name: http           
 {{- end }}
