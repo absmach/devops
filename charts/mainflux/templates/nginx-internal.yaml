@@ -73,7 +73,7 @@ data:
         add_header Access-Control-Allow-Methods '*';
         add_header Access-Control-Allow-Headers '*';
 
-        server_name localhost;
+        server_name {{ .Values.ingress.hostname }};
 
         # Proxy pass to users service
         location ~ ^/(users|tokens) {
@@ -354,9 +354,8 @@ data:
     // Check certificate HTTPS and WSS.
     function setKey(r) {
       if (clientKey === '') {
-        clientKey = parseCert(r.variables.ssl_client_s_dn, 'CN');
+        clientKey = parseCert(r["headersIn"]["ssl-client-subject-dn"], 'CN');
       }
-
       var auth = r.headersIn['Authorization'];
       if (auth && auth.length && auth != clientKey) {
         r.error('Authorization header does not match certificate');
@@ -435,8 +434,14 @@ spec:
           ports:
             - containerPort: 8883
               protocol: TCP
-            - containerPort: 8884
+            - containerPort: 8185
+              protocol: TCP   
+            - containerPort: 80
+              protocol: TCP   
+            - containerPort: 443
               protocol: TCP
+            - containerPort: 8884
+              protocol: TCP           
           volumeMounts:
             - mountPath: /etc/ssl/certs/dhparam.pem
               name: dhparam
@@ -447,15 +452,9 @@ spec:
             - mountPath: /etc/nginx/authorization.js
               name: nginx-authorization
               subPath: authorization.js
-<<<<<<< HEAD
             - mountPath: /etc/ssl/certs/ca.crt
               name: ca
               subPath: ca.crt
-=======
-            - mountPath: /etc/ssl/certs/ca.crt #lokacija gde da smesti secret
-              name: ca #naziv secret-a
-              subPath: ca.crt #key iz secret-a koji se koristi
->>>>>>> efe778e... mTLS certs synchronized with mainflux core
             - mountPath: /etc/ssl/certs/mainflux-server
               name: mainflux-server
       dnsPolicy: ClusterFirst
@@ -501,4 +500,10 @@ spec:
     - port: 8883
       protocol: TCP
       name: mqtt
+    - port: 80
+      protocol: TCP
+      name: http
+    - port: 443
+      protocol: TCP
+      name: https             
 {{- end }}

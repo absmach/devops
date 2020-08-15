@@ -74,11 +74,7 @@ spec:
           - path: /(connect?.*)
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: {{ .Values.things.httpPort }}
-          - path: /http/?(.*)
-            backend:
-              serviceName: {{ .Release.Name }}-adapter-http
-              servicePort: {{ .Values.adapter_http.httpPort }}
+              servicePort: 8182
           - path: /bs/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
@@ -137,6 +133,48 @@ spec:
         - {{ .Values.ingress.tls.hostname }}
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+{{- if and (ne .Values.nginx_internal.mtls.tls "") (ne .Values.nginx_internal.mtls.intermediate_crt "") }}    
+    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
+    nginx.ingress.kubernetes.io/auth-tls-secret: {{ .Release.Namespace }}/ca
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "2
+{{- end }}    
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+{{- if .Values.ingress.labels }}
+  labels:
+{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- end }}
+  name: {{ .Release.Name }}-nginx-rewrite-ingress-http-adapter
+spec:
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+{{- if and (ne .Values.nginx_internal.mtls.tls "") (ne .Values.nginx_internal.mtls.intermediate_crt "") }}          
+          - path: /(http/?.*)
+            backend:
+              serviceName: {{ .Release.Name }}-nginx-internal
+              servicePort: 80
+{{- else }}
+          - path: /http/?(.*)
+            backend:
+              serviceName: {{ .Release.Name }}-adapter-http
+              servicePort: 8185
+{{- end }}              
+{{- if .Values.ingress.tls }}
+tls:
+  - hosts:
+      - {{ .Values.ingress.tls.hostname }}
+    secretName: {{ .Values.ingress.tls.secret }}
+{{- end }}              
 ---
 apiVersion: v1
 kind: ConfigMap
