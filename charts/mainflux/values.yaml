@@ -51,8 +51,8 @@ adapter_opcua:
 adapter_lora:
   enabled: false
   image: {}
-  http_port: 8187
-  message_url: "tcp://lora.mqtt.mainflux.io:1883"
+  httpPort: 8187
+  messageUrl: "tcp://lora.mqtt.mainflux.io:1883"
 
 mqtt:
   enabled: true
