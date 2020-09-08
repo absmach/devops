@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_lora.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-lora
           ports:
-            - containerPort: 8187
+            - containerPort: {{ default .Values.adapter_lora.httpPort }}
               protocol: TCP
           stdin: true
           tty: true
