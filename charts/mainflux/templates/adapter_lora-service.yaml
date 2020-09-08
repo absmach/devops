@@ -1,16 +1,16 @@
 # Copyright (c) Mainflux
 # SPDX-License-Identifier: Apache-2.0
 
-{{- if .Values.adapter_opcua.enabled }}
+{{- if .Values.adapter_lora.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-adapter-opcua
+  name: {{ .Release.Name }}-adapter-lora
 spec:
   selector:
     app: {{ .Release.Name }}
-    component: adapter-opcua
+    component: adapter-lora
   ports:
-    - port: 8188
+    - port: 8187
       protocol: TCP
 {{- end }}
