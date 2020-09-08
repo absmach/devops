@@ -53,6 +53,11 @@ dependencies:
     repository: "@stable"
     alias: redis-opcua
     condition: adapter_opcua.enabled
+  - name: redis
+    version: "9.5.5"
+    repository: "@stable"
+    alias: redis-lora
+    condition: adapter_lora.enabled
   - name: influxdb
     version: "4.3.2"
     repository: "@stable"

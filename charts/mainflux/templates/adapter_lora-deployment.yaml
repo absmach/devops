@@ -20,7 +20,7 @@ spec:
       containers:
         - env:
             - name: MF_LORA_ADAPTER_HTTP_PORT
-              value: {{ default .Values.adapter_lora.httpPort }}
+              value: "{{ default .Values.adapter_lora.httpPort }}"
             - name: MF_LORA_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_lora.logLevel }}
             - name: MF_NATS_URL

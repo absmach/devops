@@ -176,6 +176,14 @@ redis-opcua:
     persistence:
       enabled: false
 
+redis-lora:
+  cluster:
+    enabled: false
+  usePassword: false
+  master:
+    persistence:
+      enabled: false
+
 jaeger-operator:
   jaeger:
     create: true
