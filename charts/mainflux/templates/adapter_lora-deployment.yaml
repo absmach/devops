@@ -1,0 +1,44 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.adapter_lora.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-adapter-lora
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: adapter-lora
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: adapter-lora
+    spec:
+      containers:
+        - env:
+            - name: MF_LORA_ADAPTER_HTTP_PORT
+              value: {{ default .Values.adapter_lora.http_port }}
+            - name: MF_LORA_ADAPTER_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.adapter_lora.logLevel }}
+            - name: MF_NATS_URL
+              value: nats://{{ .Release.Name }}-nats-client:4222
+            - name: MF_LORA_ADAPTER_MESSAGES_URL
+              value: {{ .Values.adapter_lora.messsage_url }}
+            - name: MF_LORA_ADAPTER_ROUTE_MAP_URL
+              value: {{ .Release.Name }}-redis-lora-master:6379
+            - name: MF_THINGS_ES_URL
+              value: {{ .Release.Name }}-redis-streams-master:6379
+          image: "{{ default .Values.defaults.image.repository .Values.adapter_lora.image.repository }}/lora:{{ default .Values.defaults.image.tag .Values.adapter_lora.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_lora.image.pullPolicy }}
+          name: {{ .Release.Name }}-adapter-lora
+          ports:
+            - containerPort: 8187
+              protocol: TCP
+          stdin: true
+          tty: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+{{- end }}
