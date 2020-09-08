@@ -48,13 +48,19 @@ adapter_opcua:
   keyFile: ""
   eventConsumer: "opcua"
 
+adapter_lora:
+  enabled: false
+  image: {}
+  httpPort: 8187
+  messageUrl: "tcp://lora.mqtt.mainflux.io:1883"
+
 mqtt:
   enabled: true
   securityContext:
     runAsUser: 10000
     runAsGroup: 10000
     fsGroup: 10000
-  proxy: 
+  proxy:
     image:
       repository: "mainflux/mqtt"
       tag: "0.11.0"
@@ -63,7 +69,7 @@ mqtt:
     ws_port: 8081
     logLevel: "debug"
   broker:
-    image: 
+    image:
       repository: "mainflux/vernemq"
       tag: "0.11.0"
     mqtt_port: 1883
@@ -168,7 +174,15 @@ redis-opcua:
   usePassword: false
   master:
     persistence:
-      enabled: false      
+      enabled: false
+
+redis-lora:
+  cluster:
+    enabled: false
+  usePassword: false
+  master:
+    persistence:
+      enabled: false
 
 jaeger-operator:
   jaeger:
