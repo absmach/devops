@@ -84,7 +84,7 @@ data:
         hosts:
         - socket_address:
             address: {{ .Release.Name }}-things-headless
-            port_value: {{ .Values.things.authGrpcPort }            
+            port_value: {{ .Values.things.authGrpcPort }
     admin:
       access_log_path: "/dev/null"
       address:
@@ -117,11 +117,11 @@ spec:
           imagePullPolicy: Always
           name: {{ .Release.Name }}-envoy
           ports:
-            - containerPort: 1883 
+            - containerPort: 1883
               protocol: TCP
-            - containerPort: {{ .Values.authn.grpcPort } 
+            - containerPort: {{ .Values.authn.grpcPort }
               protocol: TCP
-            - containerPort: {{ .Values.things.authGrpcPort } 
+            - containerPort: {{ .Values.things.authGrpcPort }
               protocol: TCP
             - containerPort: 8001
               protocol: TCP

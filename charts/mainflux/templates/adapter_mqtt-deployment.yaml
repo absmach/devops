@@ -54,7 +54,7 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       securityContext:
-        {{ toYaml .Values.mqtt.securityContext | nindent 8 }}      
+        {{ toYaml .Values.mqtt.securityContext | nindent 8 }}
       containers:
         - volumeMounts:
             - name: data
@@ -91,11 +91,11 @@ spec:
             - name: DOCKER_VERNEMQ_PLUGINS__VMQ_PASSWD
               value: "off"
             - name: DOCKER_VERNEMQ_LISTENER__NR_OF_ACCEPTORS
-              value: "1000"  
+              value: "1000"
             - name: DOCKER_VERNEMQ_LISTENER__TCP__LOCALHOST
               value: "127.0.0.1:1883"
             - name: DOCKER_VERNEMQ_LISTENER__WS__LOCALHOST
-              value: "127.0.0.1:8080"                 
+              value: "127.0.0.1:8080"
           image: "{{ default .Values.defaults.image.repository .Values.mqtt.broker.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.broker.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.broker.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-mqtt
@@ -153,9 +153,9 @@ spec:
           env:
             - name: MF_MQTT_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.mqtt.proxy.logLevel }}
-            - name: MF_MQTT_ADAPTER_mqttPort
+            - name: MF_MQTT_ADAPTER_MQTT_PORT
               value: "{{ .Values.mqtt.proxy.mqttPort }}"
-            - name: MF_MQTT_ADAPTER_wsPort 
+            - name: MF_MQTT_ADAPTER_WS_PORT
               value: "{{ .Values.mqtt.proxy.wsPort }}"
             - name: MF_MQTT_ADAPTER_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:6379
@@ -171,7 +171,7 @@ spec:
               value: "{{ .Values.mqtt.broker.mqttPort }}"
             - name: MF_MQTT_ADAPTER_WS_TARGET_HOST
               value: localhost
-            - name: MF_MQTT_ADAPTER_WS_TARGET_PORT    
+            - name: MF_MQTT_ADAPTER_WS_TARGET_PORT
               value: "{{ .Values.mqtt.broker.wsPort }}"
             - name: MF_MQTT_ADAPTER_THINGS_TIMEOUT
               value: "15"
@@ -184,5 +184,4 @@ spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
-            storage: {{ .Values.mqtt.broker.persistentVolume.size }}              
-
+            storage: {{ .Values.mqtt.broker.persistentVolume.size }}
