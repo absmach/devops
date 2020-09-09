@@ -1,4 +1,4 @@
-adapter# Mainflux Helm Chart
+# Mainflux Helm Chart
 
 Helm Chart for the Mainflux IoT Platform
 
