@@ -24,17 +24,17 @@ spec:
             - name: MF_THINGS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }
             - name: MF_INFLUX_READER_PORT
-              value: "{{ .Values.influxdb.reader.httpPort }"                         
+              value: "{{ .Values.influxdb.reader.httpPort }"
             - name: MF_INFLUX_READER_DB
               value: mainflux
             - name: MF_INFLUX_READER_DB_USER
               value: mainflux
             - name: MF_INFLUX_READER_DB_PASS
-              value: mainflux              
+              value: mainflux
             - name: MF_INFLUX_READER_DB_HOST
               value: {{ .Release.Name }}-influxdb
             - name: MF_INFLUX_READER_DB_PORT
-              value: "8086"
+              value: "{{ .Values.influxdb.dbPort }"
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:6831
           image: "{{ default .Values.defaults.image.repository .Values.influxdb.reader.image.repository }}/influxdb-reader:{{ default .Values.defaults.image.tag .Values.influxdb.reader.image.tag }}"

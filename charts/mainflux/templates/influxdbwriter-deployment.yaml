@@ -47,7 +47,7 @@ spec:
             - name: MF_INFLUX_WRITER_DB_HOST
               value: {{ .Release.Name }}-influxdb
             - name: MF_INFLUX_WRITER_DB_PORT
-              value: "8086"
+              value: "{{ .Values.influxdb.dbPort }"
           image: "{{ default .Values.defaults.image.repository .Values.influxdb.writer.image.repository }}/influxdb-writer:{{ default .Values.defaults.image.tag .Values.influxdb.writer.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb.writer.image.pullPolicy }}
           name: {{ .Release.Name }}-influxdb-writer

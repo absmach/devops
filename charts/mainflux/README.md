@@ -47,6 +47,7 @@ The following table lists the configurable parameters and their default values.
 | bootstrap.enabled                    | Enable bootstrap service                                                   | false        |
 | bootstrap.httpPort                   | Bootstrap service HTTP port                                                | 8182         |
 | influxdb.enabled                     | Enable InfluxDB reader & writer                                            | false        |
+| influxdb.dbPort                      | InfluxDB port                                                              | 8086         |
 | influxdb.writer.httpPort             | InfluxDB writer HTTP port                                                  | 8900         |
 | influxdb.reader.httpPort             | InfluxDB reader HTTP port                                                  | 8905         |
 | adapter_opcua.enabled                | Enable OPC-UA Adapter                                                      | false        |

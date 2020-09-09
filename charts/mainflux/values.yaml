@@ -104,6 +104,7 @@ ui:
 
 influxdb:
   enabled: false
+  dbPort: 8086
   writer:
     image: {}
     httpPort: 8900
