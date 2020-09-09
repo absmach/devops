@@ -10,5 +10,5 @@ spec:
     app: {{ .Release.Name }}
     component: adapter-coap
   ports:
-    - port: {{ .Values.adapter_coap.httpPort }}
+    - port: {{ .Values.adapter_coap.udpPort }}
       protocol: TCP

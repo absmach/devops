@@ -23,7 +23,7 @@ spec:
             - name: MF_HTTP_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_http.logLevel }}
             - name: MF_HTTP_ADAPTER_PORT
-              value: "{{ .Values.adapter_http.port }}"
+              value: "{{ .Values.adapter_http.httpPort }}"
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
             - name: MF_THINGS_AUTH_GRPC_URL
@@ -32,7 +32,7 @@ spec:
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_http.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-http
           ports:
-            - containerPort: {{ .Values.adapter_http.port }}
+            - containerPort: {{ .Values.adapter_http.httpPort }}
               protocol: TCP
           stdin: true
           tty: true

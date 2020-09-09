@@ -27,12 +27,12 @@ spec:
             - name: MF_COAP_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_coap.logLevel }}
             - name: MF_COAP_ADAPTER_PORT
-              value: "{{ .Values.adapter_coap.port }}"
+              value: "{{ .Values.adapter_coap.udpPort }}"
           image: "{{ default .Values.defaults.image.repository .Values.adapter_coap.image.repository }}/coap:{{ default .Values.defaults.image.tag .Values.adapter_coap.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_coap.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-coap
           ports:
-            - containerPort: {{ .Values.adapter_coap.port }}
+            - containerPort: {{ .Values.adapter_coap.udpPort }}
               protocol: TCP
           stdin: true
           tty: true

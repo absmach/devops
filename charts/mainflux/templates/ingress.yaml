@@ -78,7 +78,7 @@ spec:
           - path: /http/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
-              servicePort: {{ .Values.adapter_http.port }}
+              servicePort: {{ .Values.adapter_http.httpPort }}
           - path: /bs/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
@@ -94,7 +94,7 @@ spec:
           - path: /version/http/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
-              servicePort: {{ default .Values.adapter_http.port }}
+              servicePort: {{ default .Values.adapter_http.httpPort }}
           - path: /(mqtt)
             backend:
               serviceName: {{ .Release.Name }}-adapter-mqtt
@@ -113,7 +113,7 @@ spec:
           - path: /writer/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
-              servicePort: {{ default .Values.adapter_http.port }}
+              servicePort: {{ default .Values.adapter_http.httpPort }}
 {{- end }}
 {{- if .Values.twins.enabled }}
           - path: /(twins?.*)

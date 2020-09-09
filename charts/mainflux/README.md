@@ -43,7 +43,7 @@ The following table lists the configurable parameters and their default values.
 | things.authHttpPort                  | Things service Auth HTTP port                                              | 8989         |
 | things.redisESPort                   | Things service Redis Event Store port                                      | 6379         |
 | things.redisCachePort                | Things service Redis Auth Cache port                                       | 6379         |
-| adapter_http.port                    | HTTP adapter port                                                          | 8185         |
+| adapter_http.httpPort                | HTTP adapter port                                                          | 8185         |
 | mqtt.proxy.mqttPort                  | MQTT adapter proxy port                                                    | 1884         |
 | mqtt.proxy.wsPort                    | MQTT adapter proxy WS port                                                 | 8081         |
 | mqtt.broker.mqttPort                 | MQTT adapter broker port                                                   | 1883         |
@@ -51,7 +51,7 @@ The following table lists the configurable parameters and their default values.
 | mqtt.broker.persistentVolume.size    | MQTT adapter broker data Persistent Volume size                            | 5Gi          |
 | mqtt.redisESPort                     | MQTT adapter Event Store port                                              | 6379         |
 | mqtt.redisCachePort                  | MQTT adapter Redis Auth Cache port                                         | 6379         |
-| adapter_coap.port                    | CoAP adapter port                                                          | 5683         |
+| adapter_coap.udpPort                 | CoAP adapter UDP port                                                      | 5683         |
 | ui.port                              | UI port                                                                    | 3000         |
 | bootstrap.enabled                    | Enable bootstrap service                                                   | false        |
 | bootstrap.dbPort                     | Bootstrap service DB port                                                  | 5432         |

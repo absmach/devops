@@ -34,7 +34,7 @@ spec:
             - name: MF_OPCUA_ADAPTER_KEY_FILE
               value: {{ .Values.adapter_opcua.keyFile }}
             - name: MF_OPCUA_ADAPTER_ROUTE_MAP_URL
-              value: {{ .Release.Name }}-redis-opcua-master:{{ .Values.defaults.redisRouteMapPort }}
+              value: {{ .Release.Name }}-redis-opcua-master:{{ .Values.adapter_opcua.redisRouteMapPort }}
             - name: MF_THINGS_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:{{ .Values.things.redisESPort }}
             - name: MF_OPCUA_ADAPTER_EVENT_CONSUMER
