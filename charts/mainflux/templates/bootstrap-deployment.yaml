@@ -20,7 +20,7 @@ spec:
       containers:
         - env:
             - name: MF_JAEGER_URL
-              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:6831
+              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
             - name: MF_BOOTSTRAP_DB
               value: bootstrap
             - name: MF_BOOTSTRAP_DB_HOST
@@ -32,9 +32,9 @@ spec:
             - name: MF_BOOTSTRAP_DB_USER
               value: mainflux
             - name: MF_THINGS_ES_URL
-              value: {{ .Release.Name }}-redis-streams-master:6379
+              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.defaults.redisPort }}
             - name: MF_BOOTSTRAP_ES_URL
-              value: {{ .Release.Name }}-redis-streams-master:6379
+              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.defaults.redisPort }}
             - name: MF_BOOTSTRAP_PORT
               value: "{{ .Values.bootstrap.httpPort }"
             - name: MF_BOOTSTRAP_LOG_LEVEL

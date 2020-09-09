@@ -33,7 +33,7 @@ spec:
             - name: MF_INFLUX_WRITER_LOG_LEVEL
               value: debug
             - name: MF_NATS_URL
-              value: nats://{{ .Release.Name }}-nats-client:4222
+              value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
             - name: MF_INFLUX_WRITER_PORT
               value: "{{ .Values.influxdb.writer.httpPort }"
             - name: MF_INFLUX_WRITER_BATCH_SIZE
