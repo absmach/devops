@@ -10,7 +10,6 @@ defaults:
   # Replicas of MQTT adapter, NATS, Things, Envoy and Authn
   replicaCount: 3
   natsPort: 4222
-  redisPort: 6379
   jaegerPort: 6831
 
 ingress:
@@ -82,6 +81,7 @@ mqtt:
     logLevel: "info"
     persistentVolume:
       size: 5Gi
+  redisESPort: 6379
   redisCachePort: 6379
 
 users:
@@ -95,6 +95,8 @@ things:
   httpPort: 8182
   authGrpcPort: 8183
   authHttpPort: 8989
+  redisESPort: 6379
+  redisCachePort: 6379
 
 authn:
   image: {}
@@ -107,6 +109,7 @@ bootstrap:
   image: {}
   dbPort: 5432
   httpPort: 8182
+  redisESPort: 6379
 
 ui:
   image: {}
@@ -218,6 +221,7 @@ twins:
   dbPort: 27017
   httpPort: 9021
   channelId: ""
+  redisCachePort: 6379
 
 twins-db:
   usePassword: false

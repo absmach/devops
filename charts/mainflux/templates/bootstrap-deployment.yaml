@@ -32,9 +32,9 @@ spec:
             - name: MF_BOOTSTRAP_DB_USER
               value: mainflux
             - name: MF_THINGS_ES_URL
-              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.defaults.redisPort }}
+              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.things.redisESPort }}
             - name: MF_BOOTSTRAP_ES_URL
-              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.defaults.redisPort }}
+              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.bootstrap.redisESPort }}
             - name: MF_BOOTSTRAP_PORT
               value: "{{ .Values.bootstrap.httpPort }"
             - name: MF_BOOTSTRAP_LOG_LEVEL

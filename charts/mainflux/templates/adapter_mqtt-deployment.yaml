@@ -158,7 +158,7 @@ spec:
             - name: MF_MQTT_ADAPTER_WS_PORT
               value: "{{ .Values.mqtt.proxy.wsPort }}"
             - name: MF_MQTT_ADAPTER_ES_URL
-              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.defaults.redisPort }}
+              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.mqtt.redisESPort }}
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
             - name: MF_THINGS_AUTH_GRPC_URL

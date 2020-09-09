@@ -1,4 +1,4 @@
-# Mainflux Helm Chart
+adapter# Mainflux Helm Chart
 
 Helm Chart for the Mainflux IoT Platform
 
@@ -23,7 +23,6 @@ The following table lists the configurable parameters and their default values.
 | defaults.image.tag                   | Docker Image Tag                                                           | 0.11.0       |
 | defaults.replicaCount                | Replicas of MQTT adapter, Things, Envoy and Authn                          | 3            |
 | defaults.natsPort                    | NATS port                                                                  | 4222         |
-| defaults.redisPort                   | Redis port                                                                 | 6379         |
 | defaults.jaegerPort                  | Jaeger port                                                                | 6831         |
 | nginx_internal.mtls.tls              | TLS secret which contains the server cert/key                              |              |
 | nginx_internal.mtls.intermediate_crt | Generic secret which contains the intermediate cert used to verify clients |              |
@@ -42,28 +41,36 @@ The following table lists the configurable parameters and their default values.
 | things.httpPort                      | Things service HTTP port                                                   | 8182         |
 | things.authGrpcPort                  | Things service Auth gRPC port                                              | 8183         |
 | things.authHttpPort                  | Things service Auth HTTP port                                              | 8989         |
-| adapter_http.port                    | HTTP Adapter port                                                          | 8185         |
-| mqtt.proxy.mqttPort                  | MQTT proxy port                                                            | 1884         |
-| mqtt.proxy.wsPort                    | MQTT proxy WS port                                                         | 8081         |
-| mqtt.broker.mqttPort                 | MQTT broker port                                                           | 1883         |
-| mqtt.broker.wsPort                   | MQTT broker WS port                                                        | 8080         |
-| mqtt.broker.persistentVolume.size    | MQTT broker data Persistent Volume size                                    | 5Gi          |
-| adapter_coap.port                    | CoAP Adapter port                                                          | 5683         |
+| things.redisESPort                   | Things service Redis Event Store port                                      | 6379         |
+| things.redisCachePort                | Things service Redis Auth Cache port                                       | 6379         |
+| adapter_http.port                    | HTTP adapter port                                                          | 8185         |
+| mqtt.proxy.mqttPort                  | MQTT adapter proxy port                                                    | 1884         |
+| mqtt.proxy.wsPort                    | MQTT adapter proxy WS port                                                 | 8081         |
+| mqtt.broker.mqttPort                 | MQTT adapter broker port                                                   | 1883         |
+| mqtt.broker.wsPort                   | MQTT adapter broker WS port                                                | 8080         |
+| mqtt.broker.persistentVolume.size    | MQTT adapter broker data Persistent Volume size                            | 5Gi          |
+| mqtt.redisESPort                     | MQTT adapter Event Store port                                              | 6379         |
+| mqtt.redisCachePort                  | MQTT adapter Redis Auth Cache port                                         | 6379         |
+| adapter_coap.port                    | CoAP adapter port                                                          | 5683         |
 | ui.port                              | UI port                                                                    | 3000         |
 | bootstrap.enabled                    | Enable bootstrap service                                                   | false        |
 | bootstrap.dbPort                     | Bootstrap service DB port                                                  | 5432         |
 | bootstrap.httpPort                   | Bootstrap service HTTP port                                                | 8182         |
+| bootstrap.redisESPort                | Bootstrap service Redis Event Store port                                   | 6379         |
 | influxdb.enabled                     | Enable InfluxDB reader & writer                                            | false        |
 | influxdb.dbPort                      | InfluxDB port                                                              | 8086         |
 | influxdb.writer.httpPort             | InfluxDB writer HTTP port                                                  | 8900         |
 | influxdb.reader.httpPort             | InfluxDB reader HTTP port                                                  | 8905         |
-| adapter_opcua.enabled                | Enable OPC-UA Adapter                                                      | false        |
-| adapter_opcua.httpPort               | OPC-UA Adapter HTTP port                                                   | 8188         |
-| adapter_lora.enabled                 | Enable LoRa Adapter                                                        | false        |
-| adapter_lora.httpPort                | LoRa Adapter HTTP port                                                     | 8187         |
+| adapter_opcua.enabled                | Enable OPC-UA adapter                                                      | false        |
+| adapter_opcua.httpPort               | OPC-UA adapter HTTP port                                                   | 8188         |
+| adapter_opcua.redisRouteMapPort      | OPC-UA adapter Redis Auth Cache port                                       | 6379         |
+| adapter_lora.enabled                 | Enable LoRa adapter                                                        | false        |
+| adapter_lora.httpPort                | LoRa adapter HTTP port                                                     | 8187         |
+| adapter_lora.redisRouteMapPort       | LoRa adapter Redis Auth Cache port                                         | 6379         |
 | twins.enabled                        | Enable twins service                                                       | false        |
 | twins.dbPort                         | Twins service DB port                                                      | 27017        |
 | twins.httpPort                       | Twins service HTTP port                                                    | 9021         |
+| twins.redisCachePort                 | Twins service Redis Cache port                                             | 6379         |
 
 All Mainflux services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.
 
