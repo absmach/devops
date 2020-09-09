@@ -34,11 +34,11 @@ nginx_internal:
 
 adapter_http:
   image: {}
-  port: 8185
+  httpPort: 8185
 
 adapter_coap:
   image: {}
-  port: 5683
+  udpPort: 5683
 
 adapter_opcua:
   enabled: false
