@@ -20,11 +20,11 @@ spec:
       containers:
         - env:
             - name: MF_OPCUA_ADAPTER_HTTP_PORT
-              value: "8188"
+              value: "{{ .Values.adapter_opcua.httpPort }}"
             - name: MF_OPCUA_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_opcua.logLevel }}
             - name: MF_NATS_URL
-              value: nats://{{ .Release.Name }}-nats-client:4222  
+              value: nats://{{ .Release.Name }}-nats-client:4222
             - name: MF_OPCUA_ADAPTER_POLICY
               value: {{ .Values.adapter_opcua.policy }}
             - name: MF_OPCUA_ADAPTER_MODE
@@ -43,7 +43,7 @@ spec:
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_opcua.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-opcua
           ports:
-            - containerPort: 8188
+            - containerPort: {{ .Values.adapter_opcua.httpPort }}
               protocol: TCP
           stdin: true
           tty: true

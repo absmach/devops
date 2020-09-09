@@ -26,12 +26,12 @@ spec:
     app: {{ .Release.Name }}
     component: adapter-mqtt
   ports:
-    - port: {{ .Values.mqtt.proxy.mqtt_port }}
+    - port: {{ .Values.mqtt.proxy.mqttPort }}
       protocol: TCP
-      name: "{{ .Values.mqtt.proxy.mqtt_port }}"
-    - port: {{ .Values.mqtt.proxy.ws_port }}
+      name: "{{ .Values.mqtt.proxy.mqttPort }}"
+    - port: {{ .Values.mqtt.proxy.wsPort }}
       protocol: TCP
-      name: "{{ .Values.mqtt.proxy.ws_port }}"
+      name: "{{ .Values.mqtt.proxy.wsPort }}"
   clusterIP: None
 ---
 apiVersion: apps/v1
@@ -144,35 +144,35 @@ spec:
           image: "{{ default .Values.defaults.image.repository .Values.mqtt.proxy.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.proxy.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.proxy.image.imagePullPolicy}}
           ports:
-          - containerPort: {{ .Values.mqtt.proxy.mqtt_port }}
+          - containerPort: {{ .Values.mqtt.proxy.mqttPort }}
             protocol: TCP
-          - containerPort: {{ .Values.mqtt.proxy.ws_port }}
+          - containerPort: {{ .Values.mqtt.proxy.wsPort }}
             protocol: TCP
           stdin: true
           tty: true
           env:
             - name: MF_MQTT_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.mqtt.proxy.logLevel }}
-            - name: MF_MQTT_ADAPTER_MQTT_PORT
-              value: "{{ .Values.mqtt.proxy.mqtt_port }}"
-            - name: MF_MQTT_ADAPTER_WS_PORT 
-              value: "{{ .Values.mqtt.proxy.ws_port }}"
+            - name: MF_MQTT_ADAPTER_mqttPort
+              value: "{{ .Values.mqtt.proxy.mqttPort }}"
+            - name: MF_MQTT_ADAPTER_wsPort 
+              value: "{{ .Values.mqtt.proxy.wsPort }}"
             - name: MF_MQTT_ADAPTER_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:6379
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:4222
             - name: MF_THINGS_AUTH_GRPC_URL
-              value:  {{ .Release.Name }}-envoy:8183
+              value:  {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:6831
             - name: MF_MQTT_ADAPTER_MQTT_TARGET_HOST
               value: localhost
             - name: MF_MQTT_ADAPTER_MQTT_TARGET_PORT
-              value: "{{ .Values.mqtt.broker.mqtt_port }}"
+              value: "{{ .Values.mqtt.broker.mqttPort }}"
             - name: MF_MQTT_ADAPTER_WS_TARGET_HOST
               value: localhost
             - name: MF_MQTT_ADAPTER_WS_TARGET_PORT    
-              value: "{{ .Values.mqtt.broker.ws_port }}"
+              value: "{{ .Values.mqtt.broker.wsPort }}"
             - name: MF_MQTT_ADAPTER_THINGS_TIMEOUT
               value: "15"
             - name: MF_AUTH_CACHE_URL

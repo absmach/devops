@@ -36,20 +36,20 @@ spec:
             - name: MF_BOOTSTRAP_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:6379
             - name: MF_BOOTSTRAP_PORT
-              value: "8202"
+              value: "{{ .Values.bootstrap.httpPort }"
             - name: MF_BOOTSTRAP_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.bootstrap.logLevel }}
             - name: MF_BOOTSTRAP_DB_SSL_MODE
               value: disable
             - name: MF_AUTHN_GRPC_URL
-              value: {{ .Release.Name }}-envoy:8181
+              value: {{ .Release.Name }}-envoy:{{ .Values.authn.grpcPort }
             - name: MF_SDK_BASE_URL
-              value: http://{{ .Release.Name }}-things:8182
+              value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }
           image: "{{ default .Values.defaults.image.repository .Values.bootstrap.image.repository }}/bootstrap:{{ default .Values.defaults.image.tag .Values.bootstrap.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.bootstrap.image.pullPolicy }}
           name: {{ .Release.Name }}-bootstrap
           ports:
-            - containerPort: 8202
+            - containerPort: {{ .Values.bootstrap.httpPort }
               protocol: TCP
       dnsPolicy: ClusterFirst
       restartPolicy: Always

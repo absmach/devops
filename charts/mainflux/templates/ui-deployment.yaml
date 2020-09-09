@@ -19,12 +19,12 @@ spec:
       containers:
         - env:
             - name: MF_UI_PORT
-              value: "3000"
+              value: "{{ .Values.ui.port }"
           image: "{{ default .Values.defaults.image.repository .Values.ui.image.repository }}/ui:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
           name: ui
           ports:
-            - containerPort: 3000
+            - containerPort: {{ .Values.ui.port }
               protocol: TCP
           stdin: true
           tty: true

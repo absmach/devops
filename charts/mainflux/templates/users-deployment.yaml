@@ -46,18 +46,18 @@ spec:
             - name: MF_USERS_DB_USER
               value: mainflux
             - name: MF_USERS_HTTP_PORT
-              value: "8180"
+              value: "{{ .Values.users.httpPort }"
             - name: MF_USERS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.users.logLevel }}
             - name: MF_AUTHN_GRPC_URL
-              value: {{ .Release.Name }}-envoy:8181
+              value: {{ .Release.Name }}-envoy:{{ .Values.authn.grpcPort }
             - name: MF_TOKEN_RESET_ENDPOINT
               value: "#/auth/reset-password"
           image: "{{ default .Values.defaults.image.repository .Values.users.image.repository }}/users:{{ default .Values.defaults.image.tag .Values.users.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}
           name: {{ .Release.Name }}-users
           ports:
-            - containerPort: 8180
+            - containerPort: {{ .Values.users.httpPort }
               protocol: TCP
           volumeMounts:
             - mountPath: /email.tmpl

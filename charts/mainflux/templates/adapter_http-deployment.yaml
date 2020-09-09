@@ -23,16 +23,16 @@ spec:
             - name: MF_HTTP_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_http.logLevel }}
             - name: MF_HTTP_ADAPTER_PORT
-              value: "8185"
+              value: "{{ .Values.adapter_http.port }}"
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:4222
             - name: MF_THINGS_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:8183
+              value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }
           image: "{{ default .Values.defaults.image.repository .Values.adapter_http.image.repository }}/http:{{ default .Values.defaults.image.tag .Values.adapter_http.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_http.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-http
           ports:
-            - containerPort: 8185
+            - containerPort: {{ .Values.adapter_http.port }}
               protocol: TCP
           stdin: true
           tty: true

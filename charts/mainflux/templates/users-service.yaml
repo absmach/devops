@@ -11,7 +11,7 @@ spec:
     component: users
   ports:
     - protocol: TCP
-      port: 8180
+      port: {{ .Values.users.httpPort }
       name: {{ .Release.Name }}-users-http
 ---
 apiVersion: v1
@@ -24,6 +24,6 @@ spec:
     component: users
   ports:
     - protocol: TCP
-      port: 8180
+      port: {{ .Values.users.httpPort }
       name: {{ .Release.Name }}-users-http
   clusterIP: None

@@ -32,9 +32,9 @@ spec:
             - name: MF_AUTHN_DB_USER
               value: mainflux
             - name: MF_AUTHN_GRPC_PORT
-              value: "8181"
+              value: "{{ .Values.authn.grpcPort }"
             - name: MF_AUTHN_HTTP_PORT
-              value: "8189"
+              value: "{{ .Values.authn.httpPort }}"
             - name: MF_AUTHN_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.users.logLevel }}
             - name: MF_AUTHN_SECRET
@@ -43,9 +43,9 @@ spec:
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}
           name: {{ .Release.Name }}-authn
           ports:
-            - containerPort: 8189
+            - containerPort: {{ .Values.authn.httpPort }}
               protocol: TCP
-            - containerPort: 8181
+            - containerPort: {{ .Values.authn.grpcPort }
               protocol: TCP
       dnsPolicy: ClusterFirst
       restartPolicy: Always

@@ -35,11 +35,11 @@ spec:
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:4222
             - name: MF_INFLUX_WRITER_PORT
-              value: "8900"
+              value: "{{ .Values.influxdb.writer.httpPort }"
             - name: MF_INFLUX_WRITER_BATCH_SIZE
               value: "5000"
             - name: MF_INFLUX_WRITER_BATCH_TIMEOUT
-              value: "5"                            
+              value: "5"
             - name: MF_INFLUX_WRITER_DB
               value: mainflux
             - name: MF_INFLUX_WRITER_DB_USER
@@ -52,7 +52,7 @@ spec:
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb.writer.image.pullPolicy }}
           name: {{ .Release.Name }}-influxdb-writer
           ports:
-            - containerPort: 8900
+            - containerPort: {{ .Values.influxdb.writer.httpPort }
               protocol: TCP
           stdin: true
           tty: true

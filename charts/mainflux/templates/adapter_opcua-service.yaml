@@ -11,6 +11,6 @@ spec:
     app: {{ .Release.Name }}
     component: adapter-opcua
   ports:
-    - port: 8188
+    - port: {{ .Values.adapter_opcua.httpPort }}
       protocol: TCP
 {{- end }}
