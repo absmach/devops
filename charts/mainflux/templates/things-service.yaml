@@ -10,15 +10,15 @@ spec:
     app: {{ .Release.Name }}
     component: things
   ports:
-    - port: {{ .Values.things.httpPort }
+    - port: {{ .Values.things.httpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.httpPort }
-    - port: {{ .Values.things.authGrpcPort }
+      name: {{ .Release.Name }}-things-{{ .Values.things.httpPort }}
+    - port: {{ .Values.things.authGrpcPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.authGrpcPort }
-    - port: {{ .Values.things.authHttpPort }
+      name: {{ .Release.Name }}-things-{{ .Values.things.authGrpcPort }}
+    - port: {{ .Values.things.authHttpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.authHttpPort }
+      name: {{ .Release.Name }}-things-{{ .Values.things.authHttpPort }}
 ---
 apiVersion: v1
 kind: Service
@@ -29,13 +29,13 @@ spec:
     app: {{ .Release.Name }}
     component: things
   ports:
-    - port: {{ .Values.things.httpPort }
+    - port: {{ .Values.things.httpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.httpPort }
-    - port: {{ .Values.things.authGrpcPort }
+      name: {{ .Release.Name }}-things-{{ .Values.things.httpPort }}
+    - port: {{ .Values.things.authGrpcPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.authGrpcPort }
-    - port: {{ .Values.things.authHttpPort }
+      name: {{ .Release.Name }}-things-{{ .Values.things.authGrpcPort }}
+    - port: {{ .Values.things.authHttpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.authHttpPort }
+      name: {{ .Release.Name }}-things-{{ .Values.things.authHttpPort }}
   clusterIP: None

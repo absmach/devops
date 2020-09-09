@@ -82,7 +82,7 @@ data:
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           proxy_set_header X-Forwarded-Proto $scheme;
-          proxy_pass http://{{ .Release.Name }}-users:{{ .Values.users.httpPort };
+          proxy_pass http://{{ .Release.Name }}-users:{{ .Values.users.httpPort }};
 
           # Allow OPTIONS method CORS
           if ($request_method = OPTIONS ) {
@@ -100,7 +100,7 @@ data:
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           proxy_set_header X-Forwarded-Proto $scheme;
           add_header Access-Control-Expose-Headers Location;
-          proxy_pass http://{{ .Release.Name }}-things:{{ .Values.things.httpPort };
+          proxy_pass http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }};
 
           # Allow OPTIONS method CORS
           if ($request_method = OPTIONS ) {
@@ -116,7 +116,7 @@ data:
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           proxy_set_header X-Forwarded-Proto $scheme;
-          proxy_pass http://{{ .Release.Name }}-things:{{ .Values.things.httpPort };
+          proxy_pass http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }};
 
           # Allow OPTIONS method CORS
           if ($request_method = OPTIONS ) {

@@ -21,11 +21,11 @@ spec:
           - path: /
             backend:
               serviceName: {{ .Release.Name }}-ui
-              servicePort: {{ .Values.ui.port }
+              servicePort: {{ .Values.ui.port }}
           - path: /version
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: {{ .Values.things.httpPort }
+              servicePort: {{ .Values.things.httpPort }}
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
@@ -54,27 +54,27 @@ spec:
           - path: /(users)
             backend:
               serviceName: {{ .Release.Name }}-users
-              servicePort: {{ .Values.users.httpPort }
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(password?.*)
             backend:
               serviceName: {{ .Release.Name }}-users
-              servicePort: {{ .Values.users.httpPort }
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(tokens)
             backend:
               serviceName: {{ .Release.Name }}-users
-              servicePort: {{ .Values.users.httpPort }
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(things?.*)
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: {{ .Values.things.httpPort }
+              servicePort: {{ .Values.things.httpPort }}
           - path: /(channels?.*)
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: {{ .Values.things.httpPort }
+              servicePort: {{ .Values.things.httpPort }}
           - path: /(connect?.*)
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: {{ .Values.things.httpPort }
+              servicePort: {{ .Values.things.httpPort }}
           - path: /http/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
@@ -82,15 +82,15 @@ spec:
           - path: /bs/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
-              servicePort: {{ .Values.bootstrap.httpPort }
+              servicePort: {{ .Values.bootstrap.httpPort }}
           - path: /version/users/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-users
-              servicePort: {{ .Values.users.httpPort }
+              servicePort: {{ .Values.users.httpPort }}
           - path: /version/things/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: {{ .Values.things.httpPort }
+              servicePort: {{ .Values.things.httpPort }}
           - path: /version/http/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
@@ -103,13 +103,13 @@ spec:
           - path: /bootstrap/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
-              servicePort: {{ .Values.bootstrap.httpPort }
+              servicePort: {{ .Values.bootstrap.httpPort }}
 {{- end }}
 {{- if .Values.influxdb.enabled }}
           - path: /reader/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-influxdb-reader
-              servicePort: {{ .Values.influxdb.reader.httpPort }
+              servicePort: {{ .Values.influxdb.reader.httpPort }}
           - path: /writer/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
@@ -119,11 +119,11 @@ spec:
           - path: /(twins?.*)
             backend:
               serviceName: {{ .Release.Name }}-twins
-              servicePort: {{ .Values.twins.httpPort }
+              servicePort: {{ .Values.twins.httpPort }}
           - path: /(states?.*)
             backend:
               serviceName: {{ .Release.Name }}-twins
-              servicePort: {{ .Values.twins.httpPort }
+              servicePort: {{ .Values.twins.httpPort }}
 {{- end }}
 {{- if .Values.adapter_opcua.enabled }}
           - path: /(browse?.*)

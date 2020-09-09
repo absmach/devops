@@ -19,7 +19,7 @@ data:
       - address:
           socket_address:
             address: 0.0.0.0
-            port_value: {{ .Values.authn.grpcPort }
+            port_value: {{ .Values.authn.grpcPort }}
         filter_chains:
         - filters:
           - name: envoy.http_connection_manager
@@ -40,7 +40,7 @@ data:
       - address:
           socket_address:
             address: 0.0.0.0
-            port_value: {{ .Values.things.authGrpcPort }
+            port_value: {{ .Values.things.authGrpcPort }}
         filter_chains:
         - filters:
           - name: envoy.http_connection_manager
@@ -75,7 +75,7 @@ data:
         hosts:
         - socket_address:
             address: {{ .Release.Name }}-authn-headless
-            port_value: {{ .Values.authn.grpcPort }
+            port_value: {{ .Values.authn.grpcPort }}
       - name: things
         connect_timeout: 0.25s
         type: strict_dns
@@ -84,7 +84,7 @@ data:
         hosts:
         - socket_address:
             address: {{ .Release.Name }}-things-headless
-            port_value: {{ .Values.things.authGrpcPort }
+            port_value: {{ .Values.things.authGrpcPort }}
     admin:
       access_log_path: "/dev/null"
       address:
@@ -119,9 +119,9 @@ spec:
           ports:
             - containerPort: 1883
               protocol: TCP
-            - containerPort: {{ .Values.authn.grpcPort }
+            - containerPort: {{ .Values.authn.grpcPort }}
               protocol: TCP
-            - containerPort: {{ .Values.things.authGrpcPort }
+            - containerPort: {{ .Values.things.authGrpcPort }}
               protocol: TCP
             - containerPort: 8001
               protocol: TCP
@@ -148,10 +148,10 @@ spec:
     - port: 1883
       protocol: TCP
       name: mqtt
-    - port: {{ .Values.authn.grpcPort }
+    - port: {{ .Values.authn.grpcPort }}
       protocol: TCP
       name: authn-grpc
-    - port: {{ .Values.things.authGrpcPort }
+    - port: {{ .Values.things.authGrpcPort }}
       protocol: TCP
       name: things-grpc
     - port: 8001

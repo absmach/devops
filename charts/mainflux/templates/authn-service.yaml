@@ -14,7 +14,7 @@ spec:
       port: {{ .Values.authn.httpPort }}
       name: {{ .Release.Name }}-authn-http
     - protocol: TCP
-      port: {{ .Values.authn.grpcPort }
+      port: {{ .Values.authn.grpcPort }}
       name: {{ .Release.Name }}-authn-grpc
 ---
 apiVersion: v1
@@ -30,6 +30,6 @@ spec:
       port: {{ .Values.authn.httpPort }}
       name: {{ .Release.Name }}-authn-http
     - protocol: TCP
-      port: {{ .Values.authn.grpcPort }
+      port: {{ .Values.authn.grpcPort }}
       name: {{ .Release.Name }}-authn-grpc
   clusterIP: None

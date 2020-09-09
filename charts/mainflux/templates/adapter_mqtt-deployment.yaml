@@ -162,7 +162,7 @@ spec:
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
             - name: MF_THINGS_AUTH_GRPC_URL
-              value:  {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }
+              value:  {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
             - name: MF_MQTT_ADAPTER_MQTT_TARGET_HOST

@@ -11,7 +11,7 @@ spec:
     app: {{ .Release.Name }}
     component: influxdb-writer
   ports:
-    - port: {{ .Values.influxdb.writer.httpPort }
+    - port: {{ .Values.influxdb.writer.httpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-influxdb-writer-{{ .Values.influxdb.writer.httpPort }
+      name: {{ .Release.Name }}-influxdb-writer-{{ .Values.influxdb.writer.httpPort }}
 {{- end }}

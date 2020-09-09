@@ -11,6 +11,6 @@ spec:
     app: {{ .Release.Name }}
     component: twins
   ports:
-    - port: {{ .Values.twins.httpPort }
+    - port: {{ .Values.twins.httpPort }}
       protocol: TCP
 {{- end }}

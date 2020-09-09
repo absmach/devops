@@ -32,7 +32,7 @@ spec:
             - name: MF_AUTHN_DB_USER
               value: mainflux
             - name: MF_AUTHN_GRPC_PORT
-              value: "{{ .Values.authn.grpcPort }"
+              value: "{{ .Values.authn.grpcPort }}"
             - name: MF_AUTHN_HTTP_PORT
               value: "{{ .Values.authn.httpPort }}"
             - name: MF_AUTHN_LOG_LEVEL
@@ -45,7 +45,7 @@ spec:
           ports:
             - containerPort: {{ .Values.authn.httpPort }}
               protocol: TCP
-            - containerPort: {{ .Values.authn.grpcPort }
+            - containerPort: {{ .Values.authn.grpcPort }}
               protocol: TCP
       dnsPolicy: ClusterFirst
       restartPolicy: Always
