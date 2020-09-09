@@ -28,9 +28,9 @@ spec:
             - name: MF_LORA_ADAPTER_MESSAGES_URL
               value: {{ .Values.adapter_lora.messageUrl }}
             - name: MF_LORA_ADAPTER_ROUTE_MAP_URL
-              value: {{ .Release.Name }}-redis-lora-master:{{ .Values.defaults.redisPort }}
+              value: {{ .Release.Name }}-redis-lora-master:{{ .Values.adapter_lora.redisRouteMapPort }}
             - name: MF_THINGS_ES_URL
-              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.defaults.redisPort }}
+              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.things.redisPort }}
           image: "{{ default .Values.defaults.image.repository .Values.adapter_lora.image.repository }}/lora:{{ default .Values.defaults.image.tag .Values.adapter_lora.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_lora.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-lora

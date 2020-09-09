@@ -50,12 +50,14 @@ adapter_opcua:
   certFile: ""
   keyFile: ""
   eventConsumer: "opcua"
+  redisRouteMapPort: 6379
 
 adapter_lora:
   enabled: false
   image: {}
   httpPort: 8187
   messageUrl: "tcp://lora.mqtt.mainflux.io:1883"
+  redisRouteMapPort: 6379
 
 mqtt:
   enabled: true
@@ -80,6 +82,7 @@ mqtt:
     logLevel: "info"
     persistentVolume:
       size: 5Gi
+  redisCachePort: 6379
 
 users:
   image: {}
