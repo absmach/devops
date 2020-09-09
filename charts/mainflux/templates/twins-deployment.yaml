@@ -28,15 +28,15 @@ spec:
             - name: MF_TWINS_DB_HOST
               value: {{ .Release.Name }}-twins-db
             - name: MF_TWINS_DB_PORT
-              value: "27017"
+              value: "{{.Values.twins.dbPort }}"
             - name: MF_TWINS_CHANNEL_ID
               value: {{.Values.twins.channelId }}
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:4222
             - name: MF_AUTHN_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.authn.grpcPort } 
+              value: {{ .Release.Name }}-envoy:{{ .Values.authn.grpcPort }
             - name: MF_TWINS_CACHE_URL
-              value: {{ .Release.Name }}-redis-streams-master:6379                           
+              value: {{ .Release.Name }}-redis-streams-master:6379
           image: "{{ default .Values.defaults.image.repository .Values.twins.image.repository }}/twins:{{ default .Values.defaults.image.tag .Values.twins.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.twins.image.pullPolicy }}
           name: {{ .Release.Name }}-twins
@@ -45,4 +45,4 @@ spec:
               protocol: TCP
       dnsPolicy: ClusterFirst
       restartPolicy: Always
-{{- end }}      
+{{- end }}

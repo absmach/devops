@@ -80,22 +80,26 @@ mqtt:
 
 users:
   image: {}
+  dbPort: 5432
   httpPort: 8180
 
 things:
   image: {}
+  dbPort: 5432
   httpPort: 8182
   authGrpcPort: 8183
   authHttpPort: 8989
 
 authn:
   image: {}
+  dbPort: 5432
   grpcPort: 8181
   httpPort: 8189
 
 bootstrap:
   enabled: false
   image: {}
+  dbPort: 5432
   httpPort: 8182
 
 ui:
@@ -205,6 +209,7 @@ jaeger-operator:
 twins:
   enabled: false
   image: {}
+  dbPort: 27017
   httpPort: 9021
   channelId: ""
 

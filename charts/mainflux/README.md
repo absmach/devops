@@ -30,9 +30,12 @@ The following table lists the configurable parameters and their default values.
 | ingress.tls.secret                   | TLS secret for the Nginx Ingress                                           |              |
 | nats.maxPayload                      | Maximum payload size in bytes that the NATS server will accept             | 268435456    |
 | nats.replicaCount                    | NATS replicas                                                              | 3            |
+| authn.dbPort                         | AuthN service DB port                                                      | 5432         |
 | authn.grpcPort                       | AuthN service gRPC port                                                    | 8181         |
 | authn.httpPort                       | AuthN service HTTP port                                                    | 8189         |
+| users.dbPort                         | Users service DB port                                                      | 5432         |
 | users.httpPort                       | Users service HTTP port                                                    | 8180         |
+| things.dbPort                        | Things service DB port                                                     | 5432         |
 | things.httpPort                      | Things service HTTP port                                                   | 8182         |
 | things.authGrpcPort                  | Things service Auth gRPC port                                              | 8183         |
 | things.authHttpPort                  | Things service Auth HTTP port                                              | 8989         |
@@ -45,6 +48,7 @@ The following table lists the configurable parameters and their default values.
 | adapter_coap.port                    | CoAP Adapter port                                                          | 5683         |
 | ui.port                              | UI port                                                                    | 3000         |
 | bootstrap.enabled                    | Enable bootstrap service                                                   | false        |
+| bootstrap.dbPort                     | Bootstrap service DB port                                                  | 5432         |
 | bootstrap.httpPort                   | Bootstrap service HTTP port                                                | 8182         |
 | influxdb.enabled                     | Enable InfluxDB reader & writer                                            | false        |
 | influxdb.dbPort                      | InfluxDB port                                                              | 8086         |
@@ -55,6 +59,7 @@ The following table lists the configurable parameters and their default values.
 | adapter_lora.enabled                 | Enable LoRa Adapter                                                        | false        |
 | adapter_lora.httpPort                | LoRa Adapter HTTP port                                                     | 8187         |
 | twins.enabled                        | Enable twins service                                                       | false        |
+| twins.dbPort                         | Twins service DB port                                                      | 27017        |
 | twins.httpPort                       | Twins service HTTP port                                                    | 9021         |
 
 All Mainflux services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.

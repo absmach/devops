@@ -28,7 +28,7 @@ spec:
             - name: MF_BOOTSTRAP_DB_PASS
               value: mainflux
             - name: MF_BOOTSTRAP_DB_PORT
-              value: "5432"
+              value: "{{ .Values.bootstrap.dbPort }}"
             - name: MF_BOOTSTRAP_DB_USER
               value: mainflux
             - name: MF_THINGS_ES_URL
