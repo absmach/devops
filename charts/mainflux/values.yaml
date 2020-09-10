@@ -9,6 +9,8 @@ defaults:
     tag: "0.11.0"
   # Replicas of MQTT adapter, NATS, Things, Envoy and Authn
   replicaCount: 3
+  natsPort: 4222
+  jaegerPort: 6831
 
 ingress:
   enabled: true
@@ -32,27 +34,29 @@ nginx_internal:
 
 adapter_http:
   image: {}
-
-adapter_ws:
-  image: {}
+  httpPort: 8185
 
 adapter_coap:
   image: {}
+  udpPort: 5683
 
 adapter_opcua:
   enabled: false
   image: {}
+  httpPort: 8188
   policy: ""
   mode: ""
   certFile: ""
   keyFile: ""
   eventConsumer: "opcua"
+  redisRouteMapPort: 6379
 
 adapter_lora:
   enabled: false
   image: {}
   httpPort: 8187
   messageUrl: "tcp://lora.mqtt.mainflux.io:1883"
+  redisRouteMapPort: 6379
 
 mqtt:
   enabled: true
@@ -65,41 +69,61 @@ mqtt:
       repository: "mainflux/mqtt"
       tag: "0.11.0"
       pullPolicy: "Always"
-    mqtt_port: 1884
-    ws_port: 8081
+    mqttPort: 1884
+    wsPort: 8081
     logLevel: "debug"
   broker:
     image:
       repository: "mainflux/vernemq"
       tag: "0.11.0"
-    mqtt_port: 1883
-    ws_port: 8080
+    mqttPort: 1883
+    wsPort: 8080
     logLevel: "info"
     persistentVolume:
       size: 5Gi
+  redisESPort: 6379
+  redisCachePort: 6379
 
 users:
   image: {}
+  dbPort: 5432
+  httpPort: 8180
 
 things:
   image: {}
+  dbPort: 5432
+  httpPort: 8182
+  authGrpcPort: 8183
+  authHttpPort: 8989
+  redisESPort: 6379
+  redisCachePort: 6379
 
 authn:
   image: {}
+  dbPort: 5432
+  grpcPort: 8181
+  httpPort: 8189
 
 bootstrap:
   enabled: false
   image: {}
+  dbPort: 5432
+  httpPort: 8182
+  redisESPort: 6379
 
 ui:
   image: {}
+  port: 3000
 
 influxdb:
   enabled: false
+  dbPort: 8086
   writer:
     image: {}
+    httpPort: 8900
   reader:
     image: {}
+    httpPort: 8905
   initScripts:
     enabled: true
     scripts:
@@ -194,7 +218,10 @@ jaeger-operator:
 twins:
   enabled: false
   image: {}
-  channelid: ""
+  dbPort: 27017
+  httpPort: 9021
+  channelId: ""
+  redisCachePort: 6379
 
 twins-db:
   usePassword: false

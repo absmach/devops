@@ -21,11 +21,11 @@ spec:
           - path: /
             backend:
               serviceName: {{ .Release.Name }}-ui
-              servicePort: 3000
+              servicePort: {{ .Values.ui.port }}
           - path: /version
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: 8182
+              servicePort: {{ .Values.things.httpPort }}
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
@@ -54,47 +54,47 @@ spec:
           - path: /(users)
             backend:
               serviceName: {{ .Release.Name }}-users
-              servicePort: 8180
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(password?.*)
             backend:
               serviceName: {{ .Release.Name }}-users
-              servicePort: 8180
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(tokens)
             backend:
               serviceName: {{ .Release.Name }}-users
-              servicePort: 8180
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(things?.*)
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: 8182
+              servicePort: {{ .Values.things.httpPort }}
           - path: /(channels?.*)
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: 8182
+              servicePort: {{ .Values.things.httpPort }}
           - path: /(connect?.*)
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: 8182
+              servicePort: {{ .Values.things.httpPort }}
           - path: /http/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
-              servicePort: 8185
+              servicePort: {{ .Values.adapter_http.httpPort }}
           - path: /bs/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
-              servicePort: 8202
+              servicePort: {{ .Values.bootstrap.httpPort }}
           - path: /version/users/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-users
-              servicePort: 8180
+              servicePort: {{ .Values.users.httpPort }}
           - path: /version/things/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: 8182
+              servicePort: {{ .Values.things.httpPort }}
           - path: /version/http/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
-              servicePort: 8185
+              servicePort: {{ default .Values.adapter_http.httpPort }}
           - path: /(mqtt)
             backend:
               serviceName: {{ .Release.Name }}-adapter-mqtt
@@ -103,33 +103,33 @@ spec:
           - path: /bootstrap/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
-              servicePort: 8202
+              servicePort: {{ .Values.bootstrap.httpPort }}
 {{- end }}
 {{- if .Values.influxdb.enabled }}
           - path: /reader/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-influxdb-reader
-              servicePort: 8905 
+              servicePort: {{ .Values.influxdb.reader.httpPort }}
           - path: /writer/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
-              servicePort: 8185 
+              servicePort: {{ default .Values.adapter_http.httpPort }}
 {{- end }}
 {{- if .Values.twins.enabled }}
           - path: /(twins?.*)
             backend:
               serviceName: {{ .Release.Name }}-twins
-              servicePort: 9021
+              servicePort: {{ .Values.twins.httpPort }}
           - path: /(states?.*)
             backend:
               serviceName: {{ .Release.Name }}-twins
-              servicePort: 9021
+              servicePort: {{ .Values.twins.httpPort }}
 {{- end }}
 {{- if .Values.adapter_opcua.enabled }}
           - path: /(browse?.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-opcua
-              servicePort: 8188
+              servicePort: {{ default .Values.adapter_opcua.httpPort }}
 {{- end }}
 {{- if .Values.ingress.tls }}
   tls:

@@ -10,5 +10,5 @@ spec:
     app: {{ .Release.Name }}
     component: adapter-http
   ports:
-    - port: 8185
+    - port: {{ .Values.adapter_http.httpPort }}
       protocol: TCP

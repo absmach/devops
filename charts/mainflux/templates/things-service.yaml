@@ -10,15 +10,15 @@ spec:
     app: {{ .Release.Name }}
     component: things
   ports:
-    - port: 8182
+    - port: {{ .Values.things.httpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-8182
-    - port: 8183
+      name: {{ .Release.Name }}-things-{{ .Values.things.httpPort }}
+    - port: {{ .Values.things.authGrpcPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-8183
-    - port: 8989
+      name: {{ .Release.Name }}-things-{{ .Values.things.authGrpcPort }}
+    - port: {{ .Values.things.authHttpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-8989
+      name: {{ .Release.Name }}-things-{{ .Values.things.authHttpPort }}
 ---
 apiVersion: v1
 kind: Service
@@ -29,13 +29,13 @@ spec:
     app: {{ .Release.Name }}
     component: things
   ports:
-    - port: 8182
+    - port: {{ .Values.things.httpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-8182
-    - port: 8183
+      name: {{ .Release.Name }}-things-{{ .Values.things.httpPort }}
+    - port: {{ .Values.things.authGrpcPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-8183
-    - port: 8989
+      name: {{ .Release.Name }}-things-{{ .Values.things.authGrpcPort }}
+    - port: {{ .Values.things.authHttpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-8989
+      name: {{ .Release.Name }}-things-{{ .Values.things.authHttpPort }}
   clusterIP: None

@@ -11,7 +11,7 @@ spec:
     app: {{ .Release.Name }}
     component: influxdb-reader
   ports:
-    - port: 8905
+    - port: {{ .Values.influxdb.reader.httpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-influxdb-writer-8905
+      name: {{ .Release.Name }}-influxdb-writer-{{ .Values.influxdb.reader.httpPort }}
 {{- end }}

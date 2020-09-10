@@ -11,6 +11,6 @@ spec:
     app: {{ .Release.Name }}
     component: adapter-lora
   ports:
-    - port: 8187
+    - port: {{ .Values.adapter_lora.httpPort }}
       protocol: TCP
 {{- end }}

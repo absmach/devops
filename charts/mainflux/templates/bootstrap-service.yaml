@@ -11,7 +11,7 @@ spec:
     app: {{ .Release.Name }}
     component: bootstrap
   ports:
-    - port: 8202
+    - port: {{ .Values.bootstrap.httpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-bootstrap-8202
+      name: {{ .Release.Name }}-bootstrap-{{ .Values.bootstrap.httpPort }}
 {{- end }}

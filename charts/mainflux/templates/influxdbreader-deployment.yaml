@@ -22,26 +22,26 @@ spec:
             - name: MF_INFLUX_READER_LOG_LEVEL
               value: debug
             - name: MF_THINGS_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:8183
+              value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
             - name: MF_INFLUX_READER_PORT
-              value: "8905"                         
+              value: "{{ .Values.influxdb.reader.httpPort }}"
             - name: MF_INFLUX_READER_DB
               value: mainflux
             - name: MF_INFLUX_READER_DB_USER
               value: mainflux
             - name: MF_INFLUX_READER_DB_PASS
-              value: mainflux              
+              value: mainflux
             - name: MF_INFLUX_READER_DB_HOST
               value: {{ .Release.Name }}-influxdb
             - name: MF_INFLUX_READER_DB_PORT
-              value: "8086"
+              value: "{{ .Values.influxdb.dbPort }}"
             - name: MF_JAEGER_URL
-              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:6831
+              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
           image: "{{ default .Values.defaults.image.repository .Values.influxdb.reader.image.repository }}/influxdb-reader:{{ default .Values.defaults.image.tag .Values.influxdb.reader.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb.reader.image.pullPolicy }}
           name: {{ .Release.Name }}-influxdb-reader
           ports:
-            - containerPort: 8905
+            - containerPort: {{ .Values.influxdb.reader.httpPort }}
               protocol: TCP
           stdin: true
           tty: true

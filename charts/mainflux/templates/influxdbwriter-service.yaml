@@ -11,7 +11,7 @@ spec:
     app: {{ .Release.Name }}
     component: influxdb-writer
   ports:
-    - port: 8900
+    - port: {{ .Values.influxdb.writer.httpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-influxdb-writer-8900
+      name: {{ .Release.Name }}-influxdb-writer-{{ .Values.influxdb.writer.httpPort }}
 {{- end }}
