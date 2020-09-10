@@ -142,7 +142,7 @@ metadata:
 {{- if and (ne .Values.nginx_internal.mtls.tls "") (ne .Values.nginx_internal.mtls.intermediate_crt "") }}
     nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
     nginx.ingress.kubernetes.io/auth-tls-secret: {{ .Release.Namespace }}/ca
-    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "optional"
     nginx.ingress.kubernetes.io/auth-tls-verify-depth: "2"
 {{- end }}    
 {{- if .Values.ingress.annotations }}

@@ -128,6 +128,9 @@ data:
 
         # Proxy pass to mainflux-http-adapter
         location /http/ {
+          if ($auth_key = '') {
+            return 403;
+          }
           proxy_redirect off;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
@@ -146,6 +149,9 @@ data:
 
         #Proxy pass to mainflux-mqtt-adapter for MQTT over WS
         location /mqtt {
+          if ($auth_key = '') {
+            return 403;
+          }
           proxy_redirect off;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
@@ -374,7 +380,7 @@ data:
     }
 
     function parseCert(cert, key) {
-      if (cert.length) {
+      if (cert && cert.length) {
         var pairs = cert.split(',');
         for (var i = 0; i < pairs.length; i++) {
           var pair = pairs[i].split('=');
