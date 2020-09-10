@@ -1,7 +1,7 @@
 # Copyright (c) Mainflux
 # SPDX-License-Identifier: Apache-2.0
 
-{{ if and (ne .Values.nginx_internal.mtls.tls "") (ne .Values.nginx_internal.mtls.intermediate_crt "") -}}
+{{ if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") -}}
 apiVersion: v1
 data:
   dhparam.pem: LS0tLS1CRUdJTiBESCBQQVJBTUVURVJTLS0tLS0KTUlJQkNBS0NBUUVBcXVOOE5SY1NkTE9NOVJpdW1xV0g4SnczQ0dWUi9lUVFlcStqdlQzenB4bFVRUEFNRXhRYgpNUkNzcG0xb1JnRFdHdmNoM1o0emZNbUJaeXpLSkE0QkRUaDRVU3pjRTV6dm54OGFVY1VQWlBRcHdTaWNLZ3piClFHbmwwWGYvNzVHQVdyd2h4bjhHTnlNUDI5d3JwY2QxUWc4ZkVRM0hBVzFmQ2Q5Z2lyS01LWTlhQmFIbGkvaDIKUjlSZC9LVGJlcU44OGFvTWpVdlpIb29JSVpYdTBBK2t5dWxPYWpZUU80azNTcDZDQnF2MEZGY29MUW5ZTkgxMwprTVVFNXFKNjhVNzMySHliVHc4c29mVENPeEtjQ2ZNMmtWUDdkVm9GM3BybEdqVXczejNsM1NUWTh2dVRkcTBCClI3UHNsa29RSE5tcWNMKzJnb3VvV1AzR0krSWVSekdTU3dJQkFnPT0KLS0tLS1FTkQgREggUEFSQU1FVEVSUy0tLS0t
@@ -484,10 +484,10 @@ spec:
             claimName: {{ .Release.Name }}-nginx-internal-crl-volume
         - name: ca
           secret:
-            secretName: {{ .Values.nginx_internal.mtls.intermediate_crt }}
+            secretName: {{ .Values.nginxInternal.mtls.intermediateCrt }}
         - name: mainflux-server
           secret:
-            secretName: {{ .Values.nginx_internal.mtls.tls }}
+            secretName: {{ .Values.nginxInternal.mtls.tls }}
 ---
 
 apiVersion: v1

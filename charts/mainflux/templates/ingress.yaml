@@ -139,7 +139,7 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-{{- if and (ne .Values.nginx_internal.mtls.tls "") (ne .Values.nginx_internal.mtls.intermediate_crt "") }}
+{{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
     nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
     nginx.ingress.kubernetes.io/auth-tls-secret: {{ .Release.Namespace }}/ca
     nginx.ingress.kubernetes.io/auth-tls-verify-client: "optional"
@@ -158,7 +158,7 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-{{- if and (ne .Values.nginx_internal.mtls.tls "") (ne .Values.nginx_internal.mtls.intermediate_crt "") }}
+{{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
           - path: /(http/?.*)
             backend:
               serviceName: {{ .Release.Name }}-nginx-internal
