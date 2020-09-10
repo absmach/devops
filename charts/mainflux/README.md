@@ -84,7 +84,7 @@ Mainflux Core is a minimalistic set of required Mainflux services. They are all 
 - adapter_coap
 - ui
 
-Mainflux Add-ons are optional services that are disabled by default. Find in Configuration table paramaters for enabling them, i.e. to enable influxdb reader & writer you shoud run `helm install` with `--set influxdb=true`.
+Mainflux Add-ons are optional services that are disabled by default. Find in Configuration table parameters for enabling them, i.e. to enable influxdb reader & writer you should run `helm install` with `--set influxdb=true`.
 List of add-ons services in charts:
 
 - bootstrap
@@ -94,6 +94,6 @@ List of add-ons services in charts:
 - adapter_lora
 - twins
 
-By default scale of MQTT adapter, Things, Envoy, Authn and NATS will be set to 3. It's recommended that you set this values to number of your nodes in Kubernetes cluster, i.e. `--set defaults.replicaCount=3 --set nats.replicaCount=3`
+By default scale of MQTT adapter, Things, Envoy, AuthN and NATS will be set to 3. It's recommended that you set this values to number of your nodes in Kubernetes cluster, i.e. `--set defaults.replicaCount=3 --set nats.replicaCount=3`
 
 **Note:** make sure you run `helm install` with `--dependency-update` flag!
