@@ -75,10 +75,6 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-things
               servicePort: {{ .Values.things.httpPort }}
-          - path: /http/?(.*)
-            backend:
-              serviceName: {{ .Release.Name }}-adapter-http
-              servicePort: {{ .Values.adapter_http.httpPort }}
           - path: /bs/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
@@ -131,6 +127,48 @@ spec:
               serviceName: {{ .Release.Name }}-adapter-opcua
               servicePort: {{ default .Values.adapter_opcua.httpPort }}
 {{- end }}
+{{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.tls.hostname }}
+      secretName: {{ .Values.ingress.tls.secret }}
+{{- end }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+{{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
+    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
+    nginx.ingress.kubernetes.io/auth-tls-secret: {{ .Release.Namespace }}/ca
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "optional"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "2"
+{{- end }}    
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+{{- if .Values.ingress.labels }}
+  labels:
+{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- end }}
+  name: {{ .Release.Name }}-nginx-rewrite-ingress-http-adapter
+spec:
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+{{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
+          - path: /(http/?.*)
+            backend:
+              serviceName: {{ .Release.Name }}-nginx-internal
+              servicePort: 80
+{{- else }}
+          - path: /http/?(.*)
+            backend:
+              serviceName: {{ .Release.Name }}-adapter-http
+              servicePort: {{ .Values.adapter_http.httpPort }}
+{{- end }}              
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
