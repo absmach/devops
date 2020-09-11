@@ -74,7 +74,7 @@ spec:
           - path: /(connect?.*)
             backend:
               serviceName: {{ .Release.Name }}-things
-              servicePort: 8182
+              servicePort: {{ .Values.things.httpPort }}
           - path: /bs/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
@@ -167,7 +167,7 @@ spec:
           - path: /http/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
-              servicePort: 8185
+              servicePort: {{ .Values.adapter_http.httpPort }}
 {{- end }}              
 {{- if .Values.ingress.tls }}
   tls:

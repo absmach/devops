@@ -22,6 +22,8 @@ The following table lists the configurable parameters and their default values.
 | defaults.image.repository            | Docker Image Repository                                                    | mainflux     |
 | defaults.image.tag                   | Docker Image Tag                                                           | 0.11.0       |
 | defaults.replicaCount                | Replicas of MQTT adapter, Things, Envoy and Authn                          | 3            |
+| defaults.natsPort                    | NATS port                                                                  | 4222         |
+| defaults.jaegerPort                  | Jaeger port                                                                | 6831         |
 | nginxInternal.mtls.tls               | TLS secret which contains the server cert/key                              |              |
 | nginxInternal.mtls.intermediateCrt   | Generic secret which contains the intermediate cert used to verify clients |              |
 | ingress.enabled                      | Should the Nginx Ingress be created                                        | true         |
