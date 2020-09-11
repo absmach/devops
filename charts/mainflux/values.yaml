@@ -18,9 +18,9 @@ ingress:
   labels: {}
   # Uncomment this block for TLS support in public ingress
   # hostname: ""
-  tls:
-    # hostname: ""
-    # secret: "mainflux-server"
+  # tls:
+  #   hostname: ""
+  #   secret: "mainflux-server"
 
 nginxInternal:
   mtls:
