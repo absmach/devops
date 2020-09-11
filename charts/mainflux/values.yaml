@@ -19,7 +19,7 @@ ingress:
   # Uncomment this block for TLS support in public ingress
   hostname: ""
   tls:
-    # hostname: "mainflux.ga"
+    # hostname: ""
     # secret: "mainflux-server"
 
 nginxInternal:
