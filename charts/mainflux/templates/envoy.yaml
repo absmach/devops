@@ -114,7 +114,7 @@ spec:
     spec:
       containers:
         - image: envoyproxy/envoy:v1.13.0
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           name: {{ .Release.Name }}-envoy
           ports:
             - containerPort: 1883
