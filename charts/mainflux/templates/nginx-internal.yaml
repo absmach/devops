@@ -435,7 +435,7 @@ spec:
         - image: nginx:1.19.1-alpine
         # - image: busybox
         #   command: ["sleep", "3600"]
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           name: {{ .Release.Name }}-nginx-internal
           ports:
             - containerPort: 8883
