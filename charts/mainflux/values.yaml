@@ -225,3 +225,9 @@ twins:
 
 twins-db:
   usePassword: false
+
+envoy:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "envoyproxy"
+    tag: "v1.13.0"

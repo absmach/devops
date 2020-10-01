@@ -113,8 +113,8 @@ spec:
         component: envoy
     spec:
       containers:
-        - image: envoyproxy/envoy:v1.13.0
-          imagePullPolicy: IfNotPresent
+        - image: "{{ default .Values.defaults.image.repository .Values.envoy.image.repository }}/envoy:{{ default .Values.defaults.image.tag .Values.envoy.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.envoy.image.imagePullPolicy}}
           name: {{ .Release.Name }}-envoy
           ports:
             - containerPort: 1883
