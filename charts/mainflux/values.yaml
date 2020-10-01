@@ -68,7 +68,7 @@ mqtt:
     image:
       repository: "mainflux/mqtt"
       tag: "0.11.0"
-      pullPolicy: "Always"
+      pullPolicy: "IfNotPresent"
     mqttPort: 1884
     wsPort: 8081
     logLevel: "debug"

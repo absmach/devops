@@ -91,10 +91,6 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: {{ default .Values.adapter_http.httpPort }}
-          - path: /(mqtt)
-            backend:
-              serviceName: {{ .Release.Name }}-adapter-mqtt
-              servicePort: 8081
 {{- if .Values.bootstrap.enabled }}
           - path: /bootstrap/?(.*)
             backend:
@@ -163,11 +159,19 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-nginx-internal
               servicePort: 80
+          - path: /(mqtt)
+            backend:
+              serviceName: {{ .Release.Name }}-nginx-internal
+              servicePort: 80
 {{- else }}
           - path: /http/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: {{ .Values.adapter_http.httpPort }}
+          - path: /(mqtt)
+            backend:
+              serviceName: {{ .Release.Name }}-adapter-mqtt
+              servicePort: {{ default .Values.mqtt.proxy.wsPort }}
 {{- end }}              
 {{- if .Values.ingress.tls }}
   tls:

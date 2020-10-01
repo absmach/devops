@@ -435,7 +435,7 @@ spec:
         - image: nginx:1.19.1-alpine
         # - image: busybox
         #   command: ["sleep", "3600"]
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           name: {{ .Release.Name }}-nginx-internal
           ports:
             - containerPort: 8883
@@ -454,15 +454,9 @@ spec:
             - mountPath: /etc/nginx/authorization.js
               name: nginx-authorization
               subPath: authorization.js
-<<<<<<< HEAD
             - mountPath: /etc/ssl/certs/ca.crt
               name: ca
               subPath: ca.crt
-=======
-            - mountPath: /etc/ssl/certs/ca.crt #lokacija gde da smesti secret
-              name: ca #naziv secret-a
-              subPath: ca.crt #key iz secret-a koji se koristi
->>>>>>> efe778e... mTLS certs synchronized with mainflux core
             - mountPath: /etc/ssl/certs/mainflux-server
               name: mainflux-server
       dnsPolicy: ClusterFirst
