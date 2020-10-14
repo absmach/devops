@@ -157,4 +157,3 @@ spec:
     - port: 8001
       protocol: TCP
       name: admin
-  type: LoadBalancer
