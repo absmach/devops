@@ -179,7 +179,6 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 data:
-  # MQTT adapter:
   1883: "{{ .Release.Namespace }}/{{ .Release.Name }}-envoy:1883"
   8883: "{{ .Release.Namespace }}/{{ .Release.Name }}-nginx-internal:8883"
 metadata:
@@ -189,7 +188,6 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 data:
-  # CoAP adapter:
   5683: "{{ .Release.Namespace }}/{{ .Release.Name }}-adapter-coap:5683"
 metadata:
   name: udp-services
