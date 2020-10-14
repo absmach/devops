@@ -11,4 +11,4 @@ spec:
     component: adapter-coap
   ports:
     - port: {{ .Values.adapter_coap.udpPort }}
-      protocol: TCP
+      protocol: UDP

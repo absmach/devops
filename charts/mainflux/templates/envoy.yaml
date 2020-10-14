@@ -113,7 +113,7 @@ spec:
         component: envoy
     spec:
       containers:
-        - image: "{{ default .Values.defaults.image.repository .Values.envoy.image.repository }}/envoy:{{ default .Values.defaults.image.tag .Values.envoy.image.tag }}"
+        - image: "{{ default .Values.defaults.image.repository .Values.envoy.image.repository }}:{{ default .Values.defaults.image.tag .Values.envoy.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.envoy.image.imagePullPolicy}}
           name: {{ .Release.Name }}-envoy
           ports:
