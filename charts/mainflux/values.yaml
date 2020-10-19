@@ -229,5 +229,11 @@ twins-db:
 envoy:
   image:
     pullPolicy: "IfNotPresent"
-    repository: "envoyproxy"
+    repository: "envoyproxy/envoy"
     tag: "v1.13.0"
+
+nginx_internal:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "nginx"
+    tag: "1.19.1-alpine"

@@ -102,10 +102,6 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-influxdb-reader
               servicePort: {{ .Values.influxdb.reader.httpPort }}
-          - path: /writer/?(.*)
-            backend:
-              serviceName: {{ .Release.Name }}-adapter-http
-              servicePort: {{ default .Values.adapter_http.httpPort }}
 {{- end }}
 {{- if .Values.twins.enabled }}
           - path: /(twins?.*)
@@ -183,9 +179,16 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 data:
-  # MQTT adapter:
   1883: "{{ .Release.Namespace }}/{{ .Release.Name }}-envoy:1883"
   8883: "{{ .Release.Namespace }}/{{ .Release.Name }}-nginx-internal:8883"
 metadata:
   name: tcp-services
+  namespace: ingress-nginx
+---
+apiVersion: v1
+kind: ConfigMap
+data:
+  5683: "{{ .Release.Namespace }}/{{ .Release.Name }}-adapter-coap:5683"
+metadata:
+  name: udp-services
   namespace: ingress-nginx
