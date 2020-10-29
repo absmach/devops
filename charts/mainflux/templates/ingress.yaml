@@ -51,7 +51,7 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(users)
+          - path: /(users?.*)
             backend:
               serviceName: {{ .Release.Name }}-users
               servicePort: {{ .Values.users.httpPort }}
