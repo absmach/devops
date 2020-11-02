@@ -88,6 +88,8 @@ users:
   image: {}
   dbPort: 5432
   httpPort: 8180
+  adminEmail: "admin@example.com"
+  adminPassword: "12345678"
 
 things:
   image: {}
@@ -140,7 +142,7 @@ nats:
 
 postgresql-users:
   name: postgresql-users
-  postgresqlUsername: mainflux
+  postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: users
   resources:
