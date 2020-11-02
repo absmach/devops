@@ -44,7 +44,7 @@ spec:
             - name: MF_USERS_DB_PORT
               value: "{{ .Values.users.dbPort }}"
             - name: MF_USERS_DB_USER
-              value: postgres
+              value: "{{ .Values.postgresql-users.postgresqlUsername }}"
             - name: MF_USERS_HTTP_PORT
               value: "{{ .Values.users.httpPort }}"
             - name: MF_USERS_LOG_LEVEL
