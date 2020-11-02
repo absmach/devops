@@ -36,15 +36,15 @@ spec:
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
             - name: MF_USERS_DB
-              value: users
+              value: "{{ .Values.postgresql-users.postgresqlDatabase }}"
             - name: MF_USERS_DB_HOST
               value: {{ .Release.Name }}-postgresql-users
             - name: MF_USERS_DB_PASS
-              value: mainflux
+              value: "{{ .Values.postgresql-users.postgresqlPassword }}"
             - name: MF_USERS_DB_PORT
               value: "{{ .Values.users.dbPort }}"
             - name: MF_USERS_DB_USER
-              value: postgres
+              value: "{{ .Values.postgresql-users.postgresqlUsername }}"
             - name: MF_USERS_HTTP_PORT
               value: "{{ .Values.users.httpPort }}"
             - name: MF_USERS_LOG_LEVEL
