@@ -59,6 +59,10 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-users
               servicePort: {{ .Values.users.httpPort }}
+          - path: /(groups?.*)
+            backend:
+              serviceName: {{ .Release.Name }}-users
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(tokens)
             backend:
               serviceName: {{ .Release.Name }}-users
