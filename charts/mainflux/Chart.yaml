@@ -12,6 +12,8 @@ home: https://www.mainflux.com
 sources:
   - https://hub.docker.com/u/mainflux/
 maintainers:
+  - name: blokovi
+    email: ivan.milosevic@mainflux.com
   - name: isavcic
     email: isavcic@gmail.com
 

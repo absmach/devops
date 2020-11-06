@@ -36,15 +36,15 @@ spec:
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
             - name: MF_USERS_DB
-              value: "{{ .Values.postgresql-users.postgresqlDatabase }}"
+              value: {{ index .Values "postgresql-users"  "postgresqlDatabase" }}
             - name: MF_USERS_DB_HOST
               value: {{ .Release.Name }}-postgresql-users
             - name: MF_USERS_DB_PASS
-              value: "{{ .Values.postgresql-users.postgresqlPassword }}"
+              value: {{ index .Values "postgresql-users" "postgresqlPassword" }}
             - name: MF_USERS_DB_PORT
               value: "{{ .Values.users.dbPort }}"
             - name: MF_USERS_DB_USER
-              value: "{{ .Values.postgresql-users.postgresqlUsername }}"
+              value: {{ index .Values "postgresql-users" "postgresqlUsername" }}
             - name: MF_USERS_HTTP_PORT
               value: "{{ .Values.users.httpPort }}"
             - name: MF_USERS_LOG_LEVEL
@@ -54,9 +54,9 @@ spec:
             - name: MF_TOKEN_RESET_ENDPOINT
               value: "#/auth/reset-password"
             - name: MF_USERS_ADMIN_EMAIL
-              value: "{{ .Values.users.adminEmail }}"
+              value: {{ .Values.users.adminEmail }}
             - name: MF_USERS_ADMIN_PASSWORD
-              value: "{{ .Values.users.adminPassword }}"
+              value: {{ .Values.users.adminPassword }}
           image: "{{ default .Values.defaults.image.repository .Values.users.image.repository }}/users:{{ default .Values.defaults.image.tag .Values.users.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}
           name: {{ .Release.Name }}-users
