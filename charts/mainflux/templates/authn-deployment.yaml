@@ -22,15 +22,15 @@ spec:
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
             - name: MF_AUTHN_DB
-              value: "{{ .Values.postgresql-authn.postgresqlDatabase }}"
+              value: {{ index .Values "postgresql-authn" "postgresqlDatabase" }}
             - name: MF_AUTHN_DB_HOST
               value: {{ .Release.Name }}-postgresql-authn
             - name: MF_AUTHN_DB_PASS
-              value: "{{ .Values.postgresql-authn.postgresqlPassword }}"
+              value: {{ index .Values "postgresql-authn" "postgresqlPassword" }}
             - name: MF_AUTHN_DB_PORT
               value: "{{ .Values.authn.dbPort }}"
             - name: MF_AUTHN_DB_USER
-              value: "{{ .Values.postgresql-authn.postgresqlUsername }}"
+              value: {{ index .Values "postgresql-authn" "postgresqlUsername" }}
             - name: MF_AUTHN_GRPC_PORT
               value: "{{ .Values.authn.grpcPort }}"
             - name: MF_AUTHN_HTTP_PORT
