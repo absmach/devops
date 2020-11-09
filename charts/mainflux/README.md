@@ -5,7 +5,7 @@ Helm Chart for the Mainflux IoT Platform
 ## Prerequisites
 
 - Helm v3
-- Stable & Bitnami Helm repo installed 
+- Stable & Bitnami Helm repos installed 
   ```
   helm repo add stable https://kubernetes-charts.storage.googleapis.com/
   helm repo add bitnami https://charts.bitnami.com/bitnami`
