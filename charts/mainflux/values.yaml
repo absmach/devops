@@ -191,8 +191,6 @@ redis-mqtt:
   usePassword: false
 
 redis-auth:
-  volumePermissions:
-    enabled: true
   cluster:
     enabled: false
   usePassword: false
@@ -201,8 +199,6 @@ redis-auth:
       enabled: false
 
 redis-opcua:
-  volumePermissions:
-    enabled: true
   cluster:
     enabled: false
   usePassword: false
@@ -211,8 +207,6 @@ redis-opcua:
       enabled: false
 
 redis-lora:
-  volumePermissions:
-    enabled: true
   cluster:
     enabled: false
   usePassword: false
