@@ -5,7 +5,11 @@ Helm Chart for the Mainflux IoT Platform
 ## Prerequisites
 
 - Helm v3
-- Stable Helm repo installed (`helm repo add stable https://kubernetes-charts.storage.googleapis.com/`)
+- Stable & Bitnami Helm repos installed 
+  ```
+  helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+  helm repo add bitnami https://charts.bitnami.com/bitnami`
+  ```
 - Nginx Ingress Controller
 - If using the mTLS setup:
   - Certificate/Key installed as **TLS secret**

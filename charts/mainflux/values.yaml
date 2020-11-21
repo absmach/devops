@@ -177,11 +177,15 @@ postgresql-bootstrap:
       cpu: 25m
 
 redis-streams:
+  volumePermissions:
+    enabled: true
   cluster:
     enabled: false
   usePassword: false
 
 redis-mqtt:
+  volumePermissions:
+    enabled: true
   cluster:
     enabled: false
   usePassword: false
