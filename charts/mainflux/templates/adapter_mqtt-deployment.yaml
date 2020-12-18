@@ -135,10 +135,25 @@ spec:
           stdin: true
           tty: true
           readinessProbe:
-            tcpSocket:
-              port: 44053
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8888
+              scheme: HTTP
             initialDelaySeconds: 90
             periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8888
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
           #mproxy
         - name: {{ .Release.Name }}-mqtt-proxy
           image: "{{ default .Values.defaults.image.repository .Values.mqtt.proxy.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.proxy.image.tag }}"
@@ -177,6 +192,18 @@ spec:
               value: "15"
             - name: MF_AUTH_CACHE_URL
               value: {{ .Release.Name }}-redis-auth-master:{{ .Values.mqtt.redisCachePort }}
+            - name: MF_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK
+              value: http://localhost:8888/health
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8888
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
   volumeClaimTemplates:
     - metadata:
         name: data
