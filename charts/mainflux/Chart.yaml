@@ -19,7 +19,7 @@ maintainers:
 
 dependencies:
   - name: nats
-    version: "4.2.6"
+    version: "4.3.7"
     repository: "@stable"
   - name: postgresql
     version: "10.2.3"
@@ -39,24 +39,24 @@ dependencies:
     alias: postgresql-bootstrap
     condition: bootstrap.enabled
   - name: redis
-    version: "11.3.1"
+    version: "12.6.2"
     repository: "@bitnami"
     alias: redis-streams
   - name: redis
-    version: "11.3.1"
+    version: "12.6.2"
     repository: "@bitnami"
     alias: redis-auth
   - name: redis
-    version: "11.3.1"
+    version: "12.6.2"
     repository: "@bitnami"
     alias: redis-mqtt
   - name: redis
-    version: "11.3.1"
+    version: "12.6.2"
     repository: "@bitnami"
     alias: redis-opcua
     condition: adapter_opcua.enabled
   - name: redis
-    version: "11.3.1"
+    version: "12.6.2"
     repository: "@bitnami"
     alias: redis-lora
     condition: adapter_lora.enabled
