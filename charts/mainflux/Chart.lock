@@ -1,19 +1,19 @@
 dependencies:
 - name: nats
-  repository: https://kubernetes-charts.storage.googleapis.com/
+  repository: https://charts.helm.sh/stable
   version: 4.2.6
 - name: postgresql
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 7.4.0
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.2.3
 - name: postgresql
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 7.4.0
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.2.3
 - name: postgresql
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 7.4.0
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.2.3
 - name: postgresql
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 7.4.0
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.2.3
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 11.3.1
@@ -30,10 +30,10 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   version: 11.3.1
 - name: influxdb
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 4.3.2
+  repository: https://charts.bitnami.com/bitnami
+  version: 1.1.9
 - name: mongodb
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 7.8.10
-digest: sha256:045589092e33a08c878931a665b2f42ef100de016d6ebc2f60a5ce9d30fe08f6
-generated: "2020-11-04T08:56:41.562115578+01:00"
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.4.1
+digest: sha256:88020bac91bc6d1483e94bc0c7dbd06ab5946e795b9e411b54708b55b75ffba0
+generated: "2021-01-21T20:12:38.562965467+01:00"

@@ -6,7 +6,7 @@ name: mainflux
 description: Mainflux IoT Platform
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
-version: 0.1.6
+version: 0.1.7
 appVersion: "0.11.0"
 home: https://www.mainflux.com
 sources:
@@ -22,20 +22,20 @@ dependencies:
     version: "4.2.6"
     repository: "@stable"
   - name: postgresql
-    version: "7.4.0"
-    repository: "@stable"
+    version: "10.2.3"
+    repository: "@bitnami"
     alias: postgresql-things
   - name: postgresql
-    version: "7.4.0"
-    repository: "@stable"
+    version: "10.2.3"
+    repository: "@bitnami"
     alias: postgresql-users
   - name: postgresql
-    version: "7.4.0"
-    repository: "@stable"
+    version: "10.2.3"
+    repository: "@bitnami"
     alias: postgresql-authn
   - name: postgresql
-    version: "7.4.0"
-    repository: "@stable"
+    version: "10.2.3"
+    repository: "@bitnami"
     alias: postgresql-bootstrap
     condition: bootstrap.enabled
   - name: redis
@@ -61,11 +61,11 @@ dependencies:
     alias: redis-lora
     condition: adapter_lora.enabled
   - name: influxdb
-    version: "4.3.2"
-    repository: "@stable"
+    version: "1.1.9"
+    repository: "@bitnami"
     condition: influxdb.enabled
   - name: mongodb
-    version: "7.8.10"
-    repository: "@stable"
+    version: "10.4.1"
+    repository: "@bitnami"
     alias: twins-db
     condition: twins.enabled
