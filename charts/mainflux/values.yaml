@@ -75,7 +75,7 @@ mqtt:
   broker:
     image:
       repository: "mainflux/vernemq"
-      tag: "0.11.0"
+      tag: "1.11.2"
     mqttPort: 1883
     wsPort: 8080
     logLevel: "info"
@@ -151,7 +151,7 @@ postgresql-users:
 
 postgresql-things:
   name: postgresql-things
-  postgresqlUsername: mainflux
+  postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: things
   resources:
@@ -160,7 +160,7 @@ postgresql-things:
 
 postgresql-authn:
   name: postgresql-authn
-  postgresqlUsername: mainflux
+  postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: authn
   resources:
@@ -169,7 +169,7 @@ postgresql-authn:
 
 postgresql-bootstrap:
   name: postgresql-bootstrap
-  postgresqlUsername: mainflux
+  postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: bootstrap
   resources:
