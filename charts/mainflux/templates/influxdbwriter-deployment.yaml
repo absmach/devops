@@ -41,9 +41,11 @@ spec:
             - name: MF_INFLUX_WRITER_BATCH_TIMEOUT
               value: "5"
             - name: MF_INFLUX_WRITER_DB
-              value: mainflux
+              value: "{{ .Values.influxdb.database }}"
             - name: MF_INFLUX_WRITER_DB_USER
-              value: mainflux
+              value: "{{ .Values.influxdb.adminUser.name }}"
+            - name: MF_INFLUX_WRITER_DB_PASS
+              value: "{{ .Values.influxdb.adminUser.pwd }}"
             - name: MF_INFLUX_WRITER_DB_HOST
               value: {{ .Release.Name }}-influxdb
             - name: MF_INFLUX_WRITER_DB_PORT

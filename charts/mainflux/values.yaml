@@ -126,11 +126,15 @@ influxdb:
   reader:
     image: {}
     httpPort: 8905
-  initScripts:
-    enabled: true
-    scripts:
-      init.iql: |+
-        CREATE DATABASE "mainflux"
+  database: "mainflux"
+  authEnabled: true
+  adminUser:
+    name: "mainflux"
+    pwd: "mainflux"
+  backup:
+    enabled: false
+    cronjob:
+      schedule: "0 2 * * *"
 
 nats:
   auth:
