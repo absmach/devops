@@ -8,7 +8,7 @@ Helm Chart for the Mainflux IoT Platform
 - Stable & Bitnami Helm repos installed 
   ```
   helm repo add stable https://charts.helm.sh/stable
-  helm repo add bitnami https://charts.bitnami.com/bitnami`
+  helm repo add bitnami https://charts.bitnami.com/bitnami
   ```
 - Nginx Ingress Controller
 - If using the mTLS setup:
@@ -65,6 +65,8 @@ The following table lists the configurable parameters and their default values.
 | influxdb.dbPort                      | InfluxDB port                                                              | 8086         |
 | influxdb.writer.httpPort             | InfluxDB writer HTTP port                                                  | 8900         |
 | influxdb.reader.httpPort             | InfluxDB reader HTTP port                                                  | 8905         |
+| influxdb.backup.enabled              | Enable InfluxDB backup                                                     | false        |
+| influxdb.backup.cronjob.schedule     | Crontab style time schedule for backup execution                           | "0 2 * * *"  |
 | adapter_opcua.enabled                | Enable OPC-UA adapter                                                      | false        |
 | adapter_opcua.httpPort               | OPC-UA adapter HTTP port                                                   | 8188         |
 | adapter_opcua.redisRouteMapPort      | OPC-UA adapter Redis Auth Cache port                                       | 6379         |
