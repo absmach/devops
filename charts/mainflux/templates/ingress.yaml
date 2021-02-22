@@ -1,7 +1,7 @@
 # Copyright (c) Mainflux
 # SPDX-License-Identifier: Apache-2.0
 
-apiVersion: networking.k8s.io/v1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
 {{- if .Values.ingress.annotations }}
@@ -19,19 +19,13 @@ spec:
       http:
         paths:
           - path: /
-            pathType: Prefix
             backend:
-              service:
-                name: {{ .Release.Name }}-ui
-                port:
-                  number: {{ .Values.ui.port }}
+              serviceName: {{ .Release.Name }}-ui
+              servicePort: {{ .Values.ui.port }}
           - path: /version
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-things
-                port:
-                  number: {{ .Values.things.httpPort }}
+              serviceName: {{ .Release.Name }}-things
+              servicePort: {{ .Values.things.httpPort }}
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
@@ -39,7 +33,7 @@ spec:
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
 ---
-apiVersion: networking.k8s.io/v1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
@@ -58,124 +52,76 @@ spec:
       http:
         paths:
           - path: /(users?.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port:
-                  number: {{ .Values.users.httpPort }}
+              serviceName: {{ .Release.Name }}-users
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(password?.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port:
-                  number: {{ .Values.users.httpPort }}
+              serviceName: {{ .Release.Name }}-users
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(groups?.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port:
-                  number: {{ .Values.users.httpPort }}
+              serviceName: {{ .Release.Name }}-users
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(tokens)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port:
-                  number: {{ .Values.users.httpPort }}
+              serviceName: {{ .Release.Name }}-users
+              servicePort: {{ .Values.users.httpPort }}
           - path: /(things?.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-things
-                port:
-                  number: {{ .Values.things.httpPort }}
+              serviceName: {{ .Release.Name }}-things
+              servicePort: {{ .Values.things.httpPort }}
           - path: /(channels?.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-things
-                port:
-                  number: {{ .Values.things.httpPort }}
+              serviceName: {{ .Release.Name }}-things
+              servicePort: {{ .Values.things.httpPort }}
           - path: /(connect?.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-things
-                port:
-                  number: {{ .Values.things.httpPort }}
+              serviceName: {{ .Release.Name }}-things
+              servicePort: {{ .Values.things.httpPort }}
           - path: /bs/?(.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-bootstrap
-                port:
-                  number: {{ .Values.bootstrap.httpPort }}
+              serviceName: {{ .Release.Name }}-bootstrap
+              servicePort: {{ .Values.bootstrap.httpPort }}
           - path: /version/users/?(.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port:
-                  number: {{ .Values.users.httpPort }}
+              serviceName: {{ .Release.Name }}-users
+              servicePort: {{ .Values.users.httpPort }}
           - path: /version/things/?(.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-things
-                port:
-                  number: {{ .Values.things.httpPort }}
+              serviceName: {{ .Release.Name }}-things
+              servicePort: {{ .Values.things.httpPort }}
           - path: /version/http/?(.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-adapter-http
-                port:
-                  number: {{ default .Values.adapter_http.httpPort }}
+              serviceName: {{ .Release.Name }}-adapter-http
+              servicePort: {{ default .Values.adapter_http.httpPort }}
 {{- if .Values.bootstrap.enabled }}
           - path: /bootstrap/?(.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-bootstrap
-                port:
-                  number: {{ .Values.bootstrap.httpPort }}
+              serviceName: {{ .Release.Name }}-bootstrap
+              servicePort: {{ .Values.bootstrap.httpPort }}
 {{- end }}
 {{- if .Values.influxdb.enabled }}
           - path: /reader/?(.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-influxdb-reader
-                port:
-                  number: {{ .Values.influxdb.reader.httpPort }}
+              serviceName: {{ .Release.Name }}-influxdb-reader
+              servicePort: {{ .Values.influxdb.reader.httpPort }}
 {{- end }}
 {{- if .Values.twins.enabled }}
           - path: /(twins?.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-twins
-                port:
-                  number: {{ .Values.twins.httpPort }}
+              serviceName: {{ .Release.Name }}-twins
+              servicePort: {{ .Values.twins.httpPort }}
           - path: /(states?.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-twins
-                port:
-                  number: {{ .Values.twins.httpPort }}
+              serviceName: {{ .Release.Name }}-twins
+              servicePort: {{ .Values.twins.httpPort }}
 {{- end }}
 {{- if .Values.adapter_opcua.enabled }}
           - path: /(browse?.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-adapter-opcua
-                port:
-                  number: {{ default .Values.adapter_opcua.httpPort }}
+              serviceName: {{ .Release.Name }}-adapter-opcua
+              servicePort: {{ default .Values.adapter_opcua.httpPort }}
 {{- end }}
 {{- if .Values.ingress.tls }}
   tls:
@@ -184,7 +130,7 @@ spec:
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
 ---
-apiVersion: networking.k8s.io/v1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
@@ -210,34 +156,22 @@ spec:
         paths:
 {{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
           - path: /(http/?.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-nginx-internal
-                port:
-                  number: 80
+              serviceName: {{ .Release.Name }}-nginx-internal
+              servicePort: 80
           - path: /(mqtt)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-nginx-internal
-                port:
-                  number: 80
+              serviceName: {{ .Release.Name }}-nginx-internal
+              servicePort: 80
 {{- else }}
           - path: /http/?(.*)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-adapter-http
-                port:
-                  number: {{ .Values.adapter_http.httpPort }}
+              serviceName: {{ .Release.Name }}-adapter-http
+              servicePort: {{ .Values.adapter_http.httpPort }}
           - path: /(mqtt)
-            pathType: Prefix              
             backend:
-              service:
-                name: {{ .Release.Name }}-adapter-mqtt
-                port:
-                  number: {{ default .Values.mqtt.proxy.wsPort }}
+              serviceName: {{ .Release.Name }}-adapter-mqtt
+              servicePort: {{ default .Values.mqtt.proxy.wsPort }}
 {{- end }}              
 {{- if .Values.ingress.tls }}
   tls:

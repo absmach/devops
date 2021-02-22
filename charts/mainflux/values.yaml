@@ -6,7 +6,7 @@ defaults:
   image:
     pullPolicy: "IfNotPresent"
     repository: "mainflux"
-    tag: "latest"
+    tag: "0.11.0"
   # Replicas of MQTT adapter, NATS, Things, Envoy and Authn
   replicaCount: 3
   natsPort: 4222
@@ -17,20 +17,20 @@ ingress:
   annotations: {}
   labels: {}
   # Uncomment this block for TLS support in public ingress
-  hostname: "ashvin01.mainflux.io"
-  tls:
-    hostname: "ashvin01.mainflux.io"
-    secret: "mainflux-server"
+  # hostname: ""
+  # tls:
+  #   hostname: ""
+  #   secret: "mainflux-server"
 
 nginxInternal:
   mtls:
     # By default mTLS is disabled. If you use mTLS, comment this block.
-    # tls: ""
-    # intermediateCrt: ""
+    tls: ""
+    intermediateCrt: ""
     # Uncomment this block for TLS and mTLS support.
     # Use sh script from /secrets/secrets.sh to create config maps with your certs
-    tls: "mainflux-server"
-    intermediateCrt: "ca"
+    # tls: "mainflux-server"
+    # intermediateCrt: "ca"
 
 adapter_http:
   image: {}
@@ -113,12 +113,32 @@ bootstrap:
   httpPort: 8182
   redisESPort: 6379
 
+certs:
+  enabled: true
+  image: {}
+  dbPort: 5432
+  httpPort: 8204
+  logLevel: "info"
+  sdkThingsPrefix: ""  
+  encryptKey: ""
+  clientTLS: ""
+  serverCert: ""
+  serverKey: ""
+  signCAPath: "/etc/ssl/certs/ca.crt"
+  signCAKeyPath: "/etc/ssl/certs/ca.key"
+  signHoursValid: "2048h"
+  signRSABits: 2048
+  signVaultToken: ""
+  signVaultHost: ""
+  signVaultPKIPath: "pki_int"
+  signVaultRole: "agent"
+
 ui:
   image: {}
   port: 3000
 
 influxdb:
-  enabled: true
+  enabled: false
   dbPort: 8086
   writer:
     image: {}
@@ -142,7 +162,7 @@ nats:
   clusterAuth:
     enabled: false
   maxPayload: 268435456
-  replicaCount: 1
+  replicaCount: 3
 
 postgresql-users:
   name: postgresql-users
@@ -176,6 +196,15 @@ postgresql-bootstrap:
   postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: bootstrap
+  resources:
+    requests:
+      cpu: 25m
+
+postgresql-certs:
+  name: postgresql-certs
+  postgresqlUsername: postgres
+  postgresqlPassword: mainflux
+  postgresqlDatabase: certs
   resources:
     requests:
       cpu: 25m

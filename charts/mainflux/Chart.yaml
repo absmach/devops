@@ -38,6 +38,11 @@ dependencies:
     repository: "@bitnami"
     alias: postgresql-bootstrap
     condition: bootstrap.enabled
+  - name: postgresql
+    version: "10.2.3"
+    repository: "@bitnami"
+    alias: postgresql-certs
+    condition: certs.enabled    
   - name: redis
     version: "12.6.2"
     repository: "@bitnami"
