@@ -17,20 +17,20 @@ ingress:
   annotations: {}
   labels: {}
   # Uncomment this block for TLS support in public ingress
-  # hostname: ""
-  # tls:
-  #   hostname: ""
-  #   secret: "mainflux-server"
+  hostname: "ashvin01.mainflux.io"
+  tls:
+    hostname: "ashvin01.mainflux.io"
+    secret: "mainflux-server"
 
 nginxInternal:
   mtls:
     # By default mTLS is disabled. If you use mTLS, comment this block.
-    tls: ""
-    intermediateCrt: ""
+    # tls: ""
+    # intermediateCrt: ""
     # Uncomment this block for TLS and mTLS support.
     # Use sh script from /secrets/secrets.sh to create config maps with your certs
-    # tls: "mainflux-server"
-    # intermediateCrt: "ca"
+    tls: "mainflux-server"
+    intermediateCrt: "ca"
 
 adapter_http:
   image: {}
@@ -124,7 +124,7 @@ bootstrap:
   redisESPort: 6379
 
 certs:
-  enabled: false
+  enabled: true
   image: {}
   dbPort: 5432
   httpPort: 8204
@@ -242,6 +242,15 @@ postgresql-notifier-smtp:
       cpu: 25m
   persistence:
     size: 1Gi
+
+postgresql-certs:
+  name: postgresql-certs
+  postgresqlUsername: postgres
+  postgresqlPassword: mainflux
+  postgresqlDatabase: certs
+  resources:
+    requests:
+      cpu: 25m
 
 redis-streams:
   volumePermissions:

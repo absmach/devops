@@ -14,6 +14,9 @@ dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 10.2.3
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.2.3
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 12.6.2
@@ -35,5 +38,5 @@ dependencies:
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
   version: 10.4.1
-digest: sha256:5d94c8be0eed5322fecac957f18487a4dd502340b77d27957faa10feab0b340d
-generated: "2021-01-22T19:08:41.71519337+01:00"
+digest: sha256:1efdb03c7e2e77d2de5675171009942b8ef2a0380cc2e54310d5d526b87da46d
+generated: "2021-02-22T16:52:50.164620183+01:00"
