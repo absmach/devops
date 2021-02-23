@@ -67,7 +67,7 @@ mqtt:
   proxy:
     image:
       repository: "mainflux/mqtt"
-      tag: "latest"
+      tag: "0.11.0"
       pullPolicy: "IfNotPresent"
     mqttPort: 1884
     wsPort: 8081
@@ -114,7 +114,7 @@ bootstrap:
   redisESPort: 6379
 
 certs:
-  enabled: true
+  enabled: false
   image: {}
   dbPort: 5432
   httpPort: 8204

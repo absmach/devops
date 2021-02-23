@@ -77,6 +77,7 @@ The following table lists the configurable parameters and their default values.
 | twins.dbPort                         | Twins service DB port                                                      | 27017        |
 | twins.httpPort                       | Twins service HTTP port                                                    | 9021         |
 | twins.redisCachePort                 | Twins service Redis Cache port                                             | 6379         |
+| certs.enabled                        | Enable certs service                                                       | false        |
 
 All Mainflux services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.
 
