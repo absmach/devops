@@ -113,6 +113,26 @@ bootstrap:
   httpPort: 8182
   redisESPort: 6379
 
+certs:
+  enabled: false
+  image: {}
+  dbPort: 5432
+  httpPort: 8204
+  logLevel: "info"
+  sdkThingsPrefix: ""  
+  encryptKey: ""
+  clientTLS: ""
+  serverCert: ""
+  serverKey: ""
+  signCAPath: "/etc/ssl/certs/ca.crt"
+  signCAKeyPath: "/etc/ssl/certs/ca.key"
+  signHoursValid: "2048h"
+  signRSABits: 2048
+  signVaultToken: ""
+  signVaultHost: ""
+  signVaultPKIPath: "pki_int"
+  signVaultRole: "agent"
+
 ui:
   image: {}
   port: 3000
@@ -176,6 +196,15 @@ postgresql-bootstrap:
   postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: bootstrap
+  resources:
+    requests:
+      cpu: 25m
+
+postgresql-certs:
+  name: postgresql-certs
+  postgresqlUsername: postgres
+  postgresqlPassword: mainflux
+  postgresqlDatabase: certs
   resources:
     requests:
       cpu: 25m

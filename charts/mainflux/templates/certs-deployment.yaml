@@ -1,0 +1,84 @@
+# Copyright (c) Mainflux
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.certs.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-certs
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: certs
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: certs
+    spec:
+      containers:
+        - env:
+            - name: MF_CERTS_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.certs.logLevel }}
+            - name: MF_JAEGER_URL
+              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
+            - name: MF_CERTS_DB_HOST
+              value: {{ .Release.Name }}-postgresql-certs
+            - name: MF_CERTS_DB
+              value: {{ index .Values "postgresql-certs" "postgresqlDatabase" }}
+            - name: MF_CERTS_DB_PASS
+              value: {{ index .Values "postgresql-certs" "postgresqlPassword" }}
+            - name: MF_CERTS_DB_PORT
+              value: "{{ .Values.certs.dbPort }}"
+            - name: MF_CERTS_DB_USER
+              value: {{ index .Values "postgresql-certs" "postgresqlUsername" }}
+            - name: MF_CERTS_DB_SSL_MODE
+              value: disable
+            - name: MF_CERTS_DB_SSL_CERT
+              value: disable
+            - name: MF_CERTS_DB_SSL_KEY
+              value: disable
+            - name: MF_CERTS_DB_SSL_ROOT_CERT
+              value: disable
+            - name: MF_CERTS_ENCRYPT_KEY
+              value: {{ index .Values "certs" "encryptKey" }}
+            - name: MF_CERTS_CLIENT_TLS
+              value: {{ index .Values "certs" "clientTLS" }}
+            - name: MF_CERTS_SERVER_CERT
+              value: {{ index .Values "certs" "serverCert" }}
+            - name: MF_CERTS_SERVER_KEY
+              value: {{ index .Values "certs" "serverKey" }}
+            - name: MF_CERTS_HTTP_PORT
+              value: "{{ .Values.certs.httpPort }}"
+            - name: MF_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.authn.grpcPort }}
+            - name: MF_SDK_BASE_URL
+              value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
+            - name: MF_SDK_THINGS_PREFIX
+              value: {{ index .Values "certs" "sdkThingsPrefix" }}
+            - name: MF_CERTS_SIGN_CA_PATH
+              value: {{ index .Values "certs" "signCAPath" }}
+            - name: MF_CERTS_SIGN_CA_KEY_PATH
+              value: {{ index .Values "certs" "signCAKeyPath" }}
+            - name: MF_CERTS_SIGN_HOURS_VALID
+              value: {{ index .Values "certs" "signHoursValid" }}
+            - name: MF_CERTS_SIGN_RSA_BITS
+              value: "{{ .Values.certs.signRSABits }}"
+            - name: MF_CERTS_VAULT_TOKEN
+              value: {{ index .Values "certs" "signVaultToken" }}
+            - name: MF_CERTS_VAULT_HOST
+              value: {{ index .Values "certs" "signVaultHost" }}
+            - name: MF_CERTS_VAULT_PKI_PATH
+              value: {{ index .Values "certs" "signVaultPKIPath" }}
+            - name: MF_CERTS_VAULT_ROLE
+              value: {{ index .Values "certs" "signVaultRole" }}
+          image: "{{ default .Values.defaults.image.repository .Values.certs.image.repository }}/certs:{{ default .Values.defaults.image.tag .Values.certs.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.certs.image.pullPolicy }}
+          name: {{ .Release.Name }}-certs
+          ports:
+            - containerPort: {{ .Values.certs.httpPort }}
+              protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+{{- end }}
