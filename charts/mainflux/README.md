@@ -24,7 +24,7 @@ The following table lists the configurable parameters and their default values.
 | defaults.logLevel                    | Log level                                                                  | debug        |
 | defaults.image.pullPolicy            | Docker Image Pull Policy                                                   | IfNotPresent |
 | defaults.image.repository            | Docker Image Repository                                                    | mainflux     |
-| defaults.image.tag                   | Docker Image Tag                                                           | 0.11.0       |
+| defaults.image.tag                   | Docker Image Tag                                                           | 0.12.0       |
 | defaults.replicaCount                | Replicas of MQTT adapter, Things, Envoy and Auth                           | 3            |
 | defaults.natsPort                    | NATS port                                                                  | 4222         |
 | defaults.jaegerPort                  | Jaeger port                                                                | 6831         |
@@ -39,6 +39,7 @@ The following table lists the configurable parameters and their default values.
 | auth.dbPort                          | Auth service DB port                                                       | 5432         |
 | auth.grpcPort                        | Auth service gRPC port                                                     | 8181         |
 | auth.httpPort                        | Auth service HTTP port                                                     | 8189         |
+| auth.secret                          | String used for signing tokens                                             | secret       |	
 | users.dbPort                         | Users service DB port                                                      | 5432         |
 | users.httpPort                       | Users service HTTP port                                                    | 8180         |
 | things.dbPort                        | Things service DB port                                                     | 5432         |
