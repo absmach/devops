@@ -79,10 +79,6 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-things
               servicePort: {{ .Values.things.httpPort }}
-          - path: /bs/?(.*)
-            backend:
-              serviceName: {{ .Release.Name }}-bootstrap
-              servicePort: {{ .Values.bootstrap.httpPort }}
           - path: /version/users/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-users
@@ -95,8 +91,18 @@ spec:
             backend:
               serviceName: {{ .Release.Name }}-adapter-http
               servicePort: {{ default .Values.adapter_http.httpPort }}
+{{- if .Values.notifier_smtp.enabled }}
+          - path: /smtp-notifier/?(.*)
+            backend:
+              serviceName: {{ .Release.Name }}-notifier-smtp
+              servicePort: {{ .Values.notifier_smtp.httpPort }}
+{{- end }}
 {{- if .Values.bootstrap.enabled }}
           - path: /bootstrap/?(.*)
+            backend:
+              serviceName: {{ .Release.Name }}-bootstrap
+              servicePort: {{ .Values.bootstrap.httpPort }}
+          - path: /bs/?(.*)
             backend:
               serviceName: {{ .Release.Name }}-bootstrap
               servicePort: {{ .Values.bootstrap.httpPort }}

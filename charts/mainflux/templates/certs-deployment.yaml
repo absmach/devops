@@ -52,7 +52,7 @@ spec:
             - name: MF_CERTS_HTTP_PORT
               value: "{{ .Values.certs.httpPort }}"
             - name: MF_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.authn.grpcPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: MF_SDK_BASE_URL
               value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
             - name: MF_SDK_THINGS_PREFIX

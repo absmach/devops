@@ -19,21 +19,21 @@ data:
       - address:
           socket_address:
             address: 0.0.0.0
-            port_value: {{ .Values.authn.grpcPort }}
+            port_value: {{ .Values.auth.grpcPort }}
         filter_chains:
         - filters:
           - name: envoy.http_connection_manager
             config:
               codec_type: auto
-              stat_prefix: authn
+              stat_prefix: auth
               route_config:
-                name: authn_route
+                name: auth_route
                 virtual_hosts:
-                - name: authn_service
+                - name: auth_service
                   domains: ["*"]
                   routes:
                   - match: { prefix: "/" }
-                    route: { cluster: authn }
+                    route: { cluster: auth }
               http_filters:
               - name: envoy.grpc_web
               - name: envoy.router
@@ -67,15 +67,15 @@ data:
         - socket_address:
             address: {{ .Release.Name }}-adapter-mqtt
             port_value: 1884
-      - name: authn
+      - name: auth
         connect_timeout: 0.25s
         type: strict_dns
         lb_policy: round_robin
         http2_protocol_options: {}
         hosts:
         - socket_address:
-            address: {{ .Release.Name }}-authn-headless
-            port_value: {{ .Values.authn.grpcPort }}
+            address: {{ .Release.Name }}-auth-headless
+            port_value: {{ .Values.auth.grpcPort }}
       - name: things
         connect_timeout: 0.25s
         type: strict_dns
@@ -119,7 +119,7 @@ spec:
           ports:
             - containerPort: 1883
               protocol: TCP
-            - containerPort: {{ .Values.authn.grpcPort }}
+            - containerPort: {{ .Values.auth.grpcPort }}
               protocol: TCP
             - containerPort: {{ .Values.things.authGrpcPort }}
               protocol: TCP
@@ -148,9 +148,9 @@ spec:
     - port: 1883
       protocol: TCP
       name: mqtt
-    - port: {{ .Values.authn.grpcPort }}
+    - port: {{ .Values.auth.grpcPort }}
       protocol: TCP
-      name: authn-grpc
+      name: auth-grpc
     - port: {{ .Values.things.authGrpcPort }}
       protocol: TCP
       name: things-grpc

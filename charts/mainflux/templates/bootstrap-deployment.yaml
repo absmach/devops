@@ -41,8 +41,8 @@ spec:
               value: {{ default .Values.defaults.logLevel .Values.bootstrap.logLevel }}
             - name: MF_BOOTSTRAP_DB_SSL_MODE
               value: disable
-            - name: MF_AUTHN_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.authn.grpcPort }}
+            - name: MF_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: MF_SDK_BASE_URL
               value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
           image: "{{ default .Values.defaults.image.repository .Values.bootstrap.image.repository }}/bootstrap:{{ default .Values.defaults.image.tag .Values.bootstrap.image.tag }}"

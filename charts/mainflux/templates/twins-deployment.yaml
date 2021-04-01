@@ -33,8 +33,8 @@ spec:
               value: {{.Values.twins.channelId }}
             - name: MF_NATS_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
-            - name: MF_AUTHN_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.authn.grpcPort }}
+            - name: MF_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: MF_TWINS_CACHE_URL
               value: {{ .Release.Name }}-redis-streams-master:{{ .Values.twins.redisCachePort }}
           image: "{{ default .Values.defaults.image.repository .Values.twins.image.repository }}/twins:{{ default .Values.defaults.image.tag .Values.twins.image.tag }}"
