@@ -38,7 +38,7 @@ spec:
             - name: MF_AUTH_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.users.logLevel }}
             - name: MF_AUTH_SECRET
-              value: c8ee60b5-1317-4b7c-adb3-c0d73f30959c
+              value: "{{ .Values.auth.secret }}"
           image: "{{ default .Values.defaults.image.repository .Values.auth.image.repository }}/auth:{{ default .Values.defaults.image.tag .Values.auth.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}
           name: {{ .Release.Name }}-auth

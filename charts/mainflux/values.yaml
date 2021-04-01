@@ -114,6 +114,7 @@ auth:
   dbPort: 5432
   grpcPort: 8181
   httpPort: 8189
+  secret: "secret"
 
 bootstrap:
   enabled: false
