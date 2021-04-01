@@ -25,7 +25,7 @@ The following table lists the configurable parameters and their default values.
 | defaults.image.pullPolicy            | Docker Image Pull Policy                                                   | IfNotPresent |
 | defaults.image.repository            | Docker Image Repository                                                    | mainflux     |
 | defaults.image.tag                   | Docker Image Tag                                                           | 0.11.0       |
-| defaults.replicaCount                | Replicas of MQTT adapter, Things, Envoy and Authn                          | 3            |
+| defaults.replicaCount                | Replicas of MQTT adapter, Things, Envoy and Auth                          | 3            |
 | defaults.natsPort                    | NATS port                                                                  | 4222         |
 | defaults.jaegerPort                  | Jaeger port                                                                | 6831         |
 | nginxInternal.mtls.tls               | TLS secret which contains the server cert/key                              |              |
@@ -36,9 +36,9 @@ The following table lists the configurable parameters and their default values.
 | ingress.tls.secret                   | TLS secret for the Nginx Ingress                                           |              |
 | nats.maxPayload                      | Maximum payload size in bytes that the NATS server will accept             | 268435456    |
 | nats.replicaCount                    | NATS replicas                                                              | 3            |
-| authn.dbPort                         | AuthN service DB port                                                      | 5432         |
-| authn.grpcPort                       | AuthN service gRPC port                                                    | 8181         |
-| authn.httpPort                       | AuthN service HTTP port                                                    | 8189         |
+| auth.dbPort                         | Auth service DB port                                                      | 5432         |
+| auth.grpcPort                       | Auth service gRPC port                                                    | 8181         |
+| auth.httpPort                       | Auth service HTTP port                                                    | 8189         |
 | users.dbPort                         | Users service DB port                                                      | 5432         |
 | users.httpPort                       | Users service HTTP port                                                    | 8180         |
 | things.dbPort                        | Things service DB port                                                     | 5432         |
@@ -78,12 +78,21 @@ The following table lists the configurable parameters and their default values.
 | twins.httpPort                       | Twins service HTTP port                                                    | 9021         |
 | twins.redisCachePort                 | Twins service Redis Cache port                                             | 6379         |
 | certs.enabled                        | Enable certs service                                                       | false        |
+| notifier_smtp.enabled                | Enable SMTP notifier                                                       | false        |
+| notifier_smtp.emailHost              | SMTP host                                                                  | false        |
+| notifier_smtp.smtpPort               | SMTP port                                                                  | false        |
+| notifier_smtp.fromName               | SMTP notifier `from` name                                                  | false        |
+| notifier_smtp.fromEmail              | SMTP `from` email address                                                  | false        |
+| notifier_smtp.username               | SMTP username                                                              | false        |
+| notifier_smtp.password               | SMTP password                                                              | false        |
+| notifier_smtp.secret                 | SMTP secret                                                                | false        |
+| notifier_smtp.httpPort               | SMTP notifier HTTP port                                                    | false        |
 
 All Mainflux services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.
 
 Mainflux Core is a minimalistic set of required Mainflux services. They are all installed by default:
 
-- authn
+- auth
 - users
 - things
 - adapter_http
@@ -100,7 +109,8 @@ List of add-ons services in charts:
 - adapter_opcua
 - adapter_lora
 - twins
+- notifier_smtp
 
-By default scale of MQTT adapter, Things, Envoy, AuthN and NATS will be set to 3. It's recommended that you set this values to number of your nodes in Kubernetes cluster, i.e. `--set defaults.replicaCount=3 --set nats.replicaCount=3`
+By default scale of MQTT adapter, Things, Envoy, Auth and NATS will be set to 3. It's recommended that you set this values to number of your nodes in Kubernetes cluster, i.e. `--set defaults.replicaCount=3 --set nats.replicaCount=3`
 
 **Note:** make sure you run `helm install` with `--dependency-update` flag!

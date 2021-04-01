@@ -49,8 +49,8 @@ spec:
               value: "{{ .Values.users.httpPort }}"
             - name: MF_USERS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.users.logLevel }}
-            - name: MF_AUTHN_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.authn.grpcPort }}
+            - name: MF_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: MF_TOKEN_RESET_ENDPOINT
               value: "#/auth/reset-password"
             - name: MF_USERS_ADMIN_EMAIL

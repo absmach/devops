@@ -6,8 +6,8 @@ defaults:
   image:
     pullPolicy: "IfNotPresent"
     repository: "mainflux"
-    tag: "0.11.0"
-  # Replicas of MQTT adapter, NATS, Things, Envoy and Authn
+    tag: "0.12.0"
+  # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
   replicaCount: 3
   natsPort: 4222
   jaegerPort: 6831
@@ -58,6 +58,18 @@ adapter_lora:
   messageUrl: "tcp://lora.mqtt.mainflux.io:1883"
   redisRouteMapPort: 6379
 
+notifier_smtp:
+  enabled: false
+  image: {}
+  emailHost: "smtp.example.com"
+  smtpPort: 2525
+  fromName: "Mainflux"
+  fromEmail: "admin@example.com"
+  username: ""
+  password: ""
+  secret: ""
+  httpPort: 8906
+
 mqtt:
   enabled: true
   securityContext:
@@ -67,15 +79,12 @@ mqtt:
   proxy:
     image:
       repository: "mainflux/mqtt"
-      tag: "0.11.0"
-      pullPolicy: "IfNotPresent"
     mqttPort: 1884
     wsPort: 8081
     logLevel: "debug"
   broker:
     image:
       repository: "mainflux/vernemq"
-      tag: "1.11.2"
     mqttPort: 1883
     wsPort: 8080
     logLevel: "info"
@@ -100,7 +109,7 @@ things:
   redisESPort: 6379
   redisCachePort: 6379
 
-authn:
+auth:
   image: {}
   dbPort: 5432
   grpcPort: 8181
@@ -151,6 +160,9 @@ influxdb:
   adminUser:
     name: "mainflux"
     pwd: "mainflux"
+  configPath: "/config.toml"
+  contentType: "application/senml+json"
+  transformer: "senml"
   backup:
     enabled: false
     cronjob:
@@ -172,6 +184,8 @@ postgresql-users:
   resources:
     requests:
       cpu: 25m
+  persistence:
+    size: 1Gi
 
 postgresql-things:
   name: postgresql-things
@@ -181,15 +195,19 @@ postgresql-things:
   resources:
     requests:
       cpu: 25m
+  persistence:
+    size: 1Gi
 
-postgresql-authn:
-  name: postgresql-authn
+postgresql-auth:
+  name: postgresql-auth
   postgresqlUsername: postgres
   postgresqlPassword: mainflux
-  postgresqlDatabase: authn
+  postgresqlDatabase: auth
   resources:
     requests:
       cpu: 25m
+  persistence:
+    size: 1Gi
 
 postgresql-bootstrap:
   name: postgresql-bootstrap
@@ -199,6 +217,8 @@ postgresql-bootstrap:
   resources:
     requests:
       cpu: 25m
+  persistence:
+    size: 1Gi
 
 postgresql-certs:
   name: postgresql-certs
@@ -208,6 +228,19 @@ postgresql-certs:
   resources:
     requests:
       cpu: 25m
+  persistence:
+    size: 1Gi
+
+postgresql-notifier-smtp:
+  name: postgresql-notifier-smtp
+  postgresqlUsername: postgres
+  postgresqlPassword: mainflux
+  postgresqlDatabase: subscriptions
+  resources:
+    requests:
+      cpu: 25m
+  persistence:
+    size: 1Gi
 
 redis-streams:
   volumePermissions:

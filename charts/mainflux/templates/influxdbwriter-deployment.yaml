@@ -50,6 +50,12 @@ spec:
               value: {{ .Release.Name }}-influxdb
             - name: MF_INFLUX_WRITER_DB_PORT
               value: "{{ .Values.influxdb.dbPort }}"
+            - name: MF_INFLUX_WRITER_CONFIG_PATH
+              value: "{{ .Values.influxdb.configPath }}"
+            - name: MF_INFLUX_WRITER_CONTENT_TYPE
+              value: "{{ .Values.influxdb.contentType }}"
+            - name: MF_INFLUX_WRITER_TRANSFORMER
+              value: "{{ .Values.influxdb.transformer }}"
           image: "{{ default .Values.defaults.image.repository .Values.influxdb.writer.image.repository }}/influxdb-writer:{{ default .Values.defaults.image.tag .Values.influxdb.writer.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb.writer.image.pullPolicy }}
           name: {{ .Release.Name }}-influxdb-writer

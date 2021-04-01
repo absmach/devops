@@ -6,8 +6,8 @@ name: mainflux
 description: Mainflux IoT Platform
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
-version: 0.1.7
-appVersion: "0.11.0"
+version: 1.0.0
+appVersion: "0.12.0"
 home: https://www.mainflux.com
 sources:
   - https://hub.docker.com/u/mainflux/
@@ -32,7 +32,7 @@ dependencies:
   - name: postgresql
     version: "10.2.3"
     repository: "@bitnami"
-    alias: postgresql-authn
+    alias: postgresql-auth
   - name: postgresql
     version: "10.2.3"
     repository: "@bitnami"
@@ -74,3 +74,8 @@ dependencies:
     repository: "@bitnami"
     alias: twins-db
     condition: twins.enabled
+  - name: postgresql
+    version: "10.2.3"
+    repository: "@bitnami"
+    alias: postgresql-notifier-smtp
+    condition: notifier_smtp.enabled
