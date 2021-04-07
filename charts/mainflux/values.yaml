@@ -297,7 +297,8 @@ twins:
   redisCachePort: 6379
 
 twins-db:
-  usePassword: false
+  auth:
+    enabled: false
 
 envoy:
   image:
