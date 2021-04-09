@@ -156,7 +156,7 @@ spec:
             successThreshold: 1
             timeoutSeconds: 5
           #adapter
-        - name: {{ .Release.Name }}-mqtt-adapter
+        - name: {{ .Release.Name }}-adapter-mqtt
           image: "{{ default .Values.defaults.image.repository .Values.mqtt.adapter.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.adapter.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.adapter.image.imagePullPolicy}}
           ports:

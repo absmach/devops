@@ -147,7 +147,7 @@ data:
           }
         }
 
-        #Proxy pass to mainflux-mqtt-adapter for MQTT over WS
+        #Proxy pass to mainflux-mqtt for MQTT over WS
         location /mqtt {
           if ($auth_key = '') {
             return 403;
