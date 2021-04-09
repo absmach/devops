@@ -177,7 +177,7 @@ spec:
           - path: /(mqtt)
             backend:
               serviceName: {{ .Release.Name }}-mqtt
-              servicePort: {{ default .Values.mqtt.proxy.wsPort }}
+              servicePort: {{ default .Values.mqtt.adapter.wsPort }}
 {{- end }}              
 {{- if .Values.ingress.tls }}
   tls:
