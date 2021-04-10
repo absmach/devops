@@ -14,7 +14,7 @@ data:
         - filters:
           - name: envoy.tcp_proxy
             config:
-              stat_prefix: adapter-mqtt
+              stat_prefix: mqtt
               cluster: adapter-mqtt
       - address:
           socket_address:
@@ -59,13 +59,13 @@ data:
               - name: envoy.grpc_web
               - name: envoy.router
       clusters:
-      - name: adapter-mqtt
+      - name: mqtt
         connect_timeout: 0.25s
         type: strict_dns
         lb_policy: round_robin
         hosts:
         - socket_address:
-            address: {{ .Release.Name }}-adapter-mqtt
+            address: {{ .Release.Name }}-mqtt
             port_value: 1884
       - name: auth
         connect_timeout: 0.25s

@@ -49,8 +49,8 @@ The following table lists the configurable parameters and their default values.
 | things.redisESPort                   | Things service Redis Event Store port                                      | 6379         |
 | things.redisCachePort                | Things service Redis Auth Cache port                                       | 6379         |
 | adapter_http.httpPort                | HTTP adapter port                                                          | 8185         |
-| mqtt.proxy.mqttPort                  | MQTT adapter proxy port                                                    | 1884         |
-| mqtt.proxy.wsPort                    | MQTT adapter proxy WS port                                                 | 8081         |
+| mqtt.adapter.mqttPort                | MQTT adapter port                                                          | 1884         |
+| mqtt.adapter.wsPort                  | MQTT adapter WS port                                                       | 8081         |
 | mqtt.broker.mqttPort                 | MQTT adapter broker port                                                   | 1883         |
 | mqtt.broker.wsPort                   | MQTT adapter broker WS port                                                | 8080         |
 | mqtt.broker.persistentVolume.size    | MQTT adapter broker data Persistent Volume size                            | 5Gi          |

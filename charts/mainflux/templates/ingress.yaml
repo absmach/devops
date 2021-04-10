@@ -176,8 +176,8 @@ spec:
               servicePort: {{ .Values.adapter_http.httpPort }}
           - path: /(mqtt)
             backend:
-              serviceName: {{ .Release.Name }}-adapter-mqtt
-              servicePort: {{ default .Values.mqtt.proxy.wsPort }}
+              serviceName: {{ .Release.Name }}-mqtt
+              servicePort: {{ default .Values.mqtt.adapter.wsPort }}
 {{- end }}              
 {{- if .Values.ingress.tls }}
   tls:

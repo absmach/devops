@@ -76,7 +76,7 @@ mqtt:
     runAsUser: 10000
     runAsGroup: 10000
     fsGroup: 10000
-  proxy:
+  adapter:
     image:
       repository: "mainflux/mqtt"
     mqttPort: 1884
