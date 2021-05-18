@@ -15,7 +15,7 @@ data:
           - name: envoy.tcp_proxy
             config:
               stat_prefix: mqtt
-              cluster: adapter-mqtt
+              cluster: mqtt
       - address:
           socket_address:
             address: 0.0.0.0
