@@ -193,7 +193,7 @@ data:
   8883: "{{ .Release.Namespace }}/{{ .Release.Name }}-nginx-internal:8883"
 metadata:
   name: tcp-services
-  namespace: ingress-nginx
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -201,4 +201,4 @@ data:
   5683: "{{ .Release.Namespace }}/{{ .Release.Name }}-adapter-coap:5683"
 metadata:
   name: udp-services
-  namespace: ingress-nginx
+  namespace: {{ .Release.Namespace }}
