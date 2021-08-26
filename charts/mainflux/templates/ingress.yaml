@@ -218,35 +218,35 @@ spec:
       http:
         paths:
 {{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
-        - path: /(http/?.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-nginx-internal
-              port: 
-                number: 80
-        - path: /(mqtt)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-nginx-internal
-              port:
-                number: 80
+          - path: /(http/?.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-nginx-internal
+                port: 
+                  number: 80
+          - path: /(mqtt)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-nginx-internal
+                port:
+                  number: 80
 {{- else }}
-        - path: /http/?(.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-adapter-http
-              port: 
-                number: {{ .Values.adapter_http.httpPort }}
-        - path: /(mqtt)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-mqtt
-              port: 
-                number: {{ default .Values.mqtt.adapter.wsPort }}
+          - path: /http/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-adapter-http
+                port: 
+                  number: {{ .Values.adapter_http.httpPort }}
+          - path: /(mqtt)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-mqtt
+                port: 
+                  number: {{ default .Values.mqtt.adapter.wsPort }}
 {{- end }}              
 {{- if .Values.ingress.tls }}
   tls:
