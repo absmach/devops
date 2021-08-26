@@ -57,134 +57,134 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-        - path: /(users?.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-users
-              port: 
-                number: {{ .Values.users.httpPort }}
-        - path: /(password?.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-users
-              port:
-                number: {{ .Values.users.httpPort }}
-        - path: /(groups?.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-users
-              port: 
-                number: {{ .Values.users.httpPort }}
-        - path: /(tokens)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-users
-              port: 
-                number: {{ .Values.users.httpPort }}
-        - path: /(things?.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-things
-              port: 
-                number: {{ .Values.things.httpPort }}
-        - path: /(channels?.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-things
-              port: 
-                number: {{ .Values.things.httpPort }}
-        - path: /(connect?.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-things
-              port: 
-                number: {{ .Values.things.httpPort }}
-        - path: /version/users/?(.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-users
-              port: 
-                number: {{ .Values.users.httpPort }}
-        - path: /version/things/?(.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-things
-              port: 
-                number: {{ .Values.things.httpPort }}
-        - path: /version/http/?(.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-adapter-http
-              port: 
-                number: {{ default .Values.adapter_http.httpPort }}
+          - path: /(users?.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port: 
+                  number: {{ .Values.users.httpPort }}
+          - path: /(password?.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+          - path: /(groups?.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port: 
+                  number: {{ .Values.users.httpPort }}
+          - path: /(tokens)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port: 
+                  number: {{ .Values.users.httpPort }}
+          - path: /(things?.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-things
+                port: 
+                  number: {{ .Values.things.httpPort }}
+          - path: /(channels?.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-things
+                port: 
+                  number: {{ .Values.things.httpPort }}
+          - path: /(connect?.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-things
+                port: 
+                  number: {{ .Values.things.httpPort }}
+          - path: /version/users/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port: 
+                  number: {{ .Values.users.httpPort }}
+          - path: /version/things/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-things
+                port: 
+                  number: {{ .Values.things.httpPort }}
+          - path: /version/http/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-adapter-http
+                port: 
+                  number: {{ default .Values.adapter_http.httpPort }}
 {{- if .Values.notifier_smtp.enabled }}
-        - path: /smtp-notifier/?(.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-notifier-smtp
-              port: 
-                number: {{ .Values.notifier_smtp.httpPort }}
+          - path: /smtp-notifier/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-notifier-smtp
+                port: 
+                  number: {{ .Values.notifier_smtp.httpPort }}
 {{- end }}
 {{- if .Values.bootstrap.enabled }}
-        - path: /bootstrap/?(.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-bootstrap
-              port: 
-                number: {{ .Values.bootstrap.httpPort }}
-        - path: /bs/?(.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-bootstrap
-              port: 
-                number: {{ .Values.bootstrap.httpPort }}
+          - path: /bootstrap/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-bootstrap
+                port: 
+                  number: {{ .Values.bootstrap.httpPort }}
+          - path: /bs/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-bootstrap
+                port: 
+                  number: {{ .Values.bootstrap.httpPort }}
 {{- end }}
 {{- if .Values.influxdb.enabled }}
-        - path: /reader/?(.*)
-          pathType: Prefix
-          backend:
-            service:
-              name:  {{ .Release.Name }}-influxdb-reader
-              port: 
-                number: {{ .Values.influxdb.reader.httpPort }}
+          - path: /reader/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name:  {{ .Release.Name }}-influxdb-reader
+                port: 
+                  number: {{ .Values.influxdb.reader.httpPort }}
 {{- end }}
 {{- if .Values.twins.enabled }}
-        - path: /(twins?.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-twins
-              port: 
-                number: {{ .Values.twins.httpPort }}
-        - path: /(states?.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-twins
-              port: 
-                number: {{ .Values.twins.httpPort }}
+          - path: /(twins?.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-twins
+                port: 
+                  number: {{ .Values.twins.httpPort }}
+          - path: /(states?.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-twins
+                port: 
+                  number: {{ .Values.twins.httpPort }}
 {{- end }}
 {{- if .Values.adapter_opcua.enabled }}
-        - path: /(browse?.*)
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-adapter-opcua
-              port: 
-                number: {{ default .Values.adapter_opcua.httpPort }}
+          - path: /(browse?.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-adapter-opcua
+                port: 
+                  number: {{ default .Values.adapter_opcua.httpPort }}
 {{- end }}
 {{- if .Values.ingress.tls }}
   tls:
