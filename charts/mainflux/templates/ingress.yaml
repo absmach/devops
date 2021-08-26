@@ -18,20 +18,20 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-ui
-              port:
-                number: {{ .Values.ui.port }}
-        - path: /version
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-things
-              port:
-                number: {{ .Values.things.httpPort }}
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-ui
+                port:
+                  number: {{ .Values.ui.port }}
+          - path: /version
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-things
+                port:
+                  number: {{ .Values.things.httpPort }}
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
