@@ -78,7 +78,7 @@ spec:
               name: {{ .Release.Name }}-users
               port: 
                 number: {{ .Values.users.httpPort }}
-        - path: /(_tokens)
+        - path: /(tokens)
           pathType: Prefix
           backend:
             service:
@@ -262,7 +262,7 @@ data:
   8883: "{{ .Release.Namespace }}/{{ .Release.Name }}-nginx-internal:8883"
 metadata:
   name: tcp-services
-  namespace: {{ .Release.Namespace }}
+  namespace: ingress-nginx
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -270,4 +270,4 @@ data:
   5683: "{{ .Release.Namespace }}/{{ .Release.Name }}-adapter-coap:5683"
 metadata:
   name: udp-services
-  namespace: {{ .Release.Namespace }}
+  namespace: ingress-nginx
