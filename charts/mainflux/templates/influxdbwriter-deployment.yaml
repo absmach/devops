@@ -65,7 +65,7 @@ spec:
           stdin: true
           tty: true
           volumeMounts:
-            - mountPath: /config/subjects.toml
+            - mountPath: {{ .Values.influxdb.configPath }}
               name: influxdb-writer-config
               subPath: subjects.toml
       dnsPolicy: ClusterFirst
