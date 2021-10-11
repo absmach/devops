@@ -67,7 +67,7 @@ spec:
           stdin: true
           tty: true
           volumeMounts:
-            - mountPath: {{ .Values.influxdb.configPath }}
+            - mountPath: {{ .Values.mongodb.configPath }}
               name: mongodb-writer-config
               subPath: subjects.toml
       imagePullSecrets:
@@ -80,31 +80,4 @@ spec:
             name: {{ .Release.Name }}-mongodb-writer-config
             optional: false
           name: mongodb-writer-config
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Release.Name }}-mongodb-writer
-spec:
-  selector:
-    app: {{ .Release.Name }}
-    component: mongodb-writer
-  ports:
-    - port: {{ .Values.mongodb.writer.httpPort }}
-      protocol: TCP
-      name: {{ .Release.Name }}-mongodb-writer-{{ .Values.mongodb.writer.httpPort }}
-      
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Release.Name }}-mongodb-reader
-spec:
-  selector:
-    app: {{ .Release.Name }}
-    component: mongodb-reader
-  ports:
-    - port: {{ .Values.mongodb.reader.httpPort }}
-      protocol: TCP
-      name: {{ .Release.Name }}-mongodb-writer-{{ .Values.mongodb.reader.httpPort }}
 {{- end }}
