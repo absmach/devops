@@ -169,6 +169,24 @@ influxdb:
     cronjob:
       schedule: "0 2 * * *"
 
+mongodb:
+  enabled: false
+  dbPort: 27017
+  writer:
+    image: {}
+    httpPort: 8901
+  reader:
+    image: {}
+    httpPort: 8904
+  database: "mainflux"
+  authEnabled: true
+  adminUser:
+    name: "mainflux"
+    pwd: "mainflux"
+  configPath: "/subjects.toml"
+  contentType: "application/senml+json"
+  transformer: "json"
+
 nats:
   auth:
     enabled: false
