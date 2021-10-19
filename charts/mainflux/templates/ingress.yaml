@@ -57,99 +57,36 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(users?.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port: 
-                  number: {{ .Values.users.httpPort }}
-          - path: /(password?.*)
+          - path: /(users|password|tokens|groups.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
-          - path: /(groups?.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port: 
-                  number: {{ .Values.users.httpPort }}
-          - path: /(tokens)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port: 
-                  number: {{ .Values.users.httpPort }}
-          - path: /(things?.*)
+          - path: /(things|channels|connect|disconnect.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-things
-                port: 
+                port:
                   number: {{ .Values.things.httpPort }}
-          - path: /(channels?.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-things
-                port: 
-                  number: {{ .Values.things.httpPort }}
-          - path: /(connect?.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-things
-                port: 
-                  number: {{ .Values.things.httpPort }}
-          - path: /version/users/?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port: 
-                  number: {{ .Values.users.httpPort }}
-          - path: /version/things/?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-things
-                port: 
-                  number: {{ .Values.things.httpPort }}
-          - path: /version/http/?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-adapter-http
-                port: 
-                  number: {{ default .Values.adapter_http.httpPort }}
 {{- if .Values.notifier_smtp.enabled }}
           - path: /smtp-notifier/?(.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-notifier-smtp
-                port: 
+                port:
                   number: {{ .Values.notifier_smtp.httpPort }}
 {{- end }}
 {{- if .Values.bootstrap.enabled }}
-          - path: /bootstrap/?(.*)
+          - path: /(bootstrap|bs)/?(.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-bootstrap
-                port: 
-                  number: {{ .Values.bootstrap.httpPort }}
-          - path: /bs/?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-bootstrap
-                port: 
+                port:
                   number: {{ .Values.bootstrap.httpPort }}
 {{- end }}
 {{- if .Values.influxdb.enabled }}
@@ -158,32 +95,25 @@ spec:
             backend:
               service:
                 name:  {{ .Release.Name }}-influxdb-reader
-                port: 
+                port:
                   number: {{ .Values.influxdb.reader.httpPort }}
 {{- end }}
 {{- if .Values.twins.enabled }}
-          - path: /(twins?.*)
+          - path: /(twins|states.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-twins
-                port: 
-                  number: {{ .Values.twins.httpPort }}
-          - path: /(states?.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-twins
-                port: 
+                port:
                   number: {{ .Values.twins.httpPort }}
 {{- end }}
 {{- if .Values.adapter_opcua.enabled }}
-          - path: /(browse?.*)
+          - path: /(browse.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-adapter-opcua
-                port: 
+                port:
                   number: {{ default .Values.adapter_opcua.httpPort }}
 {{- end }}
 {{- if .Values.ingress.tls }}
@@ -203,7 +133,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-tls-secret: {{ .Release.Namespace }}/ca
     nginx.ingress.kubernetes.io/auth-tls-verify-client: "optional"
     nginx.ingress.kubernetes.io/auth-tls-verify-depth: "2"
-{{- end }}    
+{{- end }}
 {{- if .Values.ingress.annotations }}
 {{ toYaml .Values.ingress.annotations | indent 4 }}
 {{- end }}
@@ -218,12 +148,12 @@ spec:
       http:
         paths:
 {{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
-          - path: /(http/?.*)
+          - path: /(http/.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-nginx-internal
-                port: 
+                port:
                   number: 80
           - path: /(mqtt)
             pathType: Prefix
@@ -233,21 +163,21 @@ spec:
                 port:
                   number: 80
 {{- else }}
-          - path: /http/?(.*)
+          - path: /http/(.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-adapter-http
-                port: 
+                port:
                   number: {{ .Values.adapter_http.httpPort }}
           - path: /(mqtt)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-mqtt
-                port: 
+                port:
                   number: {{ default .Values.mqtt.adapter.wsPort }}
-{{- end }}              
+{{- end }}
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
