@@ -45,6 +45,8 @@ spec:
               protocol: TCP
           stdin: true
           tty: true
+      imagePullSecrets:
+      - name: regcred
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 {{- end }}

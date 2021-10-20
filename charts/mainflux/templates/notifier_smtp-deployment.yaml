@@ -103,6 +103,8 @@ spec:
               subPath: config.toml                          
           stdin: true
           tty: true
+      imagePullSecrets:
+      - name: regcred
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       volumes:

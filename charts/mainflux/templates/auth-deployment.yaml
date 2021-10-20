@@ -47,5 +47,7 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.auth.grpcPort }}
               protocol: TCP
+      imagePullSecrets:
+      - name: regcred
       dnsPolicy: ClusterFirst
       restartPolicy: Always

@@ -79,6 +79,8 @@ spec:
           ports:
             - containerPort: {{ .Values.certs.httpPort }}
               protocol: TCP
+      imagePullSecrets:
+      - name: regcred
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 {{- end }}

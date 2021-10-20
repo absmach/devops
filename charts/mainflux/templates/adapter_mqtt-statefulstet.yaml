@@ -51,6 +51,8 @@ spec:
         app: {{ .Release.Name}}
         component: mqtt
     spec:
+      imagePullSecrets:
+      - name: regcred
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       securityContext:
