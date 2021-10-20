@@ -68,7 +68,7 @@ spec:
               name: users-config
               subPath: email.tmpl
       imagePullSecrets:
-      - name: regcred
+      - name: {{ .Values.defaults.imagePullSecrets }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       volumes:

@@ -48,6 +48,6 @@ spec:
             - containerPort: {{ .Values.auth.grpcPort }}
               protocol: TCP
       imagePullSecrets:
-      - name: regcred
+      - name: {{ .Values.defaults.imagePullSecrets }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always

@@ -52,7 +52,7 @@ spec:
         component: mqtt
     spec:
       imagePullSecrets:
-      - name: regcred
+      - name: {{ .Values.defaults.imagePullSecrets }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       securityContext:

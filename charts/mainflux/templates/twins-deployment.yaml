@@ -44,7 +44,7 @@ spec:
             - containerPort: {{ .Values.twins.httpPort }}
               protocol: TCP
       imagePullSecrets:
-      - name: regcred
+      - name: {{ .Values.defaults.imagePullSecrets }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 {{- end }}

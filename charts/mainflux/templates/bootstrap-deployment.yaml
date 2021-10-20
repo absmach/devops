@@ -52,7 +52,7 @@ spec:
             - containerPort: {{ .Values.bootstrap.httpPort }}
               protocol: TCP
       imagePullSecrets:
-      - name: regcred
+      - name: {{ .Values.defaults.imagePullSecrets }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 {{- end }}
