@@ -7,6 +7,7 @@ defaults:
     pullPolicy: "IfNotPresent"
     repository: "mainflux"
     tag: "0.12.0"
+    imagePullSecrets: ""
   # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
   replicaCount: 3
   natsPort: 4222

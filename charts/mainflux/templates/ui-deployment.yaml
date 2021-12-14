@@ -29,5 +29,7 @@ spec:
           stdin: true
           tty: true
 
+      imagePullSecrets:
+      - name: {{ .Values.defaults.imagePullSecrets }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
