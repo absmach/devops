@@ -155,7 +155,7 @@ spec:
       http:
         paths:
 {{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
-          - path: /(http/.*)
+          - path: /(http/?.*)
             pathType: Prefix
             backend:
               service:
@@ -170,7 +170,7 @@ spec:
                 port:
                   number: 80
 {{- else }}
-          - path: /http/(.*)
+          - path: /http/?(.*)
             pathType: Prefix
             backend:
               service:
