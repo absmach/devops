@@ -81,7 +81,14 @@ spec:
                   number: {{ .Values.notifier_smtp.httpPort }}
 {{- end }}
 {{- if .Values.bootstrap.enabled }}
-          - path: /(bootstrap|bs)/?(.*)
+          - path: /bootstrap/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-bootstrap
+                port:
+                  number: {{ .Values.bootstrap.httpPort }}
+          - path: /bs/?(.*)
             pathType: Prefix
             backend:
               service:
