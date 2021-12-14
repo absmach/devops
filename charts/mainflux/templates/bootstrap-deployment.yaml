@@ -51,6 +51,8 @@ spec:
           ports:
             - containerPort: {{ .Values.bootstrap.httpPort }}
               protocol: TCP
+      imagePullSecrets:
+      - name: {{ .Values.defaults.imagePullSecrets }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 {{- end }}
