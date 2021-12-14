@@ -55,5 +55,7 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.things.authHttpPort }}
               protocol: TCP
+      imagePullSecrets:
+      - name: {{ .Values.defaults.imagePullSecrets }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always

@@ -71,7 +71,7 @@ spec:
               name: mongodb-writer-config
               subPath: subjects.toml
       imagePullSecrets:
-      - name: regcred
+      - name: {{ .Values.defaults.imagePullSecrets }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       volumes:

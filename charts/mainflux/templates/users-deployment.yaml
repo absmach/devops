@@ -67,6 +67,8 @@ spec:
             - mountPath: /email.tmpl
               name: users-config
               subPath: email.tmpl
+      imagePullSecrets:
+      - name: {{ .Values.defaults.imagePullSecrets }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       volumes:
