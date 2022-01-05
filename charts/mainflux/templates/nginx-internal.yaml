@@ -93,7 +93,7 @@ data:
         }
 
         # Proxy pass to things service
-        location ~ ^/(things|channels|connect) {
+        location ~ ^/(things|channels|connect|disconnect) {
           proxy_redirect off;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
@@ -504,5 +504,5 @@ spec:
       name: mqtt
     - port: 80
       protocol: TCP
-      name: http           
+      name: http
 {{- end }}
