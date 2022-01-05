@@ -330,3 +330,36 @@ nginx_internal:
     pullPolicy: "IfNotPresent"
     repository: "nginx"
     tag: "1.19.1-alpine"
+
+# All options for loki-stack: https://github.com/grafana/helm-charts/tree/main/charts/loki-stack
+loki-stack:
+  enabled: true
+  loki:
+    enabled: false
+    persistence:
+      enabled: true
+  promtail:
+    enabled: false
+  fluent-bit:
+    enabled: false
+  grafana:
+    enabled: true
+    sidecar:
+      datasources:
+        enabled: true
+    image:
+      tag: 8.1.6
+    # grafana.ini:
+    #   server:
+    #     domain:
+    #     root_url: "%(protocol)s://%(domain)s/grafana"
+    #     serve_from_sub_path: true
+    # ingress:
+    #   enabled: false
+    #   hosts: {}
+    #   path: "/grafana"
+    # persistence:
+    #   enabled: true
+    #   size: 3Gi
+  prometheus:
+    enabled: false

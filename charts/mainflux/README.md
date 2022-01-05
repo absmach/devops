@@ -9,6 +9,7 @@ Helm Chart for the Mainflux IoT Platform
   ```
   helm repo add stable https://charts.helm.sh/stable
   helm repo add bitnami https://charts.bitnami.com/bitnami
+  helm repo add grafana https://grafana.github.io/helm-charts
   ```
 - Nginx Ingress Controller
 - If using the mTLS setup:
@@ -88,6 +89,7 @@ The following table lists the configurable parameters and their default values.
 | notifier_smtp.password               | SMTP password                                                              | false        |
 | notifier_smtp.secret                 | SMTP secret                                                                | false        |
 | notifier_smtp.httpPort               | SMTP notifier HTTP port                                                    | false        |
+| loki_stack.enabled                   | Enable Loki_Stack                                                          | true         |
 
 All Mainflux services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.
 
@@ -115,3 +117,13 @@ List of add-ons services in charts:
 By default scale of MQTT adapter, Things, Envoy, Auth and NATS will be set to 3. It's recommended that you set this values to number of your nodes in Kubernetes cluster, i.e. `--set defaults.replicaCount=3 --set nats.replicaCount=3`
 
 **Note:** make sure you run `helm install` with `--dependency-update` flag!
+
+Grafana admin password:
+```
+kubectl get secret --namespace mf mainflux-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+
+Grafana access on http://localhost:3000:
+```
+kubectl port-forward --namespace mf service/mainflux-grafana 3000:80
+```
