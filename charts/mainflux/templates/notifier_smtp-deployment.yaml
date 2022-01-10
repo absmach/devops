@@ -8,7 +8,7 @@ metadata:
   name: {{ .Release.Name }}-email-notifier-config
 data:
   email.tmpl: |
-    To: {{`{{.To}}`}}
+    To: {{`{{range $index, $v := .To}}{{if $index}},{{end}}{{$v}}{{end}}`}}
     From: {{`{{.From}}`}}
     Subject: {{`{{.Subject}}`}}
     {{`{{.Header}}`}}
