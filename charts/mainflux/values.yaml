@@ -349,17 +349,18 @@ loki-stack:
         enabled: true
     image:
       tag: 8.1.6
-    # grafana.ini:
-    #   server:
-    #     domain:
-    #     root_url: "%(protocol)s://%(domain)s/grafana"
-    #     serve_from_sub_path: true
-    # ingress:
-    #   enabled: false
-    #   hosts: {}
-    #   path: "/grafana"
-    # persistence:
-    #   enabled: true
-    #   size: 3Gi
+    grafana.ini:
+      server:
+        domain: example.com
+        root_url: "%(protocol)s://%(domain)s/grafana"
+        serve_from_sub_path: true
+    ingress:
+      enabled: false
+      hosts:
+        - "example.com"
+      path: "/grafana"
+    persistence:
+      enabled: true
+      size: 3Gi
   prometheus:
     enabled: false
