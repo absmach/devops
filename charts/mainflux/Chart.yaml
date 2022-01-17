@@ -79,3 +79,7 @@ dependencies:
     repository: "@bitnami"
     alias: postgresql-notifier-smtp
     condition: notifier_smtp.enabled
+  - name: loki-stack
+    version: "2.5.0"
+    repository: "@grafana"
+    condition: loki-stack.enabled    
