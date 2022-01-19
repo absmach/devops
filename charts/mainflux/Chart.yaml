@@ -39,8 +39,8 @@ dependencies:
   - name: postgresql
     version: "10.2.3"
     repository: "@bitnami"
-    alias: postgresql-bootstrap
-    condition: postgresql-bootstrap.enabled
+    alias: postgresqlBootstrap
+    condition: postgresqlBootstrap.enabled
   - name: postgresql
     version: "10.2.3"
     repository: "@bitnami"
