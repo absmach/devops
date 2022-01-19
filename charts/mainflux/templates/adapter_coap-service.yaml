@@ -10,9 +10,9 @@ spec:
     app: {{ .Release.Name }}
     component: adapter-coap
   ports:
-    - port: {{ .Values.adapter_coap.udpPort }}
+    - port: {{ .Values.adapter_coap.port }}
       protocol: UDP
-      name: "udp-{{ .Values.adapter_coap.udpPort }}"
-    - port: {{ .Values.adapter_coap.udptcpPort }}
+      name: "udp-{{ .Values.adapter_coap.port }}"
+    - port: {{ .Values.adapter_coap.port }}
       protocol: TCP
-      name: "tcp-{{ .Values.adapter_coap.udpPort }}"      
+      name: "tcp-{{ .Values.adapter_coap.port }}"
