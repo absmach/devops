@@ -39,7 +39,7 @@ adapter_http:
 
 adapter_coap:
   image: {}
-  udpPort: 5683
+  port: 5683
 
 adapter_opcua:
   enabled: false
