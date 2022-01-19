@@ -68,7 +68,7 @@ spec:
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
             - name: MF_SMTP_NOTIFIER_DB
-              value: value: {{ .Values.postgresqlNotifierSMTP.postgresqlDatabase | quote }}
+              value: {{ .Values.postgresqlNotifierSMTP.postgresqlDatabase | quote }}
             - name: MF_SMTP_NOTIFIER_DB_HOST
             {{- if .Values.postgresqlNotifierSMTP.enabled }}
               value: {{ .Release.Name }}-postgresql-notifier-smtp
@@ -76,11 +76,11 @@ spec:
               value: {{ .Values.postgresqlNotifierSMTP.postgresqlHost | quote }}
             {{- end }}
             - name: MF_SMTP_NOTIFIER_DB_PASS
-              value: value: {{ .Values.postgresqlNotifierSMTP.postgresqlPassword | quote }}
+              value: {{ .Values.postgresqlNotifierSMTP.postgresqlPassword | quote }}
             - name: MF_SMTP_NOTIFIER_DB_PORT
               value: "{{ .Values.notifier_smtp.dbPort }}"
             - name: MF_SMTP_NOTIFIER_DB_USER
-              value: value: {{ .Values.postgresqlNotifierSMTP.postgresqlUsername | quote }}
+              value: {{ .Values.postgresqlNotifierSMTP.postgresqlUsername | quote }}
             - name: MF_SMTP_NOTIFIER_PORT
               value: "{{ .Values.notifier_smtp.httpPort }}"
             - name: MF_SMTP_NOTIFIER_LOG_LEVEL
