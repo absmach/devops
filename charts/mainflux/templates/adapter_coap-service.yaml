@@ -12,3 +12,7 @@ spec:
   ports:
     - port: {{ .Values.adapter_coap.udpPort }}
       protocol: UDP
+      name: "udp-{{ .Values.adapter_coap.udpPort }}"
+    - port: {{ .Values.adapter_coap.udptcpPort }}
+      protocol: TCP
+      name: "tcp-{{ .Values.adapter_coap.udpPort }}"      

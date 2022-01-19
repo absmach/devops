@@ -34,6 +34,10 @@ spec:
           ports:
             - containerPort: {{ .Values.adapter_coap.udpPort }}
               protocol: UDP
+              name: "udp-{{ .Values.adapter_coap.udpPort }}"
+            - containerPort: {{ .Values.adapter_coap.udpPort }}
+              name: "tcp-{{ .Values.adapter_coap.udpPort }}"
+              protocol: TCP              
           stdin: true
           tty: true
       imagePullSecrets:
