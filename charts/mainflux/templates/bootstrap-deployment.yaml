@@ -22,15 +22,19 @@ spec:
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
             - name: MF_BOOTSTRAP_DB
-              value: {{ index .Values "postgresql-bootstrap" "postgresqlDatabase" }}
+              value: {{ .Values.postgresqlBootstrap.postgresqlDatabase | quote }}
             - name: MF_BOOTSTRAP_DB_HOST
+            {{- if .Values.postgresqlBootstrap.enabled }}
               value: {{ .Release.Name }}-postgresql-bootstrap
+            {{- else }}
+              value: {{ .Values.postgresqlBootstrap.postgresqlHost | quote }}
+            {{- end }}
             - name: MF_BOOTSTRAP_DB_PASS
-              value: {{ index .Values "postgresql-bootstrap" "postgresqlPassword" }}
+              value: {{ .Values.postgresqlBootstrap.postgresqlPassword | quote }}
             - name: MF_BOOTSTRAP_DB_PORT
               value: "{{ .Values.bootstrap.dbPort }}"
             - name: MF_BOOTSTRAP_DB_USER
-              value: {{ index .Values "postgresql-bootstrap" "postgresqlUsername" }}
+              value: {{ .Values.postgresqlBootstrap.postgresqlUsername | quote }}
             - name: MF_THINGS_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:{{ .Values.things.redisESPort }}
             - name: MF_BOOTSTRAP_ES_URL
