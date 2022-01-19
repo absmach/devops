@@ -196,8 +196,11 @@ nats:
   maxPayload: 268435456
   replicaCount: 3
 
-postgresql-users:
+postgresqlUsers:
+  ## If you want to use an external database, set this to false and change postgresqlHost
+  enabled: true
   name: postgresql-users
+  postgresqlHost: localhost
   postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: users
@@ -207,8 +210,11 @@ postgresql-users:
   persistence:
     size: 1Gi
 
-postgresql-things:
+postgresqlThings:
+  ## If you want to use an external database, set this to false and change postgresqlHost
+  enabled: true
   name: postgresql-things
+  postgresqlHost: localhost
   postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: things
@@ -218,8 +224,11 @@ postgresql-things:
   persistence:
     size: 1Gi
 
-postgresql-auth:
+postgresqlAuth:
+  ## If you want to use an external database, set this to false and change postgresqlHost
+  enabled: true
   name: postgresql-auth
+  postgresqlHost: localhost
   postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: auth
@@ -229,8 +238,11 @@ postgresql-auth:
   persistence:
     size: 1Gi
 
-postgresql-bootstrap:
+postgresqlBootstrap:
+  ## If you want to use an external database, set this to false and change postgresqlHost
+  enabled: false
   name: postgresql-bootstrap
+  postgresqlHost: localhost
   postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: bootstrap
@@ -240,8 +252,11 @@ postgresql-bootstrap:
   persistence:
     size: 1Gi
 
-postgresql-certs:
+postgresqlCerts:
+  ## If you want to use an external database, set this to false and change postgresqlHost
+  enabled: false
   name: postgresql-certs
+  postgresqlHost: localhost
   postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: certs
@@ -251,8 +266,11 @@ postgresql-certs:
   persistence:
     size: 1Gi
 
-postgresql-notifier-smtp:
+postgresqlNotifierSMTP:
+  ## If you want to use an external database, set this to false and change postgresqlHost
+  enabled: false
   name: postgresql-notifier-smtp
+  postgresqlHost: localhost
   postgresqlUsername: postgres
   postgresqlPassword: mainflux
   postgresqlDatabase: subscriptions
