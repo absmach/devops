@@ -25,7 +25,7 @@ spec:
                 name: {{ .Release.Name }}-ui
                 port:
                   number: {{ .Values.ui.port }}
-          - path: /version
+          - path: /health
             pathType: Prefix
             backend:
               service:
