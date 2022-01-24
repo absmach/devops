@@ -57,7 +57,7 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(users|password|tokens|groups.*)
+          - path: /(users|password|tokens.*)
             pathType: Prefix
             backend:
               service:
@@ -65,6 +65,20 @@ spec:
                 port:
                   number: {{ .Values.users.httpPort }}
           - path: /(things|channels|connect|disconnect.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-things
+                port:
+                  number: {{ .Values.things.httpPort }}
+          - path: /groups/users.*
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+          - path: /groups/things.*
             pathType: Prefix
             backend:
               service:
