@@ -14,6 +14,9 @@ dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 10.2.3
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.2.3
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 12.6.2
@@ -35,5 +38,11 @@ dependencies:
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
   version: 10.4.1
-digest: sha256:5d94c8be0eed5322fecac957f18487a4dd502340b77d27957faa10feab0b340d
-generated: "2021-01-22T19:08:41.71519337+01:00"
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.2.3
+- name: loki-stack
+  repository: https://grafana.github.io/helm-charts
+  version: 2.5.0
+digest: sha256:1dba38cbffd00e2743cc1f398d85aacf975e65242b9d050a92261a36aa703498
+generated: "2022-01-23T02:24:32.014784219+01:00"

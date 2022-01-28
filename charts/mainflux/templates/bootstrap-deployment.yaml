@@ -22,19 +22,19 @@ spec:
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
             - name: MF_BOOTSTRAP_DB
-              value: {{ .Values.postgresqlBootstrap.postgresqlDatabase | quote }}
+              value: {{ .Values.postgresqlbootstrap.postgresqlDatabase | quote }}
             - name: MF_BOOTSTRAP_DB_HOST
-            {{- if .Values.postgresqlBootstrap.enabled }}
-              value: {{ .Release.Name }}-postgresql-bootstrap
+            {{- if .Values.postgresqlbootstrap.enabled }}
+              value: {{ .Release.Name }}-postgresqlbootstrap
             {{- else }}
-              value: {{ .Values.postgresqlBootstrap.postgresqlHost | quote }}
+              value: {{ .Values.postgresqlbootstrap.postgresqlHost | quote }}
             {{- end }}
             - name: MF_BOOTSTRAP_DB_PASS
-              value: {{ .Values.postgresqlBootstrap.postgresqlPassword | quote }}
+              value: {{ .Values.postgresqlbootstrap.postgresqlPassword | quote }}
             - name: MF_BOOTSTRAP_DB_PORT
               value: "{{ .Values.bootstrap.dbPort }}"
             - name: MF_BOOTSTRAP_DB_USER
-              value: {{ .Values.postgresqlBootstrap.postgresqlUsername | quote }}
+              value: {{ .Values.postgresqlbootstrap.postgresqlUsername | quote }}
             - name: MF_THINGS_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:{{ .Values.things.redisESPort }}
             - name: MF_BOOTSTRAP_ES_URL
@@ -55,8 +55,10 @@ spec:
           ports:
             - containerPort: {{ .Values.bootstrap.httpPort }}
               protocol: TCP
-      imagePullSecrets:
-      - name: {{ .Values.defaults.imagePullSecrets }}
+        {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 {{- end }}

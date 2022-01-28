@@ -47,8 +47,10 @@ spec:
               protocol: TCP
           stdin: true
           tty: true
-      imagePullSecrets:
-      - name: {{ .Values.defaults.imagePullSecrets }}
+        {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 {{- end }}

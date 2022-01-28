@@ -70,8 +70,10 @@ spec:
             - mountPath: {{ .Values.mongodb.configPath }}
               name: mongodb-writer-config
               subPath: subjects.toml
-      imagePullSecrets:
-      - name: {{ .Values.defaults.imagePullSecrets }}
+        {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       volumes:
