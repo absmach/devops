@@ -6,7 +6,7 @@ name: mainflux
 description: Mainflux IoT Platform
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
-version: 1.0.1
+version: 1.0.2
 appVersion: "0.12.1"
 home: https://www.mainflux.com
 sources:
