@@ -22,19 +22,19 @@ spec:
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
             - name: MF_AUTH_DB
-              value: {{ .Values.postgresqlAuth.postgresqlDatabase | quote }}
+              value: {{ .Values.postgresqlauth.postgresqlDatabase | quote }}
             - name: MF_AUTH_DB_HOST
-            {{- if .Values.postgresqlAuth.enabled }}
-              value: {{ .Release.Name }}-postgresql-auth
+            {{- if .Values.postgresqlauth.enabled }}
+              value: {{ .Release.Name }}-postgresqlauth
             {{- else }}
-              value: {{ .Values.postgresqlAuth.postgresqlHost | quote }}
+              value: {{ .Values.postgresqlauth.postgresqlHost | quote }}
             {{- end }}
             - name: MF_AUTH_DB_PASS
-              value: {{ .Values.postgresqlAuth.postgresqlPassword | quote }}
+              value: {{ .Values.postgresqlauth.postgresqlPassword | quote }}
             - name: MF_AUTH_DB_PORT
               value: "{{ .Values.auth.dbPort }}"
             - name: MF_AUTH_DB_USER
-              value: {{ .Values.postgresqlAuth.postgresqlUsername | quote }}
+              value: {{ .Values.postgresqlauth.postgresqlUsername | quote }}
             - name: MF_AUTH_GRPC_PORT
               value: "{{ .Values.auth.grpcPort }}"
             - name: MF_AUTH_HTTP_PORT
@@ -51,7 +51,9 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.auth.grpcPort }}
               protocol: TCP
-      imagePullSecrets:
-      - name: {{ .Values.defaults.imagePullSecrets }}
+        {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always

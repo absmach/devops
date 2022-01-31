@@ -24,19 +24,19 @@ spec:
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
             - name: MF_CERTS_DB_HOST
-            {{- if .Values.postgresqlCerts.enabled }}
-              value: {{ .Release.Name }}-postgresql-certs
+            {{- if .Values.postgresqlcerts.enabled }}
+              value: {{ .Release.Name }}-postgresqlcerts
             {{- else }}
-              value: {{ .Values.postgresqlCerts.postgresqlHost | quote }}
+              value: {{ .Values.postgresqlcerts.postgresqlHost | quote }}
             {{- end }}
             - name: MF_CERTS_DB
-              value: {{ .Values.postgresqlCerts.postgresqlDatabase | quote }}
+              value: {{ .Values.postgresqlcerts.postgresqlDatabase | quote }}
             - name: MF_CERTS_DB_PASS
-              value: {{ .Values.postgresqlCerts.postgresqlPassword | quote }}
+              value: {{ .Values.postgresqlcerts.postgresqlPassword | quote }}
             - name: MF_CERTS_DB_PORT
               value: "{{ .Values.certs.dbPort }}"
             - name: MF_CERTS_DB_USER
-              value: {{ .Values.postgresqlCerts.postgresqlUsername | quote }}
+              value: {{ .Values.postgresqlcerts.postgresqlUsername | quote }}
             - name: MF_CERTS_DB_SSL_MODE
               value: disable
             - name: MF_CERTS_DB_SSL_CERT
@@ -83,8 +83,10 @@ spec:
           ports:
             - containerPort: {{ .Values.certs.httpPort }}
               protocol: TCP
-      imagePullSecrets:
-      - name: {{ .Values.defaults.imagePullSecrets }}
+        {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 {{- end }}

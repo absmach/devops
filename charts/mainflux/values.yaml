@@ -7,7 +7,8 @@ defaults:
     pullPolicy: "IfNotPresent"
     repository: "mainflux"
     tag: "0.12.0"
-    imagePullSecrets: ""
+    imagePullSecrets:
+      - {}
   # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
   replicaCount: 3
   natsPort: 4222
@@ -196,7 +197,7 @@ nats:
   maxPayload: 268435456
   replicaCount: 3
 
-postgresqlUsers:
+postgresqlusers:
   ## If you want to use an external database, set this to false and change postgresqlHost
   enabled: true
   name: postgresql-users
@@ -210,7 +211,7 @@ postgresqlUsers:
   persistence:
     size: 1Gi
 
-postgresqlThings:
+postgresqlthings:
   ## If you want to use an external database, set this to false and change postgresqlHost
   enabled: true
   name: postgresql-things
@@ -224,7 +225,7 @@ postgresqlThings:
   persistence:
     size: 1Gi
 
-postgresqlAuth:
+postgresqlauth:
   ## If you want to use an external database, set this to false and change postgresqlHost
   enabled: true
   name: postgresql-auth
@@ -238,7 +239,7 @@ postgresqlAuth:
   persistence:
     size: 1Gi
 
-postgresqlBootstrap:
+postgresqlbootstrap:
   ## If you want to use an external database, set this to false and change postgresqlHost
   enabled: false
   name: postgresql-bootstrap
@@ -252,7 +253,7 @@ postgresqlBootstrap:
   persistence:
     size: 1Gi
 
-postgresqlCerts:
+postgresqlcerts:
   ## If you want to use an external database, set this to false and change postgresqlHost
   enabled: false
   name: postgresql-certs
@@ -266,7 +267,7 @@ postgresqlCerts:
   persistence:
     size: 1Gi
 
-postgresqlNotifierSMTP:
+postgresqlnotifiersmtp:
   ## If you want to use an external database, set this to false and change postgresqlHost
   enabled: false
   name: postgresql-notifier-smtp
@@ -373,12 +374,12 @@ loki-stack:
         root_url: "%(protocol)s://%(domain)s/grafana"
         serve_from_sub_path: true
     ingress:
-      enabled: false
+      enabled: true
       hosts:
         - "example.com"
       path: "/grafana"
     persistence:
-      enabled: true
+      enabled: false
       size: 3Gi
   prometheus:
     enabled: false

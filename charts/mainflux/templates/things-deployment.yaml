@@ -28,19 +28,19 @@ spec:
             - name: MF_THINGS_CACHE_URL
               value: {{ .Release.Name }}-redis-auth-master:{{ .Values.things.redisCachePort }}
             - name: MF_THINGS_DB
-              value: {{ .Values.postgresqlThings.postgresqlDatabase | quote }}
+              value: {{ .Values.postgresqlthings.postgresqlDatabase | quote }}
             - name: MF_THINGS_DB_HOST
-            {{- if .Values.postgresqlThings.enabled }}
-              value: {{ .Release.Name }}-postgresql-things
+            {{- if .Values.postgresqlthings.enabled }}
+              value: {{ .Release.Name }}-postgresqlthings
             {{- else }}
-              value: {{ .Values.postgresqlThings.postgresqlHost | quote}}
+              value: {{ .Values.postgresqlthings.postgresqlHost | quote}}
             {{- end }}
             - name: MF_THINGS_DB_PASS
-              value: {{ .Values.postgresqlThings.postgresqlPassword | quote}}
+              value: {{ .Values.postgresqlthings.postgresqlPassword | quote}}
             - name: MF_THINGS_DB_PORT
               value: "{{ .Values.things.dbPort }}"
             - name: MF_THINGS_DB_USER
-              value: {{ .Values.postgresqlThings.postgresqlUsername | quote}}
+              value: {{ .Values.postgresqlthings.postgresqlUsername | quote}}
             - name: MF_THINGS_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:{{ .Values.things.redisESPort }}
             - name: MF_THINGS_HTTP_PORT
@@ -59,7 +59,9 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.things.authHttpPort }}
               protocol: TCP
-      imagePullSecrets:
-      - name: {{ .Values.defaults.imagePullSecrets }}
+        {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always

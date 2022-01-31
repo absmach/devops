@@ -6,7 +6,7 @@ name: mainflux
 description: Mainflux IoT Platform
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
-version: 1.0.1
+version: 1.0.2
 appVersion: "0.12.1"
 home: https://www.mainflux.com
 sources:
@@ -24,28 +24,28 @@ dependencies:
   - name: postgresql
     version: "10.2.3"
     repository: "@bitnami"
-    alias: postgresqlThings
-    condition: postgresqlThings.enabled
+    alias: postgresqlthings
+    condition: postgresqlthings.enabled
   - name: postgresql
     version: "10.2.3"
     repository: "@bitnami"
-    alias: postgresqlUsers
-    condition: postgresqlUsers.enabled
+    alias: postgresqlusers
+    condition: postgresqlusers.enabled
   - name: postgresql
     version: "10.2.3"
     repository: "@bitnami"
-    alias: postgresqlAuth
-    condition: postgresqlAuth.enabled
+    alias: postgresqlauth
+    condition: postgresqlauth.enabled
   - name: postgresql
     version: "10.2.3"
     repository: "@bitnami"
-    alias: postgresqlBootstrap
-    condition: postgresqlBootstrap.enabled
+    alias: postgresqlbootstrap
+    condition: postgresqlbootstrap.enabled
   - name: postgresql
     version: "10.2.3"
     repository: "@bitnami"
-    alias: postgresqlCerts
-    condition: postgresqlCerts.enabled
+    alias: postgresqlcerts
+    condition: postgresqlcerts.enabled
   - name: redis
     version: "12.6.2"
     repository: "@bitnami"
@@ -80,8 +80,8 @@ dependencies:
   - name: postgresql
     version: "10.2.3"
     repository: "@bitnami"
-    alias: postgresqlNotifierSMTP
-    condition: postgresqlNotifierSMTP.enabled
+    alias: postgresqlnotifiersmtp
+    condition: postgresqlnotifiersmtp.enabled
   - name: loki-stack
     version: "2.5.0"
     repository: "@grafana"

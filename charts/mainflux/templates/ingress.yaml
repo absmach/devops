@@ -14,6 +14,7 @@ metadata:
 {{- end }}
   name: {{ .Release.Name }}-nginx-ingress
 spec:
+  ingressClassName: nginx
   rules:
     - host: "{{ .Values.ingress.hostname }}"
       http:
@@ -53,6 +54,7 @@ metadata:
 {{- end }}
   name: {{ .Release.Name }}-nginx-rewrite-ingress
 spec:
+  ingressClassName: nginx
   rules:
     - host: "{{ .Values.ingress.hostname }}"
       http:
@@ -71,14 +73,14 @@ spec:
                 name: {{ .Release.Name }}-things
                 port:
                   number: {{ .Values.things.httpPort }}
-          - path: /groups/users.*
+          - path: /groups/users/?(.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
-          - path: /groups/things.*
+          - path: /groups/things/?(.*)
             pathType: Prefix
             backend:
               service:
@@ -164,6 +166,7 @@ metadata:
 {{- end }}
   name: {{ .Release.Name }}-nginx-rewrite-ingress-http-adapter
 spec:
+  ingressClassName: nginx
   rules:
     - host: "{{ .Values.ingress.hostname }}"
       http:
