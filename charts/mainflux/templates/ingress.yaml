@@ -59,14 +59,14 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(users|password|tokens.*)
+          - path: /(users.*|password.*|tokens.*)
             pathType: Prefix
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
-          - path: /(things|channels|connect|disconnect.*)
+          - path: /(things.*|channels.*|connect.*|disconnect.*)
             pathType: Prefix
             backend:
               service:
@@ -122,7 +122,7 @@ spec:
                   number: {{ .Values.influxdb.reader.httpPort }}
 {{- end }}
 {{- if .Values.twins.enabled }}
-          - path: /(twins|states.*)
+          - path: /(twins.*|states.*)
             pathType: Prefix
             backend:
               service:
