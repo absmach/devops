@@ -44,5 +44,8 @@ dependencies:
 - name: loki-stack
   repository: https://grafana.github.io/helm-charts
   version: 2.5.0
-digest: sha256:b8e22daa1dae5d2a18d59a2187d720417cb2e718f0530cf25fa8dfd2f90a3f66
-generated: "2022-01-28T15:59:34.378322252+01:00"
+- name: keto
+  repository: https://k8s.ory.sh/helm/charts
+  version: 0.21.7
+digest: sha256:d1d5b2bd36185bf632d5a08bf9f26495d93781d8c3ec335066afc4cc8cd6b9f6
+generated: "2022-02-07T17:15:53.130234981+01:00"

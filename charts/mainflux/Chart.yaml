@@ -46,6 +46,11 @@ dependencies:
     repository: "@bitnami"
     alias: postgresqlcerts
     condition: postgresqlcerts.enabled
+  - name: postgresql
+    version: "10.2.3"
+    repository: "@bitnami"
+    alias: postgresqlketo
+    condition: postgresqlketo.enabled
   - name: redis
     version: "12.6.2"
     repository: "@bitnami"
@@ -86,3 +91,6 @@ dependencies:
     version: "2.5.0"
     repository: "@grafana"
     condition: loki-stack.enabled
+  - name: keto
+    version: "0.21.7"
+    repository: "@ory"

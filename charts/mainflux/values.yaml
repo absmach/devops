@@ -6,7 +6,7 @@ defaults:
   image:
     pullPolicy: "IfNotPresent"
     repository: "mainflux"
-    tag: "0.12.0"
+    tag: "latest"
     imagePullSecrets:
       - {}
   # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
@@ -383,3 +383,27 @@ loki-stack:
       size: 3Gi
   prometheus:
     enabled: false
+keto:
+  image:
+    tag: "v0.7.0"
+  keto:
+    config:
+      namespaces:
+        - id: 0
+          name: members
+      dsn: "postgresql://postgres:mainflux@mainflux-postgresqlketo:5432/keto?sslmode=disable"
+    autoMigrate: true
+
+postgresqlketo:
+  ## If you want to use an external database, set this to false and change postgresqlHost
+  enabled: true
+  name: postgresql-keto
+  postgresqlHost: localhost
+  postgresqlUsername: postgres
+  postgresqlPassword: mainflux
+  postgresqlDatabase: keto
+  resources:
+    requests:
+      cpu: 25m
+  persistence:
+    size: 1Gi
