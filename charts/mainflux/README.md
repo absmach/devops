@@ -10,6 +10,7 @@ Helm Chart for the Mainflux IoT Platform
   helm repo add stable https://charts.helm.sh/stable
   helm repo add bitnami https://charts.bitnami.com/bitnami
   helm repo add grafana https://grafana.github.io/helm-charts
+  helm repo add ory https://k8s.ory.sh/helm/charts
   ```
 - Nginx Ingress Controller
 - If using the mTLS setup:
