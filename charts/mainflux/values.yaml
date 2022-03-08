@@ -148,6 +148,9 @@ certs:
 ui:
   image: {}
   port: 3000
+  proxy: false
+  prefix: "ui"
+
 
 influxdb:
   enabled: false
@@ -407,3 +410,12 @@ postgresqlketo:
       cpu: 25m
   persistence:
     size: 1Gi
+
+oidc:
+  enabled: false
+  host: mainflux.io
+  realm: master
+  client_id: "mainflux.io"
+  client_secret: "3275634c-49f7-4e19-8ac0-ebf9b765140d"
+  cookie_secret: "KzE2bSt4VDRiendJUV3ZRDlEcFhaUT09"
+  redirect_after_logout_uri: 
