@@ -151,7 +151,6 @@ ui:
   proxy: false
   prefix: "ui"
 
-
 influxdb:
   enabled: false
   dbPort: 8086
@@ -410,6 +409,10 @@ postgresqlketo:
       cpu: 25m
   persistence:
     size: 1Gi
+  commonAnnotations:
+    helm.sh/hook-weight: "-1"
+    helm.sh/hook: "pre-install, pre-upgrade"
+    helm.sh/hook-delete-policy: "before-hook-creation"
 
 oidc:
   enabled: false
