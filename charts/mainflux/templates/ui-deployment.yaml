@@ -23,11 +23,11 @@ spec:
             - name: MF_UI_MQTT_WS_URL
               value: 'ws://localhost/mqtt'
             - name: MF_PROXY_AUTH
-              value: "{{ .Values.oidc.enabled }}"
+              value: "{{ .Values.ui.proxy }}"
             - name: MF_UI_APP_PREFIX
               value: "{{ .Values.ui.prefix }}"
             - name : MF_PROXY_LOGOUT_URL
-              value: "/oauth2/sign_out?rd=https%3A%2F%2F{{ .Values.oidc.host }}%2Fauth%2Frealms%2F{{ .Values.oidc.realm }}%2Fprotocol%2Fopenid-connect%2Flogout"
+              value: "{{ .Values.ui.prefix }}"
           image: "{{ default .Values.defaults.image.repository .Values.ui.image.repository }}/ui:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
           name: ui

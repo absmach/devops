@@ -150,6 +150,7 @@ ui:
   port: 3000
   proxy: false
   prefix: "ui"
+  logoutUrl: "/logout"
 
 influxdb:
   enabled: false
@@ -414,11 +415,3 @@ postgresqlketo:
     helm.sh/hook: "pre-install, pre-upgrade"
     helm.sh/hook-delete-policy: "before-hook-creation"
 
-oidc:
-  enabled: false
-  host: mainflux.io
-  realm: master
-  client_id: "mainflux.io"
-  client_secret: "3275634c-49f7-4e19-8ac0-ebf9b765140d"
-  cookie_secret: "KzE2bSt4VDRiendJUV3ZRDlEcFhaUT09"
-  redirect_after_logout_uri: 
