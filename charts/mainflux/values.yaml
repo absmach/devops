@@ -148,6 +148,10 @@ certs:
 ui:
   image: {}
   port: 3000
+  proxyAuth: false
+  prefix: "ui"
+  logoutUrl: "/logout"
+  wsUrl: "ws://localhost/mqtt"
 
 influxdb:
   enabled: false
@@ -407,3 +411,8 @@ postgresqlketo:
       cpu: 25m
   persistence:
     size: 1Gi
+  commonAnnotations:
+    helm.sh/hook-weight: "-1"
+    helm.sh/hook: "pre-install, pre-upgrade"
+    helm.sh/hook-delete-policy: "before-hook-creation"
+
