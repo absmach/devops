@@ -21,9 +21,9 @@ spec:
             - name: MF_UI_PORT
               value: "{{ .Values.ui.port }}"
             - name: MF_UI_MQTT_WS_URL
-              value: 'ws://localhost/mqtt'
+              value: "{{ .Values.ui.wsUrl }}"
             - name: MF_PROXY_AUTH
-              value: "{{ .Values.ui.proxy }}"
+              value: "{{ .Values.ui.proxyAuth }}"
             - name: MF_UI_APP_PREFIX
               value: "{{ .Values.ui.prefix }}"
             - name : MF_PROXY_LOGOUT_URL

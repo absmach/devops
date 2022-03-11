@@ -148,9 +148,10 @@ certs:
 ui:
   image: {}
   port: 3000
-  proxy: false
+  proxyAuth: false
   prefix: "ui"
   logoutUrl: "/logout"
+  wsUrl: "ws://localhost/mqtt"
 
 influxdb:
   enabled: false
