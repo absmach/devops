@@ -68,10 +68,6 @@ spec:
             - mountPath: {{ .Values.influxdb.configPath }}
               name: influxdb-writer-config
               subPath: subjects.toml
-      {{- with .Values.defaults.image.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 12 }}
-      {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       volumes:
