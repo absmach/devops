@@ -43,10 +43,10 @@ spec:
           ports:
             - containerPort: {{ .Values.twins.httpPort }}
               protocol: TCP
-        {{- with .Values.imagePullSecrets }}
-          imagePullSecrets:
-            {{- toYaml . | nindent 12 }}
-        {{- end }}
+      {{- with .Values.defaults.image.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 {{- end }}
