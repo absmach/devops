@@ -23,6 +23,8 @@ spec:
               value: debug
             - name: MF_THINGS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
+            - name: MF_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: MF_MONGO_READER_PORT
               value: "{{ .Values.mongodb.reader.httpPort }}"
             - name: MF_MONGO_READER_DB
