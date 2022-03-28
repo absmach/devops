@@ -88,7 +88,7 @@ spec:
                 port:
                   number: {{ .Values.things.httpPort }}
 {{- if .Values.certs.enabled -}} 
-          - path: /(certs?.*|serials?.*)
+          - path: /(certs.*|serials.*)
             pathType: Prefix
             backend:
               service:
