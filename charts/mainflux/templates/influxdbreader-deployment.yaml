@@ -23,17 +23,19 @@ spec:
               value: debug
             - name: MF_THINGS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
+            - name: MF_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: MF_INFLUX_READER_PORT
               value: "{{ .Values.influxdb.reader.httpPort }}"
-            - name: MF_INFLUX_READER_DB
+            - name: MF_INFLUXDB_DB
               value: "{{ .Values.influxdb.database }}"
-            - name: MF_INFLUX_READER_DB_USER
+            - name: MF_INFLUXDB_ADMIN_USER
               value: "{{ .Values.influxdb.adminUser.name }}"
-            - name: MF_INFLUX_READER_DB_PASS
+            - name: MF_INFLUXDB_ADMIN_PASSWORD
               value: "{{ .Values.influxdb.adminUser.pwd }}"
-            - name: MF_INFLUX_READER_DB_HOST
+            - name: MF_INFLUXDB_HOST
               value: {{ .Release.Name }}-influxdb
-            - name: MF_INFLUX_READER_DB_PORT
+            - name: MF_INFLUXDB_PORT
               value: "{{ .Values.influxdb.dbPort }}"
             - name: MF_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
