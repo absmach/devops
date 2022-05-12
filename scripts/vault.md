@@ -13,7 +13,7 @@ kubectl exec -it vault-0 -n mf -- vault operator init  -key-shares=1 -key-thresh
 
 Take a not for unseal keys and root token, by default on `init` operation you will get 5 keys and you need 3 to unseal
 ```bash
-kubectl exec vault-0 -n vault -- vault operator unseal <VAULT_UNSEAL_KEY>
+kubectl exec vault-0 -n mf -- vault operator unseal <VAULT_UNSEAL_KEY>
 ```
 
 Edit `.env` and set to `MF_VAULT_TOKEN` to value of root token 
