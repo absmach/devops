@@ -12,6 +12,10 @@ spec:
       component: adapter-coap
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.adapter_coap.port }}"
+        prometheus.io/scrape: "true"
       labels:
         app: {{ .Release.Name }}
         component: adapter-coap

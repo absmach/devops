@@ -13,6 +13,10 @@ spec:
       component: influxdb-reader
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.influxdb.dbPort }}"
+        prometheus.io/scrape: "true"
       labels:
         app: {{ .Release.Name }}
         component: influxdb-reader
