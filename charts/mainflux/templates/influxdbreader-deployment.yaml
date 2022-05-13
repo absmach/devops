@@ -15,7 +15,7 @@ spec:
     metadata:
       annotations:
         prometheus.io/path: /metrics
-        prometheus.io/port: "{{ .Values.influxdb.dbPort }}"
+        prometheus.io/port: "{{ .Values.influxdb.reader.httpPort }}"
         prometheus.io/scrape: "true"
       labels:
         app: {{ .Release.Name }}
