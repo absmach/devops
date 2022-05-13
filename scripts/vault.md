@@ -1,4 +1,5 @@
 # Install and configure `vault` with `certs`
+Make sure you configured your `KUBECONFIG` to point to destination cluster.
 
 Install vault
 
@@ -11,7 +12,7 @@ Initialize vault
 kubectl exec -it vault-0 -n mf -- vault operator init  -key-shares=1 -key-threshold=1
 ```
 
-Take a not for unseal keys and root token, by default on `init` operation you will get 5 keys and you need 3 to unseal
+Take a not for unseal keys and root token, by default on `init` operation you will get 1 keys and you need 1 to unseal
 ```bash
 kubectl exec vault-0 -n mf -- vault operator unseal <VAULT_UNSEAL_KEY>
 ```
