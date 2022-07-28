@@ -4,48 +4,51 @@ dependencies:
   version: 4.3.7
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 10.2.3
+  version: 10.14.3
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 10.2.3
+  version: 10.14.3
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 10.2.3
+  version: 10.14.3
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 10.2.3
+  version: 10.14.3
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 10.2.3
+  version: 10.14.3
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.14.3
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 12.6.2
+  version: 15.7.0
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 12.6.2
+  version: 15.7.0
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 12.6.2
+  version: 15.7.0
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 12.6.2
+  version: 15.7.0
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 12.6.2
+  version: 15.7.0
 - name: influxdb
   repository: https://charts.bitnami.com/bitnami
-  version: 1.1.9
+  version: 2.5.0
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
-  version: 10.4.1
+  version: 10.30.12
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 10.2.3
+  version: 10.14.3
 - name: loki-stack
   repository: https://grafana.github.io/helm-charts
   version: 2.5.0
 - name: keto
   repository: https://k8s.ory.sh/helm/charts
   version: 0.21.7
-digest: sha256:d1d5b2bd36185bf632d5a08bf9f26495d93781d8c3ec335066afc4cc8cd6b9f6
-generated: "2022-02-07T17:15:53.130234981+01:00"
+digest: sha256:17c5da393b583d1b551d19f965a3e32e8d3644478212042a6edf796e0a502bf4
+generated: "2022-07-27T20:29:03.086767381-07:00"
