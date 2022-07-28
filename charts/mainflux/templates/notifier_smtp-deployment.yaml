@@ -87,7 +87,7 @@ spec:
               value: {{ default .Values.defaults.logLevel .Values.notifier_smtp.logLevel }}
             - name: MF_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.authn.grpcPort }} 
-            - name: MF_NATS_URL
+            - name: MF_BROKER_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}                                      
           image: "{{ default .Values.defaults.image.repository .Values.notifier_smtp.image.repository }}/smtp-notifier:{{ default .Values.defaults.image.tag .Values.notifier_smtp.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.notifier_smtp.image.pullPolicy }}
