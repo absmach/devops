@@ -27,7 +27,7 @@ spec:
               value: "{{ .Values.adapter_opcua.httpPort }}"
             - name: MF_OPCUA_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_opcua.logLevel }}
-            - name: MF_NATS_URL
+            - name: MF_BROKER_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
             - name: MF_OPCUA_ADAPTER_POLICY
               value: {{ .Values.adapter_opcua.policy }}
