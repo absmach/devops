@@ -36,7 +36,7 @@ nginxInternal:
 
 adapter_http:
   image: {}
-  httpPort: 8185
+  httpPort: 8008
 
 adapter_coap:
   image: {}
@@ -56,7 +56,7 @@ adapter_opcua:
 adapter_lora:
   enabled: false
   image: {}
-  httpPort: 8187
+  httpPort: 9017
   messageUrl: "tcp://lora.mqtt.mainflux.io:1883"
   redisRouteMapPort: 6379
 
@@ -70,7 +70,7 @@ notifier_smtp:
   username: ""
   password: ""
   secret: ""
-  httpPort: 8906
+  httpPort: 9015
 
 mqtt:
   enabled: true
@@ -98,38 +98,38 @@ mqtt:
 users:
   image: {}
   dbPort: 5432
-  httpPort: 8180
+  httpPort: 9002
   adminEmail: "admin@example.com"
   adminPassword: "12345678"
 
 things:
   image: {}
   dbPort: 5432
-  httpPort: 8182
-  authGrpcPort: 8183
-  authHttpPort: 8989
+  httpPort: 9000
+  authGrpcPort: 7000
+  authHttpPort: 9001
   redisESPort: 6379
   redisCachePort: 6379
 
 auth:
   image: {}
   dbPort: 5432
-  grpcPort: 8181
-  httpPort: 8189
+  grpcPort: 7001
+  httpPort: 9020
   secret: "secret"
 
 bootstrap:
   enabled: false
   image: {}
   dbPort: 5432
-  httpPort: 8182
+  httpPort: 9013
   redisESPort: 6379
 
 certs:
   enabled: false
   image: {}
   dbPort: 5432
-  httpPort: 8204
+  httpPort: 9019
   logLevel: "info"
   sdkThingsPrefix: ""  
   encryptKey: ""
@@ -158,10 +158,10 @@ influxdb:
   dbPort: 8086
   writer:
     image: {}
-    httpPort: 8900
+    httpPort: 9006
   reader:
     image: {}
-    httpPort: 8905
+    httpPort: 9005
   database: "mainflux"
   authEnabled: true
   adminUser:
@@ -180,10 +180,10 @@ mongodb:
   dbPort: 27017
   writer:
     image: {}
-    httpPort: 8901
+    httpPort: 9008
   reader:
     image: {}
-    httpPort: 8904
+    httpPort: 9007
   database: "mainflux"
   authEnabled: true
   adminUser:
@@ -334,7 +334,7 @@ twins:
   enabled: false
   image: {}
   dbPort: 27017
-  httpPort: 9021
+  httpPort: 9018
   channelId: ""
   redisCachePort: 6379
 
