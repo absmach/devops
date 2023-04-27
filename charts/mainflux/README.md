@@ -39,18 +39,18 @@ The following table lists the configurable parameters and their default values.
 | nats.maxPayload                      | Maximum payload size in bytes that the NATS server will accept             | 268435456    |
 | nats.replicaCount                    | NATS replicas                                                              | 3            |
 | auth.dbPort                          | Auth service DB port                                                       | 5432         |
-| auth.grpcPort                        | Auth service gRPC port                                                     | 8181         |
-| auth.httpPort                        | Auth service HTTP port                                                     | 8189         |
+| auth.grpcPort                        | Auth service gRPC port                                                     | 7001         |
+| auth.httpPort                        | Auth service HTTP port                                                     | 9020         |
 | auth.secret                          | String used for signing tokens                                             | secret       |	
 | users.dbPort                         | Users service DB port                                                      | 5432         |
-| users.httpPort                       | Users service HTTP port                                                    | 8180         |
+| users.httpPort                       | Users service HTTP port                                                    | 9002         |
 | things.dbPort                        | Things service DB port                                                     | 5432         |
-| things.httpPort                      | Things service HTTP port                                                   | 8182         |
-| things.authGrpcPort                  | Things service Auth gRPC port                                              | 8183         |
-| things.authHttpPort                  | Things service Auth HTTP port                                              | 8989         |
+| things.httpPort                      | Things service HTTP port                                                   | 9000         |
+| things.authGrpcPort                  | Things service Auth gRPC port                                              | 7000         |
+| things.authHttpPort                  | Things service Auth HTTP port                                              | 9001        |
 | things.redisESPort                   | Things service Redis Event Store port                                      | 6379         |
 | things.redisCachePort                | Things service Redis Auth Cache port                                       | 6379         |
-| adapter_http.httpPort                | HTTP adapter port                                                          | 8185         |
+| adapter_http.httpPort                | HTTP adapter port                                                          | 8008         |
 | mqtt.adapter.mqttPort                | MQTT adapter port                                                          | 1884         |
 | mqtt.adapter.wsPort                  | MQTT adapter WS port                                                       | 8081         |
 | mqtt.broker.mqttPort                 | MQTT adapter broker port                                                   | 1883         |
@@ -62,23 +62,23 @@ The following table lists the configurable parameters and their default values.
 | ui.port                              | UI port                                                                    | 3000         |
 | bootstrap.enabled                    | Enable bootstrap service                                                   | false        |
 | bootstrap.dbPort                     | Bootstrap service DB port                                                  | 5432         |
-| bootstrap.httpPort                   | Bootstrap service HTTP port                                                | 8182         |
+| bootstrap.httpPort                   | Bootstrap service HTTP port                                                | 9013         |
 | bootstrap.redisESPort                | Bootstrap service Redis Event Store port                                   | 6379         |
 | influxdb.enabled                     | Enable InfluxDB reader & writer                                            | false        |
 | influxdb.dbPort                      | InfluxDB port                                                              | 8086         |
-| influxdb.writer.httpPort             | InfluxDB writer HTTP port                                                  | 8900         |
-| influxdb.reader.httpPort             | InfluxDB reader HTTP port                                                  | 8905         |
+| influxdb.writer.httpPort             | InfluxDB writer HTTP port                                                  | 9006         |
+| influxdb.reader.httpPort             | InfluxDB reader HTTP port                                                  | 9005         |
 | influxdb.backup.enabled              | Enable InfluxDB backup                                                     | false        |
 | influxdb.backup.cronjob.schedule     | Crontab style time schedule for backup execution                           | "0 2 * * *"  |
 | adapter_opcua.enabled                | Enable OPC-UA adapter                                                      | false        |
 | adapter_opcua.httpPort               | OPC-UA adapter HTTP port                                                   | 8188         |
 | adapter_opcua.redisRouteMapPort      | OPC-UA adapter Redis Auth Cache port                                       | 6379         |
 | adapter_lora.enabled                 | Enable LoRa adapter                                                        | false        |
-| adapter_lora.httpPort                | LoRa adapter HTTP port                                                     | 8187         |
+| adapter_lora.httpPort                | LoRa adapter HTTP port                                                     | 9017         |
 | adapter_lora.redisRouteMapPort       | LoRa adapter Redis Auth Cache port                                         | 6379         |
 | twins.enabled                        | Enable twins service                                                       | false        |
 | twins.dbPort                         | Twins service DB port                                                      | 27017        |
-| twins.httpPort                       | Twins service HTTP port                                                    | 9021         |
+| twins.httpPort                       | Twins service HTTP port                                                    | 9018         |
 | twins.redisCachePort                 | Twins service Redis Cache port                                             | 6379         |
 | certs.enabled                        | Enable certs service                                                       | false        |
 | notifier_smtp.enabled                | Enable SMTP notifier                                                       | false        |
