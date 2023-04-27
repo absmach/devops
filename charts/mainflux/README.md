@@ -39,8 +39,8 @@ The following table lists the configurable parameters and their default values.
 | nats.maxPayload                      | Maximum payload size in bytes that the NATS server will accept             | 268435456    |
 | nats.replicaCount                    | NATS replicas                                                              | 3            |
 | auth.dbPort                          | Auth service DB port                                                       | 5432         |
-| auth.grpcPort                        | Auth service gRPC port                                                     | 7000         |
-| auth.httpPort                        | Auth service HTTP port                                                     | 9001         |
+| auth.grpcPort                        | Auth service gRPC port                                                     | 7001         |
+| auth.httpPort                        | Auth service HTTP port                                                     | 9020         |
 | auth.secret                          | String used for signing tokens                                             | secret       |	
 | users.dbPort                         | Users service DB port                                                      | 5432         |
 | users.httpPort                       | Users service HTTP port                                                    | 9002         |
