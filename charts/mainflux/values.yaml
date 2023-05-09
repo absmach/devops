@@ -131,7 +131,7 @@ certs:
   dbPort: 5432
   httpPort: 9019
   logLevel: "info"
-  sdkThingsPrefix: ""  
+  sdkThingsPrefix: ""
   encryptKey: ""
   clientTLS: ""
   serverCert: ""
@@ -206,9 +206,12 @@ postgresqlusers:
   enabled: true
   name: postgresql-users
   postgresqlHost: localhost
-  postgresqlUsername: postgres
-  postgresqlPassword: mainflux
-  postgresqlDatabase: users
+  auth:
+    enablePostgresUser: true
+    postgresPassword: "password"
+    username: "mainflux"
+    password: "mainflux"
+    database: "users"
   resources:
     requests:
       cpu: 25m
@@ -220,37 +223,30 @@ postgresqlthings:
   enabled: true
   name: postgresql-things
   postgresqlHost: localhost
-  postgresqlUsername: postgres
-  postgresqlPassword: mainflux
-  postgresqlDatabase: things
+  auth:
+    enablePostgresUser: true
+    postgresPassword: "password"
+    username: "mainflux"
+    password: "mainflux"
+    database: "things"
   resources:
     requests:
       cpu: 25m
   persistence:
     size: 1Gi
 
-postgresqlauth:
-  ## If you want to use an external database, set this to false and change postgresqlHost
-  enabled: true
-  name: postgresql-auth
-  postgresqlHost: localhost
-  postgresqlUsername: postgres
-  postgresqlPassword: mainflux
-  postgresqlDatabase: auth
-  resources:
-    requests:
-      cpu: 25m
-  persistence:
-    size: 1Gi
 
 postgresqlbootstrap:
   ## If you want to use an external database, set this to false and change postgresqlHost
   enabled: false
   name: postgresql-bootstrap
   postgresqlHost: localhost
-  postgresqlUsername: postgres
-  postgresqlPassword: mainflux
-  postgresqlDatabase: bootstrap
+  auth:
+    enablePostgresUser: true
+    postgresPassword: "password"
+    username: "mainflux"
+    password: "mainflux"
+    database: "bootstrap"
   resources:
     requests:
       cpu: 25m
@@ -262,9 +258,12 @@ postgresqlcerts:
   enabled: false
   name: postgresql-certs
   postgresqlHost: localhost
-  postgresqlUsername: postgres
-  postgresqlPassword: mainflux
-  postgresqlDatabase: certs
+  auth:
+    enablePostgresUser: true
+    postgresPassword: "password"
+    username: "mainflux"
+    password: "mainflux"
+    database: "certs"
   resources:
     requests:
       cpu: 25m
@@ -276,9 +275,12 @@ postgresqlnotifiersmtp:
   enabled: false
   name: postgresql-notifier-smtp
   postgresqlHost: localhost
-  postgresqlUsername: postgres
-  postgresqlPassword: mainflux
-  postgresqlDatabase: subscriptions
+  auth:
+    enablePostgresUser: true
+    postgresPassword: "password"
+    username: "mainflux"
+    password: "mainflux"
+    database: "subscriptions"
   resources:
     requests:
       cpu: 25m
@@ -387,32 +389,4 @@ loki-stack:
       size: 3Gi
   prometheus:
     enabled: false
-keto:
-  image:
-    tag: "v0.7.0"
-  keto:
-    config:
-      namespaces:
-        - id: 0
-          name: members
-      dsn: "postgresql://postgres:mainflux@mainflux-postgresqlketo:5432/keto?sslmode=disable"
-    autoMigrate: true
-
-postgresqlketo:
-  ## If you want to use an external database, set this to false and change postgresqlHost
-  enabled: true
-  name: postgresql-keto
-  postgresqlHost: localhost
-  postgresqlUsername: postgres
-  postgresqlPassword: mainflux
-  postgresqlDatabase: keto
-  resources:
-    requests:
-      cpu: 25m
-  persistence:
-    size: 1Gi
-  commonAnnotations:
-    helm.sh/hook-weight: "-1"
-    helm.sh/hook: "pre-install, pre-upgrade"
-    helm.sh/hook-delete-policy: "before-hook-creation"
 
