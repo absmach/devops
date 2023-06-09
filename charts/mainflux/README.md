@@ -5,7 +5,7 @@ Helm Chart for the Mainflux IoT Platform
 ## Prerequisites
 
 - Helm v3
-- Stable & Bitnami Helm repos installed 
+- Stable & Bitnami Helm repos installed
   ```
   helm repo add stable https://charts.helm.sh/stable
   helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -29,7 +29,7 @@ The following table lists the configurable parameters and their default values.
 | defaults.image.tag                   | Docker Image Tag                                                           | 0.12.0       |
 | defaults.replicaCount                | Replicas of MQTT adapter, Things, Envoy and Auth                           | 3            |
 | defaults.natsPort                    | NATS port                                                                  | 4222         |
-| defaults.jaegerPort                  | Jaeger port                                                                | 6831         |
+| defaults.jaegerCollectorPort         | Jaeger port                                                                | 14268        |
 | nginxInternal.mtls.tls               | TLS secret which contains the server cert/key                              |              |
 | nginxInternal.mtls.intermediateCrt   | Generic secret which contains the intermediate cert used to verify clients |              |
 | ingress.enabled                      | Should the Nginx Ingress be created                                        | true         |
@@ -41,7 +41,7 @@ The following table lists the configurable parameters and their default values.
 | auth.dbPort                          | Auth service DB port                                                       | 5432         |
 | auth.grpcPort                        | Auth service gRPC port                                                     | 7001         |
 | auth.httpPort                        | Auth service HTTP port                                                     | 9020         |
-| auth.secret                          | String used for signing tokens                                             | secret       |	
+| auth.secret                          | String used for signing tokens                                             | secret       |
 | users.dbPort                         | Users service DB port                                                      | 5432         |
 | users.httpPort                       | Users service HTTP port                                                    | 9002         |
 | things.dbPort                        | Things service DB port                                                     | 5432         |
