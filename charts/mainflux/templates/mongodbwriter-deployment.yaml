@@ -24,6 +24,10 @@ spec:
       component: mongodb-writer
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.mongodb.writer.httpPort }}"
+        prometheus.io/scrape: "true"
       labels:
         app: {{ .Release.Name }}
         component: mongodb-writer

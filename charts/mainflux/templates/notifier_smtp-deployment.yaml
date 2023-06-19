@@ -34,6 +34,10 @@ spec:
       component: notifier-smtp
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.notifier_smtp.httpPort }}"
+        prometheus.io/scrape: "true"
       labels:
         app: {{ .Release.Name }}
         component: notifier-smtp

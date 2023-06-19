@@ -13,6 +13,10 @@ spec:
       component: mongodb-reader
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.mongodb.reader.httpPort }}"
+        prometheus.io/scrape: "true"
       labels:
         app: {{ .Release.Name }}
         component: mongodb-reader

@@ -27,6 +27,10 @@ spec:
       component: users
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.users.httpPort }}"
+        prometheus.io/scrape: "true"
       labels:
         app: {{ .Release.Name }}
         component: users
