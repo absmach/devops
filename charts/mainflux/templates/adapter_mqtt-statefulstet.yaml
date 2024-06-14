@@ -65,19 +65,19 @@ spec:
             - name: data
               mountPath: /vernemq/data
           env:
-            - name: MF_MQTT_ADAPTER_LOG_LEVEL
+            - name: MG_MQTT_ADAPTER_LOG_LEVEL
               value: {{ .Values.mqtt.broker.logLevel }}
             - name: MY_POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: MF_MQTT_INSTANCE_ID
+            - name: MG_MQTT_INSTANCE_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: DOCKER_VERNEMQ_LOG__CONSOLE__LEVEL
               value: {{ default .Values.defaults.logLevel .Values.mqtt.broker.logLevel }}
-            - name: MF_MQTT_VERNEMQ_GRPC_POOL_SIZE
+            - name: MG_MQTT_VERNEMQ_GRPC_POOL_SIZE
               value: "1000"
             - name: DOCKER_VERNEMQ_ALLOW_ANONYMOUS
               value: "on"
@@ -171,33 +171,33 @@ spec:
           stdin: true
           tty: true
           env:
-            - name: MF_MQTT_ADAPTER_LOG_LEVEL
+            - name: MG_MQTT_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.mqtt.adapter.logLevel }}
-            - name: MF_MQTT_ADAPTER_MQTT_PORT
+            - name: MG_MQTT_ADAPTER_MQTT_PORT
               value: "{{ .Values.mqtt.adapter.mqttPort }}"
-            - name: MF_MQTT_ADAPTER_WS_PORT
+            - name: MG_MQTT_ADAPTER_WS_PORT
               value: "{{ .Values.mqtt.adapter.wsPort }}"
-            - name: MF_MQTT_ADAPTER_ES_URL
+            - name: MG_MQTT_ADAPTER_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:{{ .Values.mqtt.redisESPort }}
-            - name: MF_BROKER_URL
+            - name: MG_BROKER_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
-            - name: MF_THINGS_AUTH_GRPC_URL
+            - name: MG_THINGS_AUTH_GRPC_URL
               value:  {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
-            - name: MF_JAEGER_URL
+            - name: MG_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
-            - name: MF_MQTT_ADAPTER_MQTT_TARGET_HOST
+            - name: MG_MQTT_ADAPTER_MQTT_TARGET_HOST
               value: localhost
-            - name: MF_MQTT_ADAPTER_MQTT_TARGET_PORT
+            - name: MG_MQTT_ADAPTER_MQTT_TARGET_PORT
               value: "{{ .Values.mqtt.broker.mqttPort }}"
-            - name: MF_MQTT_ADAPTER_WS_TARGET_HOST
+            - name: MG_MQTT_ADAPTER_WS_TARGET_HOST
               value: localhost
-            - name: MF_MQTT_ADAPTER_WS_TARGET_PORT
+            - name: MG_MQTT_ADAPTER_WS_TARGET_PORT
               value: "{{ .Values.mqtt.broker.wsPort }}"
-            - name: MF_MQTT_ADAPTER_THINGS_TIMEOUT
+            - name: MG_MQTT_ADAPTER_THINGS_TIMEOUT
               value: "15"
-            - name: MF_AUTH_CACHE_URL
+            - name: MG_AUTH_CACHE_URL
               value: {{ .Release.Name }}-redis-auth-master:{{ .Values.mqtt.redisCachePort }}
-            - name: MF_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK
+            - name: MG_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK
               value: http://localhost:8888/health
           livenessProbe:
             failureThreshold: 3

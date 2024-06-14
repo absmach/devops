@@ -37,33 +37,33 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_JAEGER_URL
+            - name: MG_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
-            - name: MF_USERS_DB
+            - name: MG_USERS_DB
               value: {{ .Values.postgresqlusers.postgresqlDatabase | quote }}
-            - name: MF_USERS_DB_HOST
+            - name: MG_USERS_DB_HOST
             {{- if .Values.postgresqlusers.enabled }}
               value: {{ .Release.Name }}-postgresqlusers
             {{- else }}
               value: {{ .Values.postgresqlusers.postgresqlHost | quote }}
             {{- end }}
-            - name: MF_USERS_DB_PASS
+            - name: MG_USERS_DB_PASS
               value: {{ .Values.postgresqlusers.postgresqlPassword | quote }}
-            - name: MF_USERS_DB_PORT
+            - name: MG_USERS_DB_PORT
               value: "{{ .Values.users.dbPort }}"
-            - name: MF_USERS_DB_USER
+            - name: MG_USERS_DB_USER
               value: {{ .Values.postgresqlusers.postgresqlUsername | quote }}
-            - name: MF_USERS_HTTP_PORT
+            - name: MG_USERS_HTTP_PORT
               value: "{{ .Values.users.httpPort }}"
-            - name: MF_USERS_LOG_LEVEL
+            - name: MG_USERS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.users.logLevel }}
-            - name: MF_AUTH_GRPC_URL
+            - name: MG_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
-            - name: MF_TOKEN_RESET_ENDPOINT
+            - name: MG_TOKEN_RESET_ENDPOINT
               value: "#/auth/reset-password"
-            - name: MF_USERS_ADMIN_EMAIL
+            - name: MG_USERS_ADMIN_EMAIL
               value: "{{ .Values.users.adminEmail }}"
-            - name: MF_USERS_ADMIN_PASSWORD
+            - name: MG_USERS_ADMIN_PASSWORD
               value: "{{ .Values.users.adminPassword }}"
           image: "{{ default .Values.defaults.image.repository .Values.users.image.repository }}/users:{{ default .Values.defaults.image.tag .Values.users.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}

@@ -1,6 +1,6 @@
 # Mainflux Helm Chart
 
-Helm Chart for the Mainflux IoT Platform
+Helm Chart for the Magistrala IoT Platform
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ The following table lists the configurable parameters and their default values.
 | ------------------------------------ | -------------------------------------------------------------------------- | ------------ |
 | defaults.logLevel                    | Log level                                                                  | debug        |
 | defaults.image.pullPolicy            | Docker Image Pull Policy                                                   | IfNotPresent |
-| defaults.image.repository            | Docker Image Repository                                                    | mainflux     |
+| defaults.image.repository            | Docker Image Repository                                                    | magistrala     |
 | defaults.image.tag                   | Docker Image Tag                                                           | 0.12.0       |
 | defaults.replicaCount                | Replicas of MQTT adapter, Things, Envoy and Auth                           | 3            |
 | defaults.natsPort                    | NATS port                                                                  | 4222         |
@@ -92,9 +92,9 @@ The following table lists the configurable parameters and their default values.
 | notifier_smtp.httpPort               | SMTP notifier HTTP port                                                    | false        |
 | loki_stack.enabled                   | Enable Loki_Stack                                                          | true         |
 
-All Mainflux services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.
+All Magistrala services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.
 
-Mainflux Core is a minimalistic set of required Mainflux services. They are all installed by default:
+Magistrala Core is a minimalistic set of required Magistrala services. They are all installed by default:
 
 - auth
 - users
@@ -121,10 +121,10 @@ By default scale of MQTT adapter, Things, Envoy, Auth and NATS will be set to 3.
 
 Grafana admin password:
 ```
-kubectl get secret --namespace mf mainflux-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+kubectl get secret --namespace mg magistrala-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
 Grafana access on http://localhost:3000:
 ```
-kubectl port-forward --namespace mf service/mainflux-grafana 3000:80
+kubectl port-forward --namespace mg service/magistrala-grafana 3000:80
 ```

@@ -1,12 +1,12 @@
 {{- /*
-Copyright (c) Mainflux
+Copyright (c) Magistrala
 SPDX-License-Identifier: Apache-2.0
 */ -}}
-{{- define "mainflux.name" -}}
+{{- define "magistrala.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "mainflux.fullname" -}}
+{{- define "magistrala.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}

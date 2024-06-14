@@ -23,25 +23,25 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_MONGO_READER_LOG_LEVEL
+            - name: MG_MONGO_READER_LOG_LEVEL
               value: debug
-            - name: MF_THINGS_AUTH_GRPC_URL
+            - name: MG_THINGS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
-            - name: MF_AUTH_GRPC_URL
+            - name: MG_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
-            - name: MF_MONGO_READER_PORT
+            - name: MG_MONGO_READER_PORT
               value: "{{ .Values.mongodb.reader.httpPort }}"
-            - name: MF_MONGO_READER_DB
+            - name: MG_MONGO_READER_DB
               value: "{{ .Values.mongodb.database }}"
-            - name: MF_MONGO_READER_DB_USER
+            - name: MG_MONGO_READER_DB_USER
               value: "{{ .Values.mongodb.adminUser.name }}"
-            - name: MF_MONGO_READER_DB_PASS
+            - name: MG_MONGO_READER_DB_PASS
               value: "{{ .Values.mongodb.adminUser.pwd }}"
-            - name: MF_MONGO_READER_DB_HOST
+            - name: MG_MONGO_READER_DB_HOST
               value: {{ .Release.Name }}-mongodb
-            - name: MF_MONGO_READER_DB_PORT
+            - name: MG_MONGO_READER_DB_PORT
               value: "{{ .Values.mongodb.dbPort }}"
-            - name: MF_JAEGER_URL
+            - name: MG_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
           image: "{{ default .Values.defaults.image.repository .Values.mongodb.reader.image.repository }}/mongodb-reader:{{ default .Values.defaults.image.tag .Values.mongodb.reader.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mongodb.reader.image.pullPolicy }}

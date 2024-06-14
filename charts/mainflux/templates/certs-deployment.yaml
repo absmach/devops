@@ -23,63 +23,63 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_CERTS_LOG_LEVEL
+            - name: MG_CERTS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.certs.logLevel }}
-            - name: MF_JAEGER_URL
+            - name: MG_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
-            - name: MF_CERTS_DB_HOST
+            - name: MG_CERTS_DB_HOST
             {{- if .Values.postgresqlcerts.enabled }}
               value: {{ .Release.Name }}-postgresqlcerts
             {{- else }}
               value: {{ .Values.postgresqlcerts.postgresqlHost | quote }}
             {{- end }}
-            - name: MF_CERTS_DB
+            - name: MG_CERTS_DB
               value: {{ .Values.postgresqlcerts.postgresqlDatabase | quote }}
-            - name: MF_CERTS_DB_PASS
+            - name: MG_CERTS_DB_PASS
               value: {{ .Values.postgresqlcerts.postgresqlPassword | quote }}
-            - name: MF_CERTS_DB_PORT
+            - name: MG_CERTS_DB_PORT
               value: "{{ .Values.certs.dbPort }}"
-            - name: MF_CERTS_DB_USER
+            - name: MG_CERTS_DB_USER
               value: {{ .Values.postgresqlcerts.postgresqlUsername | quote }}
-            - name: MF_CERTS_DB_SSL_MODE
+            - name: MG_CERTS_DB_SSL_MODE
               value: disable
-            - name: MF_CERTS_DB_SSL_CERT
+            - name: MG_CERTS_DB_SSL_CERT
               value: disable
-            - name: MF_CERTS_DB_SSL_KEY
+            - name: MG_CERTS_DB_SSL_KEY
               value: disable
-            - name: MF_CERTS_DB_SSL_ROOT_CERT
+            - name: MG_CERTS_DB_SSL_ROOT_CERT
               value: disable
-            - name: MF_CERTS_ENCRYPT_KEY
+            - name: MG_CERTS_ENCRYPT_KEY
               value: {{ index .Values "certs" "encryptKey" }}
-            - name: MF_CERTS_CLIENT_TLS
+            - name: MG_CERTS_CLIENT_TLS
               value: {{ index .Values "certs" "clientTLS" }}
-            - name: MF_CERTS_SERVER_CERT
+            - name: MG_CERTS_SERVER_CERT
               value: {{ index .Values "certs" "serverCert" }}
-            - name: MF_CERTS_SERVER_KEY
+            - name: MG_CERTS_SERVER_KEY
               value: {{ index .Values "certs" "serverKey" }}
-            - name: MF_CERTS_HTTP_PORT
+            - name: MG_CERTS_HTTP_PORT
               value: "{{ .Values.certs.httpPort }}"
-            - name: MF_AUTH_GRPC_URL
+            - name: MG_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
-            - name: MF_SDK_BASE_URL
+            - name: MG_SDK_BASE_URL
               value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
-            - name: MF_SDK_THINGS_PREFIX
+            - name: MG_SDK_THINGS_PREFIX
               value: {{ index .Values "certs" "sdkThingsPrefix" }}
-            - name: MF_CERTS_SIGN_CA_PATH
+            - name: MG_CERTS_SIGN_CA_PATH
               value: {{ index .Values "certs" "signCAPath" }}
-            - name: MF_CERTS_SIGN_CA_KEY_PATH
+            - name: MG_CERTS_SIGN_CA_KEY_PATH
               value: {{ index .Values "certs" "signCAKeyPath" }}
-            - name: MF_CERTS_SIGN_HOURS_VALID
+            - name: MG_CERTS_SIGN_HOURS_VALID
               value: {{ index .Values "certs" "signHoursValid" }}
-            - name: MF_CERTS_SIGN_RSA_BITS
+            - name: MG_CERTS_SIGN_RSA_BITS
               value: "{{ .Values.certs.signRSABits }}"
-            - name: MF_CERTS_VAULT_TOKEN
+            - name: MG_CERTS_VAULT_TOKEN
               value: {{ index .Values "certs" "signVaultToken" }}
-            - name: MF_CERTS_VAULT_HOST
+            - name: MG_CERTS_VAULT_HOST
               value: {{ index .Values "certs" "signVaultHost" }}
-            - name: MF_CERTS_VAULT_PKI_PATH
+            - name: MG_CERTS_VAULT_PKI_PATH
               value: {{ index .Values "certs" "signVaultPKIPath" }}
-            - name: MF_CERTS_VAULT_ROLE
+            - name: MG_CERTS_VAULT_ROLE
               value: {{ index .Values "certs" "signVaultRole" }}
           image: "{{ default .Values.defaults.image.repository .Values.certs.image.repository }}/certs:{{ default .Values.defaults.image.tag .Values.certs.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.certs.image.pullPolicy }}

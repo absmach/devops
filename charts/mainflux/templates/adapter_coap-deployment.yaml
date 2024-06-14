@@ -22,15 +22,15 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_JAEGER_URL
+            - name: MG_JAEGER_URL
               value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
-            - name: MF_BROKER_URL
+            - name: MG_BROKER_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
-            - name: MF_THINGS_AUTH_GRPC_URL
+            - name: MG_THINGS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
-            - name: MF_COAP_ADAPTER_LOG_LEVEL
+            - name: MG_COAP_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_coap.logLevel }}
-            - name: MF_COAP_ADAPTER_PORT
+            - name: MG_COAP_ADAPTER_PORT
               value: "{{ .Values.adapter_coap.port }}"
           image: "{{ default .Values.defaults.image.repository .Values.adapter_coap.image.repository }}/coap:{{ default .Values.defaults.image.tag .Values.adapter_coap.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_coap.image.pullPolicy }}

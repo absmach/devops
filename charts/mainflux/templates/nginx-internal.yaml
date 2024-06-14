@@ -1,4 +1,4 @@
-# Copyright (c) Mainflux
+# Copyright (c) magistrala
 # SPDX-License-Identifier: Apache-2.0
 
 {{ if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") -}}
@@ -48,8 +48,8 @@ data:
 
         # These paths are set to its default values as
         # a volume in the docker/docker-compose.yml file.
-        ssl_certificate /etc/ssl/certs/mainflux-server/tls.crt;
-        ssl_certificate_key /etc/ssl/certs/mainflux-server/tls.key;
+        ssl_certificate /etc/ssl/certs/magistrala-server/tls.crt;
+        ssl_certificate_key /etc/ssl/certs/magistrala-server/tls.key;
         ssl_client_certificate /etc/ssl/certs/ca.crt;
         # ssl_crl /etc/ssl/certs/crl.pem;
         ssl_verify_client optional;
@@ -126,7 +126,7 @@ data:
           }
         }
 
-        # Proxy pass to mainflux-http-adapter
+        # Proxy pass to magistrala-http-adapter
         location /http/ {
           if ($auth_key = '') {
             return 403;
@@ -147,7 +147,7 @@ data:
           }
         }
 
-        #Proxy pass to mainflux-mqtt for MQTT over WS
+        #Proxy pass to magistrala-mqtt for MQTT over WS
         location /mqtt {
           if ($auth_key = '') {
             return 403;
@@ -193,8 +193,8 @@ data:
 
           # These paths are set to its default values as
           # a volume in the docker/docker-compose.yml file.
-          ssl_certificate /etc/ssl/certs/mainflux-server/tls.crt;
-          ssl_certificate_key /etc/ssl/certs/mainflux-server/tls.key;
+          ssl_certificate /etc/ssl/certs/magistrala-server/tls.crt;
+          ssl_certificate_key /etc/ssl/certs/magistrala-server/tls.key;
           ssl_client_certificate /etc/ssl/certs/ca.crt;
           # FIXME
           # ssl_crl /etc/ssl/certs/crl.pem;
@@ -457,8 +457,8 @@ spec:
             - mountPath: /etc/ssl/certs/ca.crt
               name: ca
               subPath: ca.crt
-            - mountPath: /etc/ssl/certs/mainflux-server
-              name: mainflux-server
+            - mountPath: /etc/ssl/certs/magistrala-server
+              name: magistrala-server
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       shareProcessNamespace: true
@@ -485,7 +485,7 @@ spec:
         - name: ca
           secret:
             secretName: {{ .Values.nginxInternal.mtls.intermediateCrt }}
-        - name: mainflux-server
+        - name: magistrala-server
           secret:
             secretName: {{ .Values.nginxInternal.mtls.tls }}
 ---

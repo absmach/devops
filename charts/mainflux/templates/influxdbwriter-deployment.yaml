@@ -34,31 +34,31 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_INFLUX_WRITER_LOG_LEVEL
+            - name: MG_INFLUX_WRITER_LOG_LEVEL
               value: debug
-            - name: MF_BROKER_URL
+            - name: MG_BROKER_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
-            - name: MF_INFLUX_WRITER_PORT
+            - name: MG_INFLUX_WRITER_PORT
               value: "{{ .Values.influxdb.writer.httpPort }}"
-            - name: MF_INFLUX_WRITER_BATCH_SIZE
+            - name: MG_INFLUX_WRITER_BATCH_SIZE
               value: "5000"
-            - name: MF_INFLUX_WRITER_BATCH_TIMEOUT
+            - name: MG_INFLUX_WRITER_BATCH_TIMEOUT
               value: "5"
-            - name: MF_INFLUXDB_DB
+            - name: MG_INFLUXDB_DB
               value: "{{ .Values.influxdb.database }}"
-            - name: MF_INFLUXDB_ADMIN_USER
+            - name: MG_INFLUXDB_ADMIN_USER
               value: "{{ .Values.influxdb.adminUser.name }}"
-            - name: MF_INFLUXDB_ADMIN_PASSWORD
+            - name: MG_INFLUXDB_ADMIN_PASSWORD
               value: "{{ .Values.influxdb.adminUser.pwd }}"
-            - name: MF_INFLUXDB_HOST
+            - name: MG_INFLUXDB_HOST
               value: {{ .Release.Name }}-influxdb
-            - name: MF_INFLUXDB_PORT
+            - name: MG_INFLUXDB_PORT
               value: "{{ .Values.influxdb.dbPort }}"
-            - name: MF_INFLUX_WRITER_CONFIG_PATH
+            - name: MG_INFLUX_WRITER_CONFIG_PATH
               value: "{{ .Values.influxdb.configPath }}"
-            - name: MF_INFLUX_WRITER_CONTENT_TYPE
+            - name: MG_INFLUX_WRITER_CONTENT_TYPE
               value: "{{ .Values.influxdb.contentType }}"
-            - name: MF_INFLUX_WRITER_TRANSFORMER
+            - name: MG_INFLUX_WRITER_TRANSFORMER
               value: "{{ .Values.influxdb.transformer }}"
           image: "{{ default .Values.defaults.image.repository .Values.influxdb.writer.image.repository }}/influxdb-writer:{{ default .Values.defaults.image.tag .Values.influxdb.writer.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb.writer.image.pullPolicy }}

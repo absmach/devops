@@ -1,4 +1,4 @@
-# Copyright (c) Mainflux
+# Copyright (c) magistrala
 # SPDX-License-Identifier: Apache-2.0
 
 {{- if .Values.twins.enabled }}
@@ -23,23 +23,23 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_TWINS_LOG_LEVEL
+            - name: MG_TWINS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.twins.logLevel }}
-            - name: MF_TWINS_HTTP_PORT
+            - name: MG_TWINS_HTTP_PORT
               value: "{{ .Values.twins.httpPort }}"
-            - name: MF_TWINS_DB
-              value: mainflux-twins
-            - name: MF_TWINS_DB_HOST
+            - name: MG_TWINS_DB
+              value: magistrala-twins
+            - name: MG_TWINS_DB_HOST
               value: {{ .Release.Name }}-twins-db
-            - name: MF_TWINS_DB_PORT
+            - name: MG_TWINS_DB_PORT
               value: "{{.Values.twins.dbPort }}"
-            - name: MF_TWINS_CHANNEL_ID
+            - name: MG_TWINS_CHANNEL_ID
               value: {{.Values.twins.channelId }}
-            - name: MF_BROKER_URL
+            - name: MG_BROKER_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
-            - name: MF_AUTH_GRPC_URL
+            - name: MG_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
-            - name: MF_TWINS_CACHE_URL
+            - name: MG_TWINS_CACHE_URL
               value: {{ .Release.Name }}-redis-streams-master:{{ .Values.twins.redisCachePort }}
           image: "{{ default .Values.defaults.image.repository .Values.twins.image.repository }}/twins:{{ default .Values.defaults.image.tag .Values.twins.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.twins.image.pullPolicy }}

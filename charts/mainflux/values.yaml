@@ -1,11 +1,11 @@
-# Copyright (c) Mainflux
+# Copyright (c) magistrala
 # SPDX-License-Identifier: Apache-2.0
 
 defaults:
   logLevel: "info"
   image:
     pullPolicy: "IfNotPresent"
-    repository: "mainflux"
+    repository: "magistrala"
     tag: "latest"
     imagePullSecrets:
       - {}
@@ -22,7 +22,7 @@ ingress:
   # hostname: ""
   # tls:
   #   hostname: ""
-  #   secret: "mainflux-server"
+  #   secret: "magistrala-server"
 
 nginxInternal:
   mtls:
@@ -31,7 +31,7 @@ nginxInternal:
     intermediateCrt: ""
     # Uncomment this block for TLS and mTLS support.
     # Use sh script from /secrets/secrets.sh to create config maps with your certs
-    # tls: "mainflux-server"
+    # tls: "magistrala-server"
     # intermediateCrt: "ca"
 
 adapter_http:
@@ -57,7 +57,7 @@ adapter_lora:
   enabled: false
   image: {}
   httpPort: 9017
-  messageUrl: "tcp://lora.mqtt.mainflux.io:1883"
+  messageUrl: "tcp://lora.mqtt.magistrala.io:1883"
   redisRouteMapPort: 6379
 
 notifier_smtp:
@@ -65,7 +65,7 @@ notifier_smtp:
   image: {}
   emailHost: "smtp.example.com"
   smtpPort: 2525
-  fromName: "Mainflux"
+  fromName: "Magistrala"
   fromEmail: "admin@example.com"
   username: ""
   password: ""
@@ -80,13 +80,13 @@ mqtt:
     fsGroup: 10000
   adapter:
     image:
-      repository: "mainflux/mqtt"
+      repository: "magistrala/mqtt"
     mqttPort: 1884
     wsPort: 8081
     logLevel: "debug"
   broker:
     image:
-      repository: "mainflux/vernemq"
+      repository: "magistrala/vernemq"
     mqttPort: 1883
     wsPort: 8080
     logLevel: "info"
@@ -162,11 +162,11 @@ influxdb:
   reader:
     image: {}
     httpPort: 9005
-  database: "mainflux"
+  database: "magistrala"
   authEnabled: true
   adminUser:
-    name: "mainflux"
-    pwd: "mainflux"
+    name: "magistrala"
+    pwd: "magistrala"
   configPath: "/config.toml"
   contentType: "application/senml+json"
   transformer: "senml"
@@ -184,11 +184,11 @@ mongodb:
   reader:
     image: {}
     httpPort: 9007
-  database: "mainflux"
+  database: "magistrala"
   authEnabled: true
   adminUser:
-    name: "mainflux"
-    pwd: "mainflux"
+    name: "magistrala"
+    pwd: "magistrala"
   configPath: "/subjects.toml"
   contentType: "application/senml+json"
   transformer: "json"
@@ -207,7 +207,7 @@ postgresqlusers:
   name: postgresql-users
   postgresqlHost: localhost
   postgresqlUsername: postgres
-  postgresqlPassword: mainflux
+  postgresqlPassword: magistrala
   postgresqlDatabase: users
   resources:
     requests:
@@ -221,7 +221,7 @@ postgresqlthings:
   name: postgresql-things
   postgresqlHost: localhost
   postgresqlUsername: postgres
-  postgresqlPassword: mainflux
+  postgresqlPassword: magistrala
   postgresqlDatabase: things
   resources:
     requests:
@@ -235,7 +235,7 @@ postgresqlauth:
   name: postgresql-auth
   postgresqlHost: localhost
   postgresqlUsername: postgres
-  postgresqlPassword: mainflux
+  postgresqlPassword: magistrala
   postgresqlDatabase: auth
   resources:
     requests:
@@ -249,7 +249,7 @@ postgresqlbootstrap:
   name: postgresql-bootstrap
   postgresqlHost: localhost
   postgresqlUsername: postgres
-  postgresqlPassword: mainflux
+  postgresqlPassword: magistrala
   postgresqlDatabase: bootstrap
   resources:
     requests:
@@ -263,7 +263,7 @@ postgresqlcerts:
   name: postgresql-certs
   postgresqlHost: localhost
   postgresqlUsername: postgres
-  postgresqlPassword: mainflux
+  postgresqlPassword: magistrala
   postgresqlDatabase: certs
   resources:
     requests:
@@ -277,7 +277,7 @@ postgresqlnotifiersmtp:
   name: postgresql-notifier-smtp
   postgresqlHost: localhost
   postgresqlUsername: postgres
-  postgresqlPassword: mainflux
+  postgresqlPassword: magistrala
   postgresqlDatabase: subscriptions
   resources:
     requests:
@@ -395,7 +395,7 @@ keto:
       namespaces:
         - id: 0
           name: members
-      dsn: "postgresql://postgres:mainflux@mainflux-postgresqlketo:5432/keto?sslmode=disable"
+      dsn: "postgresql://postgres:magistrala@magistrala-postgresqlketo:5432/keto?sslmode=disable"
     autoMigrate: true
 
 postgresqlketo:
@@ -404,7 +404,7 @@ postgresqlketo:
   name: postgresql-keto
   postgresqlHost: localhost
   postgresqlUsername: postgres
-  postgresqlPassword: mainflux
+  postgresqlPassword: magistrala
   postgresqlDatabase: keto
   resources:
     requests:
