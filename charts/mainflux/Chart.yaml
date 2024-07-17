@@ -1,21 +1,21 @@
-# Copyright (c) Mainflux
+# Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
 apiVersion: v2
-name: mainflux
-description: Mainflux IoT Platform
+name: magistrala
+description: Magistrala IoT Platform
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
 version: 1.0.3
 appVersion: "0.12.1"
-home: https://www.mainflux.com
+home: https://abstractmachines.fr/magistrala.html
 sources:
-  - https://hub.docker.com/u/mainflux/
+  - https://hub.docker.com/u/magistrala
 maintainers:
-  - name: blokovi
-    email: ivan.milosevic@mainflux.com
-  - name: isavcic
-    email: isavcic@gmail.com
+  - name: drasko
+    email: draasko.draskovic@abstractmachines.fr
+  - name: dusan
+    email: dusan.borovcanin@abstractmachines.fr
 
 dependencies:
   - name: nats

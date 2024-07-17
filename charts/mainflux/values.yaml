@@ -1,11 +1,11 @@
-# Copyright (c) Mainflux
+# Copyright (c) Magistrala
 # SPDX-License-Identifier: Apache-2.0
 
 defaults:
   logLevel: "info"
   image:
     pullPolicy: "IfNotPresent"
-    repository: "mainflux"
+    repository: "magistrala"
     tag: "latest"
     # imagePullSecrets:
     #   - {}
@@ -22,7 +22,7 @@ ingress:
   # hostname: ""
   # tls:
   #   hostname: ""
-  #   secret: "mainflux-server"
+  #   secret: "magistrala-server"
 
 nginxInternal:
   mtls:
@@ -31,7 +31,7 @@ nginxInternal:
     intermediateCrt: ""
     # Uncomment this block for TLS and mTLS support.
     # Use sh script from /secrets/secrets.sh to create config maps with your certs
-    # tls: "mainflux-server"
+    # tls: "magistrala-server"
     # intermediateCrt: "ca"
 
 adapter_http:
@@ -57,7 +57,7 @@ adapter_lora:
   enabled: false
   image: {}
   httpPort: 9017
-  messageUrl: "tcp://lora.mqtt.mainflux.io:1883"
+  messageUrl: "tcp://lora.magistrala.abstractmachines.fr:1883"
   redisRouteMapPort: 6379
 
 notifier_smtp:
@@ -65,7 +65,7 @@ notifier_smtp:
   image: {}
   emailHost: "smtp.example.com"
   smtpPort: 2525
-  fromName: "Mainflux"
+  fromName: "Magistrala - Abstract Machines"
   fromEmail: "admin@example.com"
   username: ""
   password: ""
@@ -80,13 +80,13 @@ mqtt:
     fsGroup: 10000
   adapter:
     image:
-      repository: "mainflux/mqtt"
+      repository: "magistrala/mqtt"
     mqttPort: 1884
     wsPort: 8081
     logLevel: "debug"
   broker:
     image:
-      repository: "mainflux/vernemq"
+      repository: "magistrala/vernemq"
     mqttPort: 1883
     wsPort: 8080
     logLevel: "info"
@@ -139,10 +139,10 @@ ui:
   image: {}
   port: 9090
   redirectUrl: https://localhost
-  httpAdapterUrl: "http://mainflux-adapter-http:8008"
-  usersUrl: "http://mainflux-users:9002"
-  thingsUrl: "http://mainflux-things:9000"
-  readerUrl: "http://mainflux-timescale-reader:8911"
+  httpAdapterUrl: "http://magistrala-adapter-http:8008"
+  usersUrl: "http://magistrala-users:9002"
+  thingsUrl: "http://magistrala-things:9000"
+  readerUrl: "http://magistrala-timescale-reader:8911"
 
 influxdb:
   enabled: false
@@ -153,15 +153,15 @@ influxdb:
   reader:
     image: {}
     httpPort: 9005
-  database: "mainflux"
+  database: "magistrala"
   authEnabled: true
   auth:
     admin:
-      username: mainflux
-      password: mainflux
-      token: mainflux-influxdb-token
-      org: mainflux
-      bucket: mainflux
+      username: magistrala
+      password: magistrala
+      token: magistrala-influxdb-token
+      org: magistrala
+      bucket: magistrala
   configPath: "/config.toml"
   contentType: "application/senml+json"
   transformer: "senml"
@@ -179,11 +179,11 @@ mongodb:
   reader:
     image: {}
     httpPort: 9007
-  database: "mainflux"
+  database: "magistrala"
   authEnabled: true
   adminUser:
-    name: "mainflux"
-    pwd: "mainflux"
+    name: "magistrala"
+    pwd: "magistrala"
   configPath: "/subjects.toml"
   contentType: "application/senml+json"
   transformer: "json"
@@ -204,8 +204,8 @@ postgresqlusers:
   postgresqlPort: "5432"
   auth:
     postgresPassword: postgres
-    username: mainflux
-    password: mainflux
+    username: magistrala
+    password: magistrala
     database: users
   resources:
     requests:
@@ -221,8 +221,8 @@ postgresqlthings:
   postgresqlPort: "5432"
   auth:
     postgresPassword: postgres
-    username: mainflux
-    password: mainflux
+    username: magistrala
+    password: magistrala
     database: things
   resources:
     requests:
@@ -238,8 +238,8 @@ postgresqlbootstrap:
   postgresqlPort: "5432"
   auth:
     postgresPassword: postgres
-    username: mainflux
-    password: mainflux
+    username: magistrala
+    password: magistrala
     database: bootstrap
   resources:
     requests:
@@ -255,8 +255,8 @@ postgresqlcerts:
   postgresqlPort: "5432"
   auth:
     postgresPassword: postgres
-    username: mainflux
-    password: mainflux
+    username: magistrala
+    password: magistrala
     database: certs
   resources:
     requests:
@@ -272,8 +272,8 @@ postgresqlnotifiersmtp:
   postgresqlPort: "5432"
   auth:
     postgresPassword: postgres
-    username: mainflux
-    password: mainflux
+    username: magistrala
+    password: magistrala
     database: subscriptions
   resources:
     requests:

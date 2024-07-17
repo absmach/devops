@@ -1,4 +1,4 @@
-# Copyright (c) Mainflux
+Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
 {{- if .Values.twins.enabled }}
@@ -28,7 +28,7 @@ spec:
             - name: MF_TWINS_HTTP_PORT
               value: "{{ .Values.twins.httpPort }}"
             - name: MF_TWINS_DB
-              value: mainflux-twins
+              value: magistrala-twins
             - name: MF_TWINS_DB_HOST
               value: {{ .Release.Name }}-twins-db
             - name: MF_TWINS_DB_PORT

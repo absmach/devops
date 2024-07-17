@@ -1,6 +1,6 @@
-# Mainflux Helm Chart
+# Magistrala Helm Chart
 
-Helm Chart for the Mainflux IoT Platform
+Helm Chart for the Magistrala IoT Platform
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ The following table lists the configurable parameters and their default values.
 | ------------------------------------ | -------------------------------------------------------------------------- | ------------ |
 | defaults.logLevel                    | Log level                                                                  | debug        |
 | defaults.image.pullPolicy            | Docker Image Pull Policy                                                   | IfNotPresent |
-| defaults.image.repository            | Docker Image Repository                                                    | mainflux     |
+| defaults.image.repository            | Docker Image Repository                                                    | magistrala     |
 | defaults.image.tag                   | Docker Image Tag                                                           | 0.12.0       |
 | defaults.replicaCount                | Replicas of MQTT adapter, Things, Envoy and Auth                           | 3            |
 | defaults.natsPort                    | NATS port                                                                  | 4222         |
@@ -88,10 +88,11 @@ The following table lists the configurable parameters and their default values.
 | notifier_smtp.httpPort               | SMTP notifier HTTP port                                                    | false        |
 | loki_stack.enabled                   | Enable Loki_Stack                                                          | true         |
 
-All Mainflux services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.
+All Magistrala services (both core and add-ons) can have their `logLevel`, `image.pullPolicy`, `image.repository` and `image.tag` overridden.
 
-Mainflux Core is a minimalistic set of required Mainflux services. They are all installed by default:
+Magistrala Core is a minimalistic set of required Magistrala services. They are all installed by default:
 
+- auth
 - users
 - things
 - adapter_http
@@ -99,7 +100,7 @@ Mainflux Core is a minimalistic set of required Mainflux services. They are all 
 - adapter_coap
 - ui
 
-Mainflux Add-ons are optional services that are disabled by default. Find in Configuration table parameters for enabling them, i.e. to enable influxdb reader & writer you should run `helm install` with `--set influxdb=true`.
+Magistrala Add-ons are optional services that are disabled by default. Find in Configuration table parameters for enabling them, i.e. to enable influxdb reader & writer you should run `helm install` with `--set influxdb=true`.
 List of add-ons services in charts:
 
 - bootstrap
