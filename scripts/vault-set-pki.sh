@@ -9,7 +9,7 @@ readDotEnv() {
 }
 
 vault() {
-    kubectl exec vault-0 -n mf -- vault "$@"
+    kubectl exec vault-0 -n mg -- vault "$@"
 }
 
 vaultEnablePKI() {
@@ -54,7 +54,7 @@ vaultGenerateIntermediateCSR() {
 
 vaultSignIntermediateCSR() {
     echo "Sign intermediate CSR"
-    kubectl cp data/${MG_VAULT_CA_NAME}_int.csr vault-0:/vault/${MG_VAULT_CA_NAME}_int.csr -n mf
+    kubectl cp data/${MG_VAULT_CA_NAME}_int.csr vault-0:/vault/${MG_VAULT_CA_NAME}_int.csr -n mg
     vault write -format=json ${MG_VAULT_PKI_PATH}/root/sign-intermediate \
         csr=@/vault/${MG_VAULT_CA_NAME}_int.csr \
         | tee >(jq -r .data.certificate >data/${MG_VAULT_CA_NAME}_int.crt) \
@@ -63,7 +63,7 @@ vaultSignIntermediateCSR() {
 
 vaultInjectIntermediateCertificate() {
     echo "Inject Intermediate Certificate"
-    kubectl cp data/${MG_VAULT_CA_NAME}_int.crt vault-0:/vault/${MG_VAULT_CA_NAME}_int.crt -n mf
+    kubectl cp data/${MG_VAULT_CA_NAME}_int.crt vault-0:/vault/${MG_VAULT_CA_NAME}_int.crt -n mg
     vault write ${MG_VAULT_PKI_INT_PATH}/intermediate/set-signed certificate=@/vault/${MG_VAULT_CA_NAME}_int.crt
 }
 
@@ -98,7 +98,7 @@ vaultGenerateServerCertificate() {
 }
 
 vaultCleanupFiles() {
-    kubectl exec vault-0 -n mf -- sh -c 'rm -rf /vault/*.{crt,csr}'
+    kubectl exec vault-0 -n mg -- sh -c 'rm -rf /vault/*.{crt,csr}'
 }
 
 if ! command -v jq &> /dev/null

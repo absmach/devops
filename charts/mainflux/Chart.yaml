@@ -21,21 +21,37 @@ dependencies:
   - name: nats
     version: "4.3.7"
     repository: "@stable"
+
+  - name: postgresql
+    version: "12.5.6"
+    repository: "@bitnami"
+    alias: postgresauth
+    condition: postgresauth.enabled
+
+  - name: postgresql
+    version: "12.5.6"
+    repository: "@bitnami"
+    alias: postgresspicedb
+    condition: postgresspicedb.enabled
+
   - name: postgresql
     version: "12.5.6"
     repository: "@bitnami"
     alias: postgresqlthings
     condition: postgresqlthings.enabled
+
   - name: postgresql
     version: "12.5.6"
     repository: "@bitnami"
     alias: postgresqlusers
     condition: postgresqlusers.enabled
+
   - name: postgresql
     version: "12.5.6"
     repository: "@bitnami"
     alias: postgresqlbootstrap
     condition: postgresqlbootstrap.enabled
+
   - name: postgresql
     version: "12.5.6"
     repository: "@bitnami"
@@ -46,38 +62,46 @@ dependencies:
     version: "17.11.3"
     repository: "@bitnami"
     alias: redis-streams
+
   - name: redis
     version: "17.11.3"
     repository: "@bitnami"
     alias: redis-auth
+
   - name: redis
     version: "17.11.3"
     repository: "@bitnami"
     alias: redis-mqtt
+
   - name: redis
     version: "17.11.3"
     repository: "@bitnami"
     alias: redis-opcua
     condition: adapter_opcua.enabled
+
   - name: redis
     version: "17.11.3"
     repository: "@bitnami"
     alias: redis-lora
     condition: adapter_lora.enabled
+
   - name: influxdb
     version: "5.6.1"
     repository: "@bitnami"
     condition: influxdb.enabled
+
   - name: mongodb
     version: "13.15.1"
     repository: "@bitnami"
     alias: twins-db
     condition: twins.enabled
+
   - name: postgresql
     version: "12.5.6"
     repository: "@bitnami"
     alias: postgresqlnotifiersmtp
     condition: postgresqlnotifiersmtp.enabled
+
   - name: jaeger
     version: "0.71.4"
     repository: "@jaegertracing"
