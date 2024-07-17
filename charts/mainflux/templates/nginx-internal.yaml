@@ -1,4 +1,4 @@
-Copyright (c) Abstract Machines
+# Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
 {{ if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") -}}

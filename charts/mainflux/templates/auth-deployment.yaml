@@ -44,19 +44,11 @@ spec:
             - name: MG_AUTH_HTTP_PORT
               value: "{{ .Values.auth.httpPort }}"
             - name: MG_AUTH_LOG_LEVEL
-              value: {{ default .Values.defaults.logLevel .Values.users.logLevel }}
+              value: {{ default .Values.defaults.logLevel .Values.auth.logLevel }}
             - name: MG_AUTH_SECRET
               value: "{{ .Values.auth.secret }}"
-            - name: MG_KETO_WRITE_REMOTE_HOST
-              value: {{ .Release.Name }}-keto-write
-            - name: MG_KETO_READ_REMOTE_HOST
-              value: {{ .Release.Name }}-keto-read
-            - name: MG_KETO_READ_REMOTE_PORT
-              value: "{{ .Values.keto.service.read.port }}"
-            - name: MG_KETO_WRITE_REMOTE_PORT
-              value: "{{ .Values.keto.service.write.port }}"
           image: "{{ default .Values.defaults.image.repository .Values.auth.image.repository }}/auth:{{ default .Values.defaults.image.tag .Values.auth.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.auth.image.pullPolicy }}
           name: {{ .Release.Name }}-auth
           ports:
             - containerPort: {{ .Values.auth.httpPort }}

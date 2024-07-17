@@ -95,6 +95,13 @@ mqtt:
   redisESPort: 6379
   redisCachePort: 6379
 
+auth:
+  image: {}
+  httpPort: 9002
+  grpcPort: 7001
+  adminEmail: "admin@example.com"
+  adminPassword: "12345678"
+
 users:
   image: {}
   httpPort: 9002
@@ -195,6 +202,23 @@ nats:
     enabled: false
   maxPayload: 268435456
   replicaCount: 3
+
+postgresqlauth:
+  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  enabled: true
+  name: postgresql-auth
+  postgresqlHost: postgresql-auth
+  postgresqlPort: "5432"
+  auth:
+    postgresPassword: postgres
+    username: magistrala
+    password: magistrala
+    database: auth
+  resources:
+    requests:
+      cpu: 25m
+  persistence:
+    size: 1Gi
 
 postgresqlusers:
   ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
