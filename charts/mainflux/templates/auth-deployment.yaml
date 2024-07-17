@@ -24,9 +24,9 @@ spec:
       containers:
         - env:
             - name: MG_JAEGER_URL
-              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
+              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/api/traces"
             - name: MG_AUTH_DB
-              value: {{ .Values.postgresqlauth.postgresqlDatabase | quote }}
+              value: {{ index .Values  "postgresqlauth" "auth" "database" | quote }}
             - name: MG_AUTH_DB_HOST
             {{- if .Values.postgresqlauth.enabled }}
               value: {{ .Release.Name }}-postgresqlauth
