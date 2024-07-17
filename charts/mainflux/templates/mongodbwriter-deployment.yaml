@@ -34,33 +34,33 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_MONGO_WRITER_LOG_LEVEL
+            - name: MG_MONGO_WRITER_LOG_LEVEL
               value: debug
-            - name: MF_BROKER_URL
+            - name: MG_BROKER_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
-            - name: MF_MONGO_WRITER_PORT
+            - name: MG_MONGO_WRITER_PORT
               value: "{{ .Values.mongodb.writer.httpPort }}"
-            - name: MF_MONGO_WRITER_BATCH_SIZE
+            - name: MG_MONGO_WRITER_BATCH_SIZE
               value: "5000"
-            - name: MF_MONGO_WRITER_BATCH_TIMEOUT
+            - name: MG_MONGO_WRITER_BATCH_TIMEOUT
               value: "5"
-            - name: MF_MONGO_WRITER_DB
+            - name: MG_MONGO_WRITER_DB
               value: "{{ .Values.mongodb.database }}"
-            - name: MF_MONGO_WRITER_DB_USER
+            - name: MG_MONGO_WRITER_DB_USER
               value: "{{ .Values.mongodb.adminUser.name }}"
-            - name: MF_MONGO_WRITER_DB_PASS
+            - name: MG_MONGO_WRITER_DB_PASS
               value: "{{ .Values.mongodb.adminUser.pwd }}"
-            - name: MF_MONGO_WRITER_DB_HOST
+            - name: MG_MONGO_WRITER_DB_HOST
               value: {{ .Release.Name }}-mongodb
-            - name: MF_MONGO_WRITER_DB_PORT
+            - name: MG_MONGO_WRITER_DB_PORT
               value: "{{ .Values.mongodb.dbPort }}"
-            - name: MF_MONGO_WRITER_CONFIG_PATH
+            - name: MG_MONGO_WRITER_CONFIG_PATH
               value: "{{ .Values.mongodb.configPath }}"
-            - name: MF_MONGO_WRITER_CONTENT_TYPE
+            - name: MG_MONGO_WRITER_CONTENT_TYPE
               value: "{{ .Values.mongodb.contentType }}"
-            - name: MF_MONGO_WRITER_TRANSFORMER
+            - name: MG_MONGO_WRITER_TRANSFORMER
               value: "{{ .Values.mongodb.transformer }}"
-            - name: MF_MONGO_WRITER_TRANSFORMER
+            - name: MG_MONGO_WRITER_TRANSFORMER
               value: "{{ .Values.mongodb.transformer }}"
           image: "{{ default .Values.defaults.image.repository .Values.mongodb.writer.image.repository }}/mongodb-writer:{{ default .Values.defaults.image.tag .Values.mongodb.writer.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mongodb.writer.image.pullPolicy }}

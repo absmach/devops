@@ -34,39 +34,39 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_JAEGER_URL
+            - name: MG_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/api/traces"
-            - name: MF_INFLUX_WRITER_LOG_LEVEL
+            - name: MG_INFLUX_WRITER_LOG_LEVEL
               value: debug
-            - name: MF_BROKER_URL
+            - name: MG_BROKER_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
-            - name: MF_INFLUX_WRITER_PORT
+            - name: MG_INFLUX_WRITER_PORT
               value: "{{ .Values.influxdb.writer.httpPort }}"
-            - name: MF_INFLUX_WRITER_BATCH_SIZE
+            - name: MG_INFLUX_WRITER_BATCH_SIZE
               value: "5000"
-            - name: MF_INFLUX_WRITER_BATCH_TIMEOUT
+            - name: MG_INFLUX_WRITER_BATCH_TIMEOUT
               value: "5"
-            - name: MF_INFLUXDB_BUCKET
+            - name: MG_INFLUXDB_BUCKET
               value: "{{ .Values.influxdb.auth.admin.bucket }}"
-            - name: MF_INFLUXDB_DBURL
+            - name: MG_INFLUXDB_DBURL
               value: "http://{{ .Release.Name }}-influxdb:{{ .Values.influxdb.dbPort }}"
-            - name: MF_INFLUXDB_TOKEN
+            - name: MG_INFLUXDB_TOKEN
               value: "{{ .Values.influxdb.auth.admin.token }}"
-            - name: MF_INFLUXDB_ORG
+            - name: MG_INFLUXDB_ORG
               value: "{{ .Values.influxdb.auth.admin.org }}"
-            - name: MF_INFLUXDB_HOST
+            - name: MG_INFLUXDB_HOST
               value: {{ .Release.Name }}-influxdb
-            - name: MF_INFLUXDB_PORT
+            - name: MG_INFLUXDB_PORT
               value: "{{ .Values.influxdb.dbPort }}"
-            - name: MF_INFLUXDB_TIMEOUT
+            - name: MG_INFLUXDB_TIMEOUT
               value: 60s
-            - name: MF_INFLUXDB_USER_AGENT
+            - name: MG_INFLUXDB_USER_AGENT
               value: influxdb-writer
-            - name: MF_INFLUX_WRITER_CONFIG_PATH
+            - name: MG_INFLUX_WRITER_CONFIG_PATH
               value: "{{ .Values.influxdb.configPath }}"
-            - name: MF_INFLUX_WRITER_CONTENT_TYPE
+            - name: MG_INFLUX_WRITER_CONTENT_TYPE
               value: "{{ .Values.influxdb.contentType }}"
-            - name: MF_INFLUX_WRITER_TRANSFORMER
+            - name: MG_INFLUX_WRITER_TRANSFORMER
               value: "{{ .Values.influxdb.transformer }}"
           image: "{{ default .Values.defaults.image.repository .Values.influxdb.writer.image.repository }}/influxdb-writer:{{ default .Values.defaults.image.tag .Values.influxdb.writer.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb.writer.image.pullPolicy }}

@@ -23,17 +23,17 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_LORA_ADAPTER_HTTP_PORT
+            - name: MG_LORA_ADAPTER_HTTP_PORT
               value: "{{ default .Values.adapter_lora.httpPort }}"
-            - name: MF_LORA_ADAPTER_LOG_LEVEL
+            - name: MG_LORA_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_lora.logLevel }}
-            - name: MF_BROKER_URL
+            - name: MG_BROKER_URL
               value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
-            - name: MF_LORA_ADAPTER_MESSAGES_URL
+            - name: MG_LORA_ADAPTER_MESSAGES_URL
               value: {{ .Values.adapter_lora.messageUrl }}
-            - name: MF_LORA_ADAPTER_ROUTE_MAP_URL
+            - name: MG_LORA_ADAPTER_ROUTE_MAP_URL
               value: {{ .Release.Name }}-redis-lora-master:{{ .Values.adapter_lora.redisRouteMapPort }}
-            - name: MF_THINGS_ES_URL
+            - name: MG_THINGS_ES_URL
               value: {{ .Release.Name }}-redis-streams-master:{{ .Values.things.redisESPort }}
           image: "{{ default .Values.defaults.image.repository .Values.adapter_lora.image.repository }}/lora:{{ default .Values.defaults.image.tag .Values.adapter_lora.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_lora.image.pullPolicy }}

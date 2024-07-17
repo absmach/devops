@@ -23,33 +23,33 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_INFLUX_READER_LOG_LEVEL
+            - name: MG_INFLUX_READER_LOG_LEVEL
               value: debug
-            - name: MF_THINGS_AUTH_GRPC_URL
+            - name: MG_THINGS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
-            - name: MF_AUTH_GRPC_URL
+            - name: MG_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.users.grpcPort }}
-            - name: MF_INFLUX_READER_PORT
+            - name: MG_INFLUX_READER_PORT
               value: "{{ .Values.influxdb.reader.httpPort }}"
-            - name: MF_INFLUXDB_BUCKET
+            - name: MG_INFLUXDB_BUCKET
               value: "{{ .Values.influxdb.auth.admin.bucket }}"
-            - name: MF_INFLUXDB_DBURL
+            - name: MG_INFLUXDB_DBURL
               value: "http://{{ .Release.Name }}-influxdb:{{ .Values.influxdb.dbPort }}"
-            - name: MF_INFLUXDB_TOKEN
+            - name: MG_INFLUXDB_TOKEN
               value: "{{ .Values.influxdb.auth.admin.token }}"
-            - name: MF_INFLUXDB_ORG
+            - name: MG_INFLUXDB_ORG
               value: "{{ .Values.influxdb.auth.admin.org }}"
-            - name: MF_INFLUXDB_HOST
+            - name: MG_INFLUXDB_HOST
               value: {{ .Release.Name }}-influxdb
-            - name: MF_INFLUXDB_PORT
+            - name: MG_INFLUXDB_PORT
               value: "{{ .Values.influxdb.dbPort }}"
-            - name: MF_INFLUXDB_TIMEOUT
+            - name: MG_INFLUXDB_TIMEOUT
               value: 60s
-            - name: MF_INFLUXDB_USER_AGENT
+            - name: MG_INFLUXDB_USER_AGENT
               value: influxdb-reader
-            - name: MF_JAEGER_URL
+            - name: MG_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/api/traces"
-            - name: MF_SEND_TELEMETRY
+            - name: MG_SEND_TELEMETRY
               value: "false"
           image: "{{ default .Values.defaults.image.repository .Values.influxdb.reader.image.repository }}/influxdb-reader:{{ default .Values.defaults.image.tag .Values.influxdb.reader.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.influxdb.reader.image.pullPolicy }}

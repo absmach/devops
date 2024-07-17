@@ -17,7 +17,7 @@ Take a not for unseal keys and root token, by default on `init` operation you wi
 kubectl exec vault-0 -n mf -- vault operator unseal <VAULT_UNSEAL_KEY>
 ```
 
-Edit `.env` and set to `MF_VAULT_TOKEN` to value of root token, additonaly, to setup `mTLS` properly `MF_VAULT_CA_CN` must match host that `Magistrala` is deployed to. 
+Edit `.env` and set to `MG_VAULT_TOKEN` to value of root token, additonaly, to setup `mTLS` properly `MG_VAULT_CA_CN` must match host that `Magistrala` is deployed to. 
 
 Execute `/vault-set-pki.sh`
 

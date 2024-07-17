@@ -18,15 +18,15 @@ spec:
     spec:
       containers:
         - env:
-            - name: MF_UI_PORT
+            - name: MG_UI_PORT
               value: "{{ .Values.ui.port }}"
-            - name: MF_UI_MQTT_WS_URL
+            - name: MG_UI_MQTT_WS_URL
               value: "{{ .Values.ui.wsUrl }}"
-            - name: MF_PROXY_AUTH
+            - name: MG_PROXY_AUTH
               value: "{{ .Values.ui.proxyAuth }}"
-            - name: MF_UI_APP_PREFIX
+            - name: MG_UI_APP_PREFIX
               value: "{{ .Values.ui.prefix }}"
-            - name : MF_PROXY_LOGOUT_URL
+            - name : MG_PROXY_LOGOUT_URL
               value: "{{ .Values.ui.logoutUrl }}"
           image: "{{ default .Values.defaults.image.repository .Values.ui.image.repository }}/ui:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
