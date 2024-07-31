@@ -26,7 +26,7 @@ spec:
             - name: MG_CERTS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.certs.logLevel }}
             - name: MG_JAEGER_URL
-              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/api/traces"
+              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
             - name: MG_CERTS_DB_HOST
             {{- if .Values.postgresqlcerts.enabled }}
               value: {{ .Release.Name }}-postgresqlcerts
@@ -60,7 +60,7 @@ spec:
             - name: MG_CERTS_HTTP_PORT
               value: "{{ .Values.certs.httpPort }}"
             - name: MG_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.users.grpcPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: MG_THINGS_URL
               value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
             - name: MG_SDK_THINGS_PREFIX

@@ -13,23 +13,3 @@ spec:
     - protocol: TCP
       port: {{ .Values.users.httpPort }}
       name: {{ .Release.Name }}-users-http
-    - port: {{ .Values.users.grpcPort }}
-      protocol: TCP
-      name: {{ .Release.Name }}-users-grpc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Release.Name }}-users-headless
-spec:
-  selector:
-    app: {{ .Release.Name }}
-    component: users
-  ports:
-    - protocol: TCP
-      port: {{ .Values.users.httpPort }}
-      name: {{ .Release.Name }}-users-http
-    - port: {{ .Values.users.grpcPort }}
-      protocol: TCP
-      name: {{ .Release.Name }}-users-grpc
-  clusterIP: None

@@ -12,10 +12,10 @@ spec:
   ports:
     - protocol: TCP
       port: {{ .Values.auth.httpPort }}
-      name: {{ .Release.Name }}-auth-http
+      name: {{ .Release.Name }}-auth-http-{{ .Values.auth.httpPort }}
     - protocol: TCP
       port: {{ .Values.auth.grpcPort }}
-      name: {{ .Release.Name }}-auth-grpc
+      name: {{ .Release.Name }}-auth-grpc-{{ .Values.auth.grpcPort }}
 ---
 apiVersion: v1
 kind: Service
@@ -28,8 +28,8 @@ spec:
   ports:
     - protocol: TCP
       port: {{ .Values.auth.httpPort }}
-      name: {{ .Release.Name }}-auth-http
+      name: {{ .Release.Name }}-auth-http-{{ .Values.auth.httpPort }}
     - protocol: TCP
       port: {{ .Values.auth.grpcPort }}
-      name: {{ .Release.Name }}-auth-grpc
+      name: {{ .Release.Name }}-auth-grpc-{{ .Values.auth.grpcPort }}
   clusterIP: None

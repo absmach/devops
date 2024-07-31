@@ -1,45 +1,30 @@
 dependencies:
 - name: nats
-  repository: https://charts.helm.sh/stable
-  version: 4.3.7
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami
-  version: 12.5.6
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami
-  version: 12.5.6
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami
-  version: 12.5.6
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami
-  version: 12.5.6
-- name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 17.11.3
-- name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 17.11.3
-- name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 17.11.3
-- name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 17.11.3
-- name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 17.11.3
-- name: influxdb
-  repository: https://charts.bitnami.com/bitnami
-  version: 5.6.1
-- name: mongodb
-  repository: https://charts.bitnami.com/bitnami
-  version: 13.15.1
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami
-  version: 12.5.6
+  repository: https://nats-io.github.io/k8s/helm/charts/
+  version: 1.2.1
 - name: jaeger
   repository: https://jaegertracing.github.io/helm-charts
-  version: 0.71.4
-digest: sha256:235e8512e714ec5d8ed1e8fb27ec2c4c9caaa52d8010b087b565bcb723701810
-generated: "2023-06-28T12:37:51.146445339+05:30"
+  version: 3.1.1
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.5.6
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.5.6
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.5.6
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.5.6
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.5.6
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.5.6
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 19.6.2
+digest: sha256:002ffd55cf0376bf37a04b7ce1188caec1a4d015c51b3b37922b61afcbef6791
+generated: "2024-07-30T18:40:23.501924267+05:30"

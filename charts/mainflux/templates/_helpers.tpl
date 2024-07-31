@@ -26,3 +26,12 @@ SPDX-License-Identifier: Apache-2.0
 tls.crt: {{ $cert.Cert | b64enc }}
 tls.key: {{ $cert.Key | b64enc }}
 {{- end -}}
+
+
+{{- define "validateSpiceDBDatastoreEngine" -}}
+{{- if and (not (eq . "memory")) (not (eq . "postgres")) -}}
+  {{- fail "Invalid value for .Values.spicedb.datastore.engine. Must be 'memory' or 'postgres'." -}}
+{{- else -}}
+  {{- . -}}
+{{- end -}}
+{{- end -}}

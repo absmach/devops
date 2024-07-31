@@ -24,7 +24,7 @@ spec:
       containers:
         - env:
             - name: MG_JAEGER_URL
-              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/api/traces"
+              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
             - name: MG_THINGS_URL
               value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
             - name: MG_BOOTSTRAP_DB
@@ -52,7 +52,7 @@ spec:
             - name: MG_BOOTSTRAP_DB_SSL_MODE
               value: disable
             - name: MG_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.users.grpcPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: MG_SDK_BASE_URL
               value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
           image: "{{ default .Values.defaults.image.repository .Values.bootstrap.image.repository }}/bootstrap:{{ default .Values.defaults.image.tag .Values.bootstrap.image.tag }}"

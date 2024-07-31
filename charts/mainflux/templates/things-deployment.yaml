@@ -22,40 +22,40 @@ spec:
         component: things
     spec:
       containers:
-        - env:
+        - name: {{ .Release.Name }}-things
+          image: "{{ default .Values.defaults.image.repository .Values.things.image.repository }}/things:{{ default .Values.defaults.image.tag .Values.things.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.things.image.pullPolicy }}
+          env:
             - name: MG_JAEGER_URL
-              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/api/traces"
+              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
             - name: MG_THINGS_AUTH_GRPC_PORT
-              value: "{{ .Values.things.authGrpcPort }}"
+              value: {{ .Values.things.authGrpcPort | quote}}
             - name: MG_THINGS_AUTH_HTTP_PORT
-              value: "{{ .Values.things.authHttpPort }}"
+              value: {{ .Values.things.authHttpPort | quote}}
             - name: MG_THINGS_CACHE_URL
-              value: {{ .Release.Name }}-redis-auth-master:{{ .Values.things.redisCachePort }}
-            - name: MG_THINGS_DB
-              value: {{ index .Values  "postgresqlthings" "auth" "database" }}
+              value: redis://{{ .Release.Name }}-redis-things-master:{{ .Values.things.redisCachePort }}/0
             - name: MG_THINGS_DB_HOST
             {{- if .Values.postgresqlthings.enabled }}
               value: {{ .Release.Name }}-postgresqlthings
             {{- else }}
-              value: {{ .Values.postgresqlthings.postgresqlHost | quote}}
+              value: {{ .Values.postgresqlthings.host | quote}}
             {{- end }}
-            - name: MG_THINGS_DB_PASS
-              value: {{ index .Values  "postgresqlthings" "auth" "password" }}
             - name: MG_THINGS_DB_PORT
-              value: {{ .Values.postgresqlthings.postgresqlPort | quote}}
+              value: {{ .Values.postgresqlthings.port | quote}}
             - name: MG_THINGS_DB_USER
-              value: {{ index .Values  "postgresqlthings" "auth" "username" }}
+              value: {{ .Values.postgresqlthings.username | quote }}
+            - name: MG_THINGS_DB_PASS
+              value: {{ .Values.postgresqlthings.password | quote }}
+            - name: MG_THINGS_DB
+              value: {{ .Values.postgresqlthings.database | quote }}
             - name: MG_THINGS_ES_URL
-              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.things.redisESPort }}
+              value: {{ .Values.defaults.eventStreamURL | quote }}
             - name: MG_THINGS_HTTP_PORT
-              value: "{{ .Values.things.httpPort }}"
+              value: {{ .Values.things.httpPort | quote }}
             - name: MG_THINGS_LOG_LEVEL
-              value: {{ default .Values.defaults.logLevel .Values.things.logLevel }}
+              value: {{ default .Values.defaults.logLevel .Values.things.logLevel | quote }}
             - name: MG_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.users.grpcPort }}
-          image: "{{ default .Values.defaults.image.repository .Values.things.image.repository }}/things:{{ default .Values.defaults.image.tag .Values.things.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.things.image.pullPolicy }}
-          name: {{ .Release.Name }}-things
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
           ports:
             - containerPort: {{ .Values.things.httpPort }}
               protocol: TCP

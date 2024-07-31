@@ -5,6 +5,7 @@ defaults:
   logLevel: "info"
   image:
     pullPolicy: "IfNotPresent"
+    rootRepository: "magistrala"
     repository: "magistrala"
     tag: "latest"
     # imagePullSecrets:
@@ -12,7 +13,10 @@ defaults:
   # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
   replicaCount: 3
   natsPort: 4222
-  jaegerCollectorPort: 14268
+  jaegerCollectorPort: 4318
+  jaegerTraceRatio: 10
+  sendTelemetry: true
+  eventStreamURL: "magistrala-nats:4222"
 
 ingress:
   enabled: true
@@ -25,6 +29,10 @@ ingress:
   #   secret: "magistrala-server"
 
 nginxInternal:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "nginx"
+    tag: "1.19.1-alpine"
   mtls:
     # By default mTLS is disabled. If you use mTLS, comment this block.
     tls: ""
@@ -34,43 +42,54 @@ nginxInternal:
     # tls: "magistrala-server"
     # intermediateCrt: "ca"
 
-adapter_http:
-  image: {}
-  httpPort: 8008
+
+envoy:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "envoyproxy/envoy"
+    tag: "v1.31-latest"
+
+jaeger:
+  fullnameOverride: magistrala-jaeger
+  provisionDataStore:
+    cassandra: true
+  agent:
+    enabled: false
+  allInOne:
+    enabled: false
+  storage:
+    type: memory
+  collector:
+    service:
+      otlp:
+        grpc:
+          name: otlp-grpc
+          port: 4317
+        http:
+          name: otlp-http
+          port: 4318
+nats:
+  config:
+    cluster:
+      enabled: false
+      replicas: 3
+    jetstream:
+      enabled: true
+      fileStore:
+        enabled: true
+        pvc:
+          enabled: true
+      memoryStore:
+        enabled: true
+        maxSize: 2Gi
 
 adapter_coap:
   image: {}
   port: 5683
 
-adapter_opcua:
-  enabled: false
+adapter_http:
   image: {}
-  httpPort: 8188
-  policy: ""
-  mode: ""
-  certFile: ""
-  keyFile: ""
-  eventConsumer: "opcua"
-  redisRouteMapPort: 6379
-
-adapter_lora:
-  enabled: false
-  image: {}
-  httpPort: 9017
-  messageUrl: "tcp://lora.magistrala.abstractmachines.fr:1883"
-  redisRouteMapPort: 6379
-
-notifier_smtp:
-  enabled: false
-  image: {}
-  emailHost: "smtp.example.com"
-  smtpPort: 2525
-  fromName: "Magistrala - Abstract Machines"
-  fromEmail: "admin@example.com"
-  username: ""
-  password: ""
-  secret: ""
-  httpPort: 9015
+  httpPort: 8008
 
 mqtt:
   enabled: true
@@ -95,12 +114,85 @@ mqtt:
   redisESPort: 6379
   redisCachePort: 6379
 
+spicedb:
+  # replicaCount: 1
+  image:
+    pullSecrets: {}
+    repository: authzed/spicedb
+    tag: latest
+  grpc:
+    presharedKey: "helloworld"
+    port: 50051
+  datastore:
+    ## engine can be any one of the two options: postgres (default) , memory
+    engine: postgres
+  dispatch:
+    port: 50053
+    enabled: false
+  http:
+    enabled: false
+    port: 8443
+  metrics:
+    enabled: true
+    port: 9090
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+
+postgresqlspicedb:
+  ## If you want to use an external database, set this to false and change host & port
+  enabled: true
+  name: postgresql-spicedb
+  host: postgresql-spicedb
+  port: &postgresqlSpicedbPort 5432
+  database: &postgresqlSpicedbDatabase spicedb
+  username: &postgresqlSpicedbUsername magistrala
+  password: &postgresqlSpicedbPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlSpicedbPassword
+        username: *postgresqlSpicedbUsername
+        password: *postgresqlSpicedbPassword
+        database: *postgresqlSpicedbDatabase
+      service:
+        ports:
+          postgresql: *postgresqlSpicedbPort
+
 auth:
+  # logLevel: error
   image: {}
-  httpPort: 9002
-  grpcPort: 7001
+  httpPort: 8189
+  grpcPort: 8181
+  secret: "supersecret"
   adminEmail: "admin@example.com"
   adminPassword: "12345678"
+  accessTokenDuration: "1h"
+  refreshTokenDuration: "24h"
+  invitationDuration: "168h"
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+
+postgresqlauth:
+  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  enabled: true
+  name: postgresql-auth
+  host: postgresql-auth
+  port: &postgresqlAuthPort 5432
+  database: &postgresqlAuthDatabase auth
+  username: &postgresqlAuthUsername magistrala
+  password: &postgresqlAuthPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlAuthPassword
+        username: *postgresqlAuthUsername
+        password: *postgresqlAuthPassword
+        database: *postgresqlAuthDatabase
+      service:
+        ports:
+          postgresql: *postgresqlAuthPort
 
 users:
   image: {}
@@ -108,6 +200,32 @@ users:
   grpcPort: 7001
   adminEmail: "admin@example.com"
   adminPassword: "12345678"
+  secretKey: "secretKey"
+  passwordRegex: "^.{8,}$"
+  tokenResetEndpoint: "/reset-request"
+  allowSelfRegister: true
+  deleteInterval: "24h"
+  deleteAfter: "720h"
+
+postgresqlusers:
+  ## If you want to use an external database, set this to false and change host & port
+  enabled: true
+  name: postgresql-users
+  host: postgresql-users
+  port: &postgresqlUsersPort 5432
+  database: &postgresqlUsersDatabase users
+  username: &postgresqlUsersUsername magistrala
+  password: &postgresqlUsersPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlUsersPassword
+        username: *postgresqlUsersUsername
+        password: *postgresqlUsersPassword
+        database: *postgresqlUsersDatabase
+      service:
+        ports:
+          postgresql: *postgresqlUsersPort
 
 things:
   image: {}
@@ -117,11 +235,51 @@ things:
   redisESPort: 6379
   redisCachePort: 6379
 
+postgresqlthings:
+  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  enabled: true
+  name: postgresql-things
+  host: postgresql-things
+  port: &postgresqlThingsPort 5432
+  database: &postgresqlThingsDatabase things
+  username: &postgresqlThingsUsername magistrala
+  password: &postgresqlThingsPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlThingsPassword
+        username: *postgresqlThingsUsername
+        password: *postgresqlThingsPassword
+        database: *postgresqlThingsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlThingsPort
+
+redis-things:
+  volumePermissions:
+    enabled: true
+  cluster:
+    enabled: false
+  usePassword: false
+
 bootstrap:
   enabled: false
   image: {}
   httpPort: 9013
   redisESPort: 6379
+
+postgresqlbootstrap:
+  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  enabled: false
+  name: postgresql-bootstrap
+  postgresqlHost: postgresql-bootstrap
+  postgresqlPort: "5432"
+  auth:
+    postgresPassword: postgres
+    username: magistrala
+    password: magistrala
+    database: bootstrap
+
 
 certs:
   enabled: false
@@ -142,135 +300,6 @@ certs:
   signVaultPKIPath: "pki_int"
   signVaultRole: "agent"
 
-ui:
-  image: {}
-  port: 9090
-  redirectUrl: https://localhost
-  httpAdapterUrl: "http://magistrala-adapter-http:8008"
-  usersUrl: "http://magistrala-users:9002"
-  thingsUrl: "http://magistrala-things:9000"
-  readerUrl: "http://magistrala-timescale-reader:8911"
-
-influxdb:
-  enabled: false
-  dbPort: 8086
-  writer:
-    image: {}
-    httpPort: 9006
-  reader:
-    image: {}
-    httpPort: 9005
-  database: "magistrala"
-  authEnabled: true
-  auth:
-    admin:
-      username: magistrala
-      password: magistrala
-      token: magistrala-influxdb-token
-      org: magistrala
-      bucket: magistrala
-  configPath: "/config.toml"
-  contentType: "application/senml+json"
-  transformer: "senml"
-  backup:
-    enabled: false
-    cronjob:
-      schedule: "0 2 * * *"
-
-mongodb:
-  enabled: false
-  dbPort: 27017
-  writer:
-    image: {}
-    httpPort: 9008
-  reader:
-    image: {}
-    httpPort: 9007
-  database: "magistrala"
-  authEnabled: true
-  adminUser:
-    name: "magistrala"
-    pwd: "magistrala"
-  configPath: "/subjects.toml"
-  contentType: "application/senml+json"
-  transformer: "json"
-
-nats:
-  auth:
-    enabled: false
-  clusterAuth:
-    enabled: false
-  maxPayload: 268435456
-  replicaCount: 3
-
-postgresqlauth:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
-  enabled: true
-  name: postgresql-auth
-  postgresqlHost: postgresql-auth
-  postgresqlPort: "5432"
-  auth:
-    postgresPassword: postgres
-    username: magistrala
-    password: magistrala
-    database: auth
-  resources:
-    requests:
-      cpu: 25m
-  persistence:
-    size: 1Gi
-
-postgresqlusers:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
-  enabled: true
-  name: postgresql-users
-  postgresqlHost: postgresql-users
-  postgresqlPort: "5432"
-  auth:
-    postgresPassword: postgres
-    username: magistrala
-    password: magistrala
-    database: users
-  resources:
-    requests:
-      cpu: 25m
-  persistence:
-    size: 1Gi
-
-postgresqlthings:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
-  enabled: true
-  name: postgresql-things
-  postgresqlHost: postgresql-things
-  postgresqlPort: "5432"
-  auth:
-    postgresPassword: postgres
-    username: magistrala
-    password: magistrala
-    database: things
-  resources:
-    requests:
-      cpu: 25m
-  persistence:
-    size: 1Gi
-
-postgresqlbootstrap:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
-  enabled: false
-  name: postgresql-bootstrap
-  postgresqlHost: postgresql-bootstrap
-  postgresqlPort: "5432"
-  auth:
-    postgresPassword: postgres
-    username: magistrala
-    password: magistrala
-    database: bootstrap
-  resources:
-    requests:
-      cpu: 25m
-  persistence:
-    size: 1Gi
-
 postgresqlcerts:
   ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
   enabled: false
@@ -288,87 +317,12 @@ postgresqlcerts:
   persistence:
     size: 1Gi
 
-postgresqlnotifiersmtp:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
-  enabled: false
-  name: postgresql-notifier-smtp
-  postgresqlHost: postgresql-notifier-smtp
-  postgresqlPort: "5432"
-  auth:
-    postgresPassword: postgres
-    username: magistrala
-    password: magistrala
-    database: subscriptions
-  resources:
-    requests:
-      cpu: 25m
-  persistence:
-    size: 1Gi
 
-redis-streams:
-  auth:
-    enabled: false
-  master:
-    persistence:
-      enabled: false
-
-
-redis-mqtt:
-  auth:
-    enabled: false
-  master:
-    persistence:
-      enabled: true
-      size: 1Gi
-
-
-redis-auth:
-  auth:
-    enabled: false
-  master:
-    persistence:
-      enabled: false
-
-
-
-redis-opcua:
-  auth:
-    enabled: false
-  master:
-    persistence:
-      enabled: false
-
-
-
-redis-lora:
-  auth:
-    enabled: false
-  master:
-    persistence:
-      enabled: false
-
-
-
-twins:
-  enabled: false
+ui:
   image: {}
-  dbPort: 27017
-  httpPort: 9018
-  channelId: ""
-  redisCachePort: 6379
-
-twins-db:
-  auth:
-    enabled: false
-
-envoy:
-  image:
-    pullPolicy: "IfNotPresent"
-    repository: "envoyproxy/envoy"
-    tag: "v1.13.0"
-
-nginx_internal:
-  image:
-    pullPolicy: "IfNotPresent"
-    repository: "nginx"
-    tag: "1.19.1-alpine"
+  port: 9090
+  redirectUrl: https://localhost
+  httpAdapterUrl: "http://magistrala-adapter-http:8008"
+  usersUrl: "http://magistrala-users:9002"
+  thingsUrl: "http://magistrala-things:9000"
+  readerUrl: "http://magistrala-timescale-reader:8911"

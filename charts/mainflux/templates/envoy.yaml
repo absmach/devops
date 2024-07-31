@@ -4,93 +4,7 @@
 apiVersion: v1
 data:
   envoy.yaml: |-
-    static_resources:
-      listeners:
-      - address:
-          socket_address:
-            address: 0.0.0.0
-            port_value: 1883
-        filter_chains:
-        - filters:
-          - name: envoy.tcp_proxy
-            config:
-              stat_prefix: mqtt
-              cluster: mqtt
-      - address:
-          socket_address:
-            address: 0.0.0.0
-            port_value: {{ .Values.users.grpcPort }}
-        filter_chains:
-        - filters:
-          - name: envoy.http_connection_manager
-            config:
-              codec_type: auto
-              stat_prefix: auth
-              route_config:
-                name: auth_route
-                virtual_hosts:
-                - name: auth_service
-                  domains: ["*"]
-                  routes:
-                  - match: { prefix: "/" }
-                    route: { cluster: auth }
-              http_filters:
-              - name: envoy.grpc_web
-              - name: envoy.router
-      - address:
-          socket_address:
-            address: 0.0.0.0
-            port_value: {{ .Values.things.authGrpcPort }}
-        filter_chains:
-        - filters:
-          - name: envoy.http_connection_manager
-            config:
-              codec_type: auto
-              stat_prefix: things
-              route_config:
-                name: things_route
-                virtual_hosts:
-                - name: things_service
-                  domains: ["*"]
-                  routes:
-                  - match: { prefix: "/" }
-                    route: { cluster: things }
-              http_filters:
-              - name: envoy.grpc_web
-              - name: envoy.router
-      clusters:
-      - name: mqtt
-        connect_timeout: 0.25s
-        type: strict_dns
-        lb_policy: round_robin
-        hosts:
-        - socket_address:
-            address: {{ .Release.Name }}-mqtt
-            port_value: 1884
-      - name: auth
-        connect_timeout: 0.25s
-        type: strict_dns
-        lb_policy: round_robin
-        http2_protocol_options: {}
-        hosts:
-        - socket_address:
-            address: {{ .Release.Name }}-users
-            port_value: {{ .Values.users.grpcPort }}
-      - name: things
-        connect_timeout: 0.25s
-        type: strict_dns
-        lb_policy: round_robin
-        http2_protocol_options: {}
-        hosts:
-        - socket_address:
-            address: {{ .Release.Name }}-things-headless
-            port_value: {{ .Values.things.authGrpcPort }}
-    admin:
-      access_log_path: "/dev/null"
-      address:
-        socket_address:
-          address: 0.0.0.0
-          port_value: 8001
+{{ include "magistrala.envoy.config" . | indent 4 }}
 
 kind: ConfigMap
 metadata:
@@ -114,12 +28,15 @@ spec:
     spec:
       containers:
         - image: "{{ default .Values.defaults.image.repository .Values.envoy.image.repository }}:{{ default .Values.defaults.image.tag .Values.envoy.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.envoy.image.imagePullPolicy}}
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.envoy.image.pullPolicy}}
           name: {{ .Release.Name }}-envoy
+          args:
+            - -c /etc/envoy/envoy.yaml
+            - --log-level debug
           ports:
             - containerPort: 1883
               protocol: TCP
-            - containerPort: {{ .Values.users.grpcPort }}
+            - containerPort: {{ .Values.auth.grpcPort }}
               protocol: TCP
             - containerPort: {{ .Values.things.authGrpcPort }}
               protocol: TCP
@@ -131,7 +48,7 @@ spec:
               subPath: envoy.yaml
       volumes:
         - configMap:
-            defaultMode: 256
+            defaultMode: 292  ## equal to 0444 r-- r-- r--
             name: {{ .Release.Name }}-envoy-config
             optional: false
           name: envoy-config
@@ -148,7 +65,7 @@ spec:
     - port: 1883
       protocol: TCP
       name: mqtt
-    - port: {{ .Values.users.grpcPort }}
+    - port: {{ .Values.auth.grpcPort }}
       protocol: TCP
       name: auth-grpc
     - port: {{ .Values.things.authGrpcPort }}

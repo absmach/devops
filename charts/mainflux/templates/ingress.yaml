@@ -27,7 +27,7 @@ spec:
                 port:
                   number: {{ .Values.ui.port }}
           - path: /health
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: {{ .Release.Name }}-things
@@ -60,28 +60,28 @@ spec:
       http:
         paths:
           - path: /(users.*|password.*|tokens.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
           - path: /(things.*|channels.*|connect.*|disconnect.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-things
                 port:
                   number: {{ .Values.things.httpPort }}
           - path: /groups/users/?(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
           - path: /groups/things/?(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-things
@@ -89,64 +89,28 @@ spec:
                   number: {{ .Values.things.httpPort }}
 {{- if .Values.certs.enabled }}
           - path: /(certs.*|serials.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-certs
                 port:
                   number: {{ .Values.certs.httpPort }}
 {{- end }}
-{{- if .Values.notifier_smtp.enabled }}
-          - path: /smtp-notifier/?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-notifier-smtp
-                port:
-                  number: {{ .Values.notifier_smtp.httpPort }}
-{{- end }}
 {{- if .Values.bootstrap.enabled }}
           - path: /bootstrap/?(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-bootstrap
                 port:
                   number: {{ .Values.bootstrap.httpPort }}
           - path: /bs/?(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-bootstrap
                 port:
                   number: {{ .Values.bootstrap.httpPort }}
-{{- end }}
-{{- if .Values.influxdb.enabled }}
-          - path: /reader/?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name:  {{ .Release.Name }}-influxdb-reader
-                port:
-                  number: {{ .Values.influxdb.reader.httpPort }}
-{{- end }}
-{{- if .Values.twins.enabled }}
-          - path: /(twins.*|states.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-twins
-                port:
-                  number: {{ .Values.twins.httpPort }}
-{{- end }}
-{{- if .Values.adapter_opcua.enabled }}
-          - path: /(browse.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-adapter-opcua
-                port:
-                  number: {{ default .Values.adapter_opcua.httpPort }}
 {{- end }}
 {{- if .Values.ingress.tls }}
   tls:
@@ -180,43 +144,43 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-{{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
+          {{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
           - path: /(http/?.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-nginx-internal
                 port:
                   number: 80
           - path: /(mqtt)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-nginx-internal
                 port:
                   number: 80
-{{- else }}
+          {{- else }}
           - path: /http/?(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-adapter-http
                 port:
                   number: {{ .Values.adapter_http.httpPort }}
           - path: /(mqtt)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-mqtt
                 port:
                   number: {{ default .Values.mqtt.adapter.wsPort }}
-{{- end }}
-{{- if .Values.ingress.tls }}
+          {{- end }}
+  {{- if .Values.ingress.tls }}
   tls:
     - hosts:
         - {{ .Values.ingress.tls.hostname }}
       secretName: {{ .Values.ingress.tls.secret }}
-{{- end }}
+  {{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap

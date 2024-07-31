@@ -432,10 +432,10 @@ spec:
         component: nginx-internal
     spec:
       containers:
-        - image: "{{ .Values.nginx_internal.image.repository }}:{{ .Values.nginx_internal.image.tag }}"
+        - image: "{{ .Values.nginxInternal.image.repository }}:{{ .Values.nginxInternal.image.tag }}"
         # - image: busybox
         #   command: ["sleep", "3600"]
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.nginx_internal.image.imagePullPolicy}}
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.nginxInternal.image.imagePullPolicy}}
           name: {{ .Release.Name }}-nginx-internal
           ports:
             - containerPort: 8883
