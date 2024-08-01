@@ -49,15 +49,17 @@ spec:
             - name: MG_JAEGER_URL
               value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
             - name: MG_JAEGER_TRACE_RATIO
-              value: {{ default .Values.defaults.jaegerTraceRatio .Values.auth.jaegerTraceRatio | quote  }}
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.users.jaegerTraceRatio | quote  }}
             - name: MG_SEND_TELEMETRY
-              value: {{ default .Values.defaults.sendTelemetry .Values.auth.sendTelemetry | quote  }}
+              value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
             - name: MG_ES_URL
               value: {{ .Values.defaults.eventStreamURL | quote }}
-            - name: MG_USERS_HTTP_PORT
-              value: {{ .Values.users.httpPort  | quote  }}
             - name: MG_USERS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.users.logLevel  | quote }}
+            - name: MG_USERS_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_USERS_HTTP_PORT
+              value: {{ .Values.users.httpPort  | quote  }}
             - name: MG_TOKEN_RESET_ENDPOINT
               value: {{ .Values.users.tokenResetEndpoint | quote }}
             - name: MG_USERS_ADMIN_EMAIL

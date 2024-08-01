@@ -28,8 +28,12 @@ spec:
           env:
             - name: MG_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+            - name: MG_THINGS_AUTH_GRPC_HOST
+              value: "0.0.0.0"
             - name: MG_THINGS_AUTH_GRPC_PORT
               value: {{ .Values.things.authGrpcPort | quote}}
+            - name: MG_THINGS_AUTH_HTTP_HOST
+              value: "0.0.0.0"
             - name: MG_THINGS_AUTH_HTTP_PORT
               value: {{ .Values.things.authHttpPort | quote}}
             - name: MG_THINGS_CACHE_URL
@@ -48,8 +52,10 @@ spec:
               value: {{ .Values.postgresqlthings.password | quote }}
             - name: MG_THINGS_DB
               value: {{ .Values.postgresqlthings.database | quote }}
-            - name: MG_THINGS_ES_URL
+            - name: MG_ES_URL
               value: {{ .Values.defaults.eventStreamURL | quote }}
+            - name: MG_THINGS_HTTP_HOST
+              value: "0.0.0.0"
             - name: MG_THINGS_HTTP_PORT
               value: {{ .Values.things.httpPort | quote }}
             - name: MG_THINGS_LOG_LEVEL

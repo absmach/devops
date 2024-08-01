@@ -25,9 +25,11 @@ spec:
             - name: MG_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
             - name: MG_HTTP_ADAPTER_LOG_LEVEL
-              value: {{ default .Values.defaults.logLevel .Values.adapter_http.logLevel }}
+              value: {{ default .Values.defaults.logLevel .Values.adapter_http.logLevel | quote }}
+            - name: MG_HTTP_ADAPTER_HOST
+              value: "0.0.0.0"
             - name: MG_HTTP_ADAPTER_PORT
-              value: "{{ .Values.adapter_http.httpPort }}"
+              value: {{ .Values.adapter_http.httpPort | quote }}
             - name: MG_MESSAGE_BROKER_URL
               value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
             - name: MG_THINGS_AUTH_GRPC_URL

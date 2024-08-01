@@ -29,9 +29,15 @@ spec:
             - name: MG_THINGS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
             - name: MG_COAP_ADAPTER_LOG_LEVEL
-              value: {{ default .Values.defaults.logLevel .Values.adapter_coap.logLevel }}
+              value: {{ default .Values.defaults.logLevel .Values.adapter_coap.logLevel | quote }}
+            - name: MG_COAP_ADAPTER_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_COAP_ADAPTER_HTTP_PORT
+              value: {{ .Values.adapter_coap.port | quote }}
+            - name: MG_COAP_ADAPTER_HOST
+              value: "0.0.0.0"
             - name: MG_COAP_ADAPTER_PORT
-              value: "{{ .Values.adapter_coap.port }}"
+              value: {{ .Values.adapter_coap.port | quote }}
           image: "{{ default .Values.defaults.image.repository .Values.adapter_coap.image.repository }}/coap:{{ default .Values.defaults.image.tag .Values.adapter_coap.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_coap.image.pullPolicy }}
           name: {{ .Release.Name }}-adapter-coap

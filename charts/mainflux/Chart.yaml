@@ -50,6 +50,7 @@ dependencies:
     alias: postgresqlusers
     condition: postgresqlusers.enabled
 
+
   - name: postgresql
     version: "12.5.6"
     repository: "@bitnami"
@@ -61,6 +62,25 @@ dependencies:
     repository: "@bitnami"
     alias: postgresqlcerts
     condition: postgresqlcerts.enabled
+
+  - name: postgresql
+    version: "12.5.6"
+    repository: "@bitnami"
+    alias: postgresqlinvitations
+    condition: postgresqlinvitations.enabled
+
+
+  - name: postgresql
+    version: "12.5.6"
+    repository: "@bitnami"
+    alias: timescaledb
+    condition: timescaledb.enabled
+
+  - name: postgresql
+    version: "12.5.6"
+    repository: "@bitnami"
+    alias: postgresqlui
+    condition: postgresqlui.enabled
 
   - name: redis
     version: "19.6.2"

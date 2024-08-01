@@ -263,23 +263,31 @@ redis-things:
   usePassword: false
 
 bootstrap:
-  enabled: false
+  enabled: true
   image: {}
   httpPort: 9013
-  redisESPort: 6379
+  encKey: "randomstring"
+  eventConsumerName: EventConsumerByBootstrap
 
 postgresqlbootstrap:
   ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
-  enabled: false
+  enabled: true
   name: postgresql-bootstrap
-  postgresqlHost: postgresql-bootstrap
-  postgresqlPort: "5432"
-  auth:
-    postgresPassword: postgres
-    username: magistrala
-    password: magistrala
-    database: bootstrap
-
+  host: postgresql-bootstrap
+  port: &postgresqlBootstrapPort 5432
+  database: &postgresqlBootstrapDatabase bootstrap
+  username: &postgresqlBootstrapUsername magistrala
+  password: &postgresqlBootstrapPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlBootstrapPassword
+        username: *postgresqlBootstrapUsername
+        password: *postgresqlBootstrapPassword
+        database: *postgresqlBootstrapDatabase
+      service:
+        ports:
+          postgresql: *postgresqlBootstrapPort
 
 certs:
   enabled: false
@@ -318,11 +326,102 @@ postgresqlcerts:
     size: 1Gi
 
 
+invitations:
+  enabled: true
+  image: {}
+  httpPort: 9020
+
+postgresqlinvitations:
+  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  enabled: true
+  name: postgresql-invitations
+  host: postgresql-invitations
+  port: &postgresqlInvitationsPort 5432
+  database: &postgresqlInvitationsDatabase invitations
+  username: &postgresqlInvitationsUsername magistrala
+  password: &postgresqlInvitationsPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlInvitationsPassword
+        username: *postgresqlInvitationsUsername
+        password: *postgresqlInvitationsPassword
+        database: *postgresqlInvitationsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlInvitationsPort
+
+
+timescaledb:
+  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  enabled: true
+  name: timescalerw
+  host: timescalerw
+  port: &messagesRwTimescalePort 5432
+  database: &messagesRwTimescaleDatabase messages
+  username: &messagesRwTimescaleUsername magistrala
+  password: &messagesRwTimescalePassword magistrala
+  reader:
+    image: {}
+    enabled: true
+    http: { port: 9011 }
+  writer:
+    image: {}
+    enabled: true
+    http: { port: 9012 }
+  ## Configurations of Bitnami postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *messagesRwTimescalePassword
+        username: *messagesRwTimescaleUsername
+        password: *messagesRwTimescalePassword
+        database: *messagesRwTimescaleDatabase
+      service:
+        ports:
+          postgresql: *messagesRwTimescalePort
+  image:
+    registry: docker.io
+    repository: timescale/timescaledb
+    tag: latest-pg12
+
 ui:
   image: {}
-  port: 9090
-  redirectUrl: https://localhost
+  port: 9095
+  pathPrefix: "/ui"
+  hostUrl: "https://stage-domain-name"
   httpAdapterUrl: "http://magistrala-adapter-http:8008"
   usersUrl: "http://magistrala-users:9002"
   thingsUrl: "http://magistrala-things:9000"
-  readerUrl: "http://magistrala-timescale-reader:8911"
+  readerUrl: "http://magistrala-timescale-reader:9011"
+  invitationsUrl: "http:///magistrala-auth:8911"
+  domainsUrl: "http://magistrala-auth:8189"
+  bootstrapUrl: "http://magistrala-boostrap:8888"
+  googleClientID: ""
+  googleClientSecret: ""
+  googleRedirectUrl: "https://stage-domain-name/oauth/callback/google"
+  googleState: "somerandomstring"
+  contentType: "application/senml+json"
+  hashKey: "5jx4x2Qg9OUmzpP5dbveWQ"
+  blockKey: "UtgZjr92jwRY6SPUndHXiyl9QY8qTUyZ"
+
+
+postgresqlui:
+  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  enabled: true
+  name: postgresql-ui
+  host: postgresql-ui
+  port: &postgresqlUIPort 5432
+  database: &postgresqlUIDatabase ui
+  username: &postgresqlUIUsername magistrala
+  password: &postgresqlUIPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlUIPassword
+        username: *postgresqlUIUsername
+        password: *postgresqlUIPassword
+        database: *postgresqlUIDatabase
+      service:
+        ports:
+          postgresql: *postgresqlUIPort

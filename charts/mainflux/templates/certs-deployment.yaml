@@ -57,6 +57,8 @@ spec:
               value: {{ index .Values "certs" "serverCert" }}
             - name: MG_CERTS_SERVER_KEY
               value: {{ index .Values "certs" "serverKey" }}
+            - name: MG_CERTS_HTTP_HOST
+              value: "0.0.0.0"
             - name: MG_CERTS_HTTP_PORT
               value: "{{ .Values.certs.httpPort }}"
             - name: MG_AUTH_GRPC_URL

@@ -18,16 +18,56 @@ spec:
     spec:
       containers:
         - env:
+            - name: MG_UI_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.ui.logLevel | quote }}
             - name: MG_UI_PORT
-              value: "{{ .Values.ui.port }}"
-            - name: MG_UI_MQTT_WS_URL
-              value: "{{ .Values.ui.wsUrl }}"
-            - name: MG_PROXY_AUTH
-              value: "{{ .Values.ui.proxyAuth }}"
-            - name: MG_UI_APP_PREFIX
-              value: "{{ .Values.ui.prefix }}"
-            - name : MG_PROXY_LOGOUT_URL
-              value: "{{ .Values.ui.logoutUrl }}"
+              value: {{ .Values.ui.port | quote }}
+            - name: MG_UI_HOST_URL
+              value: {{  .Values.ui.hostUrl | quote  }}
+            - name: MG_UI_PATH_PREFIX
+              value: {{ .Values.ui.pathPrefix | quote  }}
+            - name: MG_HTTP_ADAPTER_URL
+              value: {{ .Values.ui.httpAdapterUrl  | quote }}
+            - name: MG_READER_URL
+              value: {{ .Values.ui.readerUrl | quote }}
+            - name: MG_THINGS_URL
+              value: {{ .Values.ui.thingsUrl | quote }}
+            - name: MG_USERS_URL
+              value: {{ .Values.ui.usersUrl | quote  }}
+            - name: MG_INVITATIONS_URL
+              value: {{ .Values.ui.invitationsUrl | quote }}
+            - name: MG_DOMAINS_URL
+              value: {{ .Values.ui.domainsUrl | quote }}
+            - name: MG_BOOTSTRAP_URL
+              value: {{ .Values.ui.bootstrapUrl | quote }}
+            - name: MG_UI_CONTENT_TYPE
+              value: {{ .Values.ui.contentType | quote  }}
+            - name: MG_UI_DB_HOST
+            {{- if .Values.postgresqlui.enabled }}
+              value: {{ .Release.Name }}-postgresqlui
+            {{- else }}
+              value: {{ .Values.postgresqlui.host }}
+            {{- end }}
+            - name: MG_UI_DB_PORT
+              value: {{ .Values.postgresqlui.port | quote }}
+            - name: MG_UI_DB_USER
+              value: {{ .Values.postgresqlui.username | quote  }}
+            - name: MG_UI_DB_PASS
+              value: {{ .Values.postgresqlui.password | quote  }}
+            - name: MG_UI_DB_NAME
+              value: {{ .Values.postgresqlui.database | quote  }}
+            - name: MG_GOOGLE_CLIENT_ID
+              value: {{ .Values.ui.googleClientID | quote  }}
+            - name: MG_GOOGLE_CLIENT_SECRET
+              value: {{ .Values.ui.googleClientSecret | quote  }}
+            - name: MG_GOOGLE_REDIRECT_URL
+              value: {{ .Values.ui.googleRedirectUrl | quote }}
+            - name: MG_GOOGLE_STATE
+              value: {{ .Values.ui.googleState | quote  }}
+            - name: MG_UI_HASH_KEY
+              value: {{ .Values.ui.hashKey | quote  }}
+            - name: MG_UI_BLOCK_KEY
+              value: {{ .Values.ui.blockKey | quote  }}
           image: "{{ default .Values.defaults.image.repository .Values.ui.image.repository }}/ui:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
           name: ui
