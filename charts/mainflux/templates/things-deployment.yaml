@@ -21,6 +21,12 @@ spec:
         app: {{ .Release.Name }}
         component: things
     spec:
+      {{- with .Values.defaults.image.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
       containers:
         - name: {{ .Release.Name }}-things
           image: "{{ default .Values.defaults.image.repository .Values.things.image.repository }}/things:{{ default .Values.defaults.image.tag .Values.things.image.tag }}"
@@ -69,9 +75,15 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.things.authHttpPort }}
               protocol: TCP
-      {{- with .Values.defaults.image.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 12 }}
+      {{- with .Values.things.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
+      {{- with .Values.things.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.things.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

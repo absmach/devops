@@ -64,5 +64,17 @@ spec:
           ports:
             - containerPort: {{ .Values.timescaledb.reader.http.port }}
               protocol: TCP
+      {{- with .Values.timescaledb.reader.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.timescaledb.reader.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.timescaledb.reader.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}
 

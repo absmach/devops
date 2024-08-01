@@ -175,7 +175,7 @@ auth:
   tolerations: {}
 
 postgresqlauth:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
   enabled: true
   name: postgresql-auth
   host: postgresql-auth
@@ -236,7 +236,7 @@ things:
   redisCachePort: 6379
 
 postgresqlthings:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
   enabled: true
   name: postgresql-things
   host: postgresql-things
@@ -270,7 +270,7 @@ bootstrap:
   eventConsumerName: EventConsumerByBootstrap
 
 postgresqlbootstrap:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
   enabled: true
   name: postgresql-bootstrap
   host: postgresql-bootstrap
@@ -294,37 +294,38 @@ certs:
   image: {}
   httpPort: 9019
   logLevel: "info"
-  sdkThingsPrefix: ""
-  encryptKey: ""
-  clientTLS: ""
-  serverCert: ""
-  serverKey: ""
   signCAPath: "/etc/ssl/certs/ca.crt"
   signCAKeyPath: "/etc/ssl/certs/ca.key"
-  signHoursValid: "2048h"
-  signRSABits: 2048
-  signVaultToken: ""
-  signVaultHost: ""
-  signVaultPKIPath: "pki_int"
-  signVaultRole: "agent"
+  vault:
+    url: ""
+    approleRoleid: ""
+    approleSecret: ""
+    namespace: ""
+    thingsCertsPkiPath: ""
+    thingsCertsPkiRoleName: ""
+
+vault:
+  enabled: false
 
 postgresqlcerts:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
-  enabled: false
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
   name: postgresql-certs
-  postgresqlHost: postgresql-certs
-  postgresqlPort: "5432"
-  auth:
-    postgresPassword: postgres
-    username: magistrala
-    password: magistrala
-    database: certs
-  resources:
-    requests:
-      cpu: 25m
-  persistence:
-    size: 1Gi
-
+  host: postgresql-certs
+  port: &postgresqlCertsPort 5432
+  database: &postgresqlCertsDatabase certs
+  username: &postgresqlCertsUsername magistrala
+  password: &postgresqlCertsPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlCertsPassword
+        username: *postgresqlCertsUsername
+        password: *postgresqlCertsPassword
+        database: *postgresqlCertsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlCertsPort
 
 invitations:
   enabled: true
@@ -332,7 +333,7 @@ invitations:
   httpPort: 9020
 
 postgresqlinvitations:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
   enabled: true
   name: postgresql-invitations
   host: postgresql-invitations
@@ -351,9 +352,33 @@ postgresqlinvitations:
         ports:
           postgresql: *postgresqlInvitationsPort
 
+journal:
+  enabled: true
+  image: {}
+  httpPort: 9021
+
+postgresqljournal:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-journal
+  host: postgresql-journal
+  port: &postgresqlJournalPort 5432
+  database: &postgresqlJournalDatabase journal
+  username: &postgresqlJournalUsername magistrala
+  password: &postgresqlJournalPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlJournalPassword
+        username: *postgresqlJournalUsername
+        password: *postgresqlJournalPassword
+        database: *postgresqlJournalDatabase
+      service:
+        ports:
+          postgresql: *postgresqlJournalPort
 
 timescaledb:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
   enabled: true
   name: timescalerw
   host: timescalerw
@@ -407,7 +432,7 @@ ui:
 
 
 postgresqlui:
-  ## If you want to use an external database, set this to false and change postgresqlHost & postgresqlPort
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
   enabled: true
   name: postgresql-ui
   host: postgresql-ui

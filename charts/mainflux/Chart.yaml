@@ -69,6 +69,11 @@ dependencies:
     alias: postgresqlinvitations
     condition: postgresqlinvitations.enabled
 
+  - name: postgresql
+    version: "12.5.6"
+    repository: "@bitnami"
+    alias: postgresqljournal
+    condition: postgresqljournal.enabled
 
   - name: postgresql
     version: "12.5.6"
@@ -86,3 +91,9 @@ dependencies:
     version: "19.6.2"
     repository: "@bitnami"
     alias: redis-things
+
+  - name: vault
+    version: "0.28.1"
+    repository: "@hashicorp"
+    alias: "vault"
+    condition: vault.enabled

@@ -61,7 +61,10 @@ spec:
         {{ toYaml .Values.mqtt.securityContext | nindent 8 }}
       containers:
           #broker
-        - volumeMounts:
+        - name: {{ .Release.Name }}-broker-mqtt
+          image: "{{ default .Values.defaults.image.repository .Values.mqtt.broker.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.broker.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.broker.image.pullPolicy }}
+          volumeMounts:
             - name: data
               mountPath: /vernemq/data
           env:
@@ -101,9 +104,6 @@ spec:
               value: "127.0.0.1:1883"
             - name: DOCKER_VERNEMQ_LISTENER__WS__LOCALHOST
               value: "127.0.0.1:8080"
-          image: "{{ default .Values.defaults.image.repository .Values.mqtt.broker.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.broker.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.broker.image.pullPolicy }}
-          name: {{ .Release.Name }}-broker-mqtt
           ports:
             - containerPort: 1883
               protocol: TCP

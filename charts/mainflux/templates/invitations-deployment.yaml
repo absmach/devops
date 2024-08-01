@@ -68,15 +68,15 @@ spec:
           ports:
             - containerPort: {{ .Values.invitations.httpPort }}
               protocol: TCP
-      {{- with .Values.auth.nodeSelector }}
+      {{- with .Values.invitations.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.auth.affinity }}
+      {{- with .Values.invitations.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.auth.tolerations }}
+      {{- with .Values.invitations.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

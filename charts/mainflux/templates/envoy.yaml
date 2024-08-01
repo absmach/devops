@@ -27,9 +27,9 @@ spec:
         component: envoy
     spec:
       containers:
-        - image: "{{ default .Values.defaults.image.repository .Values.envoy.image.repository }}:{{ default .Values.defaults.image.tag .Values.envoy.image.tag }}"
+        - name: {{ .Release.Name }}-envoy
+          image: "{{ default .Values.defaults.image.repository .Values.envoy.image.repository }}:{{ default .Values.defaults.image.tag .Values.envoy.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.envoy.image.pullPolicy}}
-          name: {{ .Release.Name }}-envoy
           args:
             - -c /etc/envoy/envoy.yaml
             - --log-level debug

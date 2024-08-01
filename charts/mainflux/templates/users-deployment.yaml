@@ -105,15 +105,15 @@ spec:
             defaultMode: 256
             name: {{ .Release.Name }}-users-config
             optional: false
-      {{- with .Values.auth.nodeSelector }}
+      {{- with .Values.users.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.auth.affinity }}
+      {{- with .Values.users.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.auth.tolerations }}
+      {{- with .Values.users.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

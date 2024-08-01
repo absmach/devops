@@ -17,7 +17,10 @@ spec:
         component: ui
     spec:
       containers:
-        - env:
+        - name: ui
+          image: "{{ default .Values.defaults.image.repository .Values.ui.image.repository }}/ui:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
+          env:
             - name: MG_UI_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.ui.logLevel | quote }}
             - name: MG_UI_PORT
@@ -68,9 +71,6 @@ spec:
               value: {{ .Values.ui.hashKey | quote  }}
             - name: MG_UI_BLOCK_KEY
               value: {{ .Values.ui.blockKey | quote  }}
-          image: "{{ default .Values.defaults.image.repository .Values.ui.image.repository }}/ui:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
-          name: ui
           ports:
             - containerPort: {{ .Values.ui.port }}
               protocol: TCP
