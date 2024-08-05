@@ -3,3 +3,4 @@
 
 data
 magistrala_things_certs_issue.hcl
+.env
