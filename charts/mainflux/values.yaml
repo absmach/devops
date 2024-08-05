@@ -411,6 +411,7 @@ timescaledb:
     tag: latest-pg12
 
 ui:
+  enabled: true
   image: {}
   port: 9095
   pathPrefix: "/ui"

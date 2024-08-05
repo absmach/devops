@@ -1,5 +1,6 @@
 # Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
+{{- if .Values.ingress.enabled }}
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -45,6 +46,7 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-users-things-ingress
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($request_method = GET) {
         proxy_pass http://{{ .Release.Name }}-things.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.things.httpPort }};
@@ -56,7 +58,7 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(users|groups)/(.+)/(channels|things)
+          - path: /((users|groups)/(.+)/(channels|things))
             pathType: ImplementationSpecific
             backend:
               service:
@@ -69,6 +71,7 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-things-users-ingress
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($request_method = GET) {
         proxy_pass http://{{ .Release.Name }}-users.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.users.httpPort }};
@@ -80,7 +83,7 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(channels|things)/(.+)/(users|groups)
+          - path: /((channels|things)/(.+)/(users|groups))
             pathType: ImplementationSpecific
             backend:
               service:
@@ -93,6 +96,7 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-users-domains-ingress
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($request_method = GET) {
         proxy_pass http://{{ .Release.Name }}-auth.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.auth.httpPort }};
@@ -104,7 +108,7 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(users)/(.+)/(domains)
+          - path: /((users)/(.+)/(domains))
             pathType: ImplementationSpecific
             backend:
               service:
@@ -117,6 +121,7 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-domains-users-ingress
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($request_method = GET) {
         proxy_pass http://{{ .Release.Name }}-users.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.users.httpPort }};
@@ -128,7 +133,7 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(domains)/(.+)/(users)
+          - path: /((domains)/(.+)/(users))
             pathType: ImplementationSpecific
             backend:
               service:
@@ -155,35 +160,35 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(domains)
+          - path: /(domains.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-auth
                 port:
                   number: {{ .Values.auth.httpPort }}
-          - path: /(users|groups|password|authorize|oauth/callback/[^/]+)
+          - path: /((users|groups|password|authorize).*|oauth/callback/[^/]+)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
-          - path: /(things|channels|connect|disconnect|identify)
+          - path: /((things|channels|connect|disconnect|identify).*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-things
                 port:
                   number: {{ .Values.things.httpPort }}
-          - path: /(invitations)
+          - path: /(invitations.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-invitations
                 port:
                   number: {{ .Values.invitations.httpPort }}
-          - path: /(journal)
+          - path: /(journal.*)
             pathType: ImplementationSpecific
             backend:
               service:
@@ -191,7 +196,7 @@ spec:
                 port:
                   number: {{ .Values.journal.httpPort }}
 {{- if .Values.certs.enabled }}
-          - path: /(certs.*|serials.*)
+          - path: /((certs|serials).*)
             pathType: ImplementationSpecific
             backend:
               service:
@@ -201,13 +206,6 @@ spec:
 {{- end }}
 {{- if .Values.bootstrap.enabled }}
           - path: /bootstrap/?(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ .Release.Name }}-bootstrap
-                port:
-                  number: {{ .Values.bootstrap.httpPort }}
-          - path: /bs/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
@@ -301,3 +299,5 @@ metadata:
   namespace: default
 data:
   5683: "{{ .Release.Namespace }}/{{ .Release.Name }}-adapter-coap:5683"
+
+{{- end }}
