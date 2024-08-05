@@ -4,6 +4,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: {{ .Release.Name }}-nginx-ingress
 {{- if .Values.ingress.annotations }}
   annotations:
 {{ toYaml .Values.ingress.annotations | indent 4 }}
@@ -12,7 +13,6 @@ metadata:
   labels:
 {{ toYaml .Values.ingress.labels | indent 4 }}
 {{- end }}
-  name: {{ .Release.Name }}-nginx-ingress
 spec:
   ingressClassName: nginx
   rules:
@@ -47,31 +47,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($request_method = GET) {
-        proxy_pass http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }};
-        break;
-      }
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: "{{ .Values.ingress.hostname }}"
-      http:
-        paths:
-          - path: /(users|groups)/(.+)/(channels|things)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ .Release.Name }}-users:
-                port:
-                  number: {{ .Values.users.httpPort }}
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ .Release.Name }}-users-things-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      if ($request_method = GET) {
-        proxy_pass http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }};
+        proxy_pass http://{{ .Release.Name }}-things.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.things.httpPort }};
         break;
       }
 spec:
@@ -95,7 +71,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($request_method = GET) {
-        proxy_pass http://{{ .Release.Name }}-users:{{ .Values.users.httpPort }};
+        proxy_pass http://{{ .Release.Name }}-users.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.users.httpPort }};
         break;
       }
 spec:
@@ -119,7 +95,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($request_method = GET) {
-        proxy_pass http://{{ .Release.Name }}-auth:{{ .Values.auth.httpPort }};
+        proxy_pass http://{{ .Release.Name }}-auth.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.auth.httpPort }};
         break;
       }
 spec:
@@ -143,7 +119,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($request_method = GET) {
-        proxy_pass http://{{ .Release.Name }}-users:{{ .Values.users.httpPort }};
+        proxy_pass http://{{ .Release.Name }}-users.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.users.httpPort }};
         break;
       }
 spec:
@@ -163,6 +139,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: {{ .Release.Name }}-nginx-rewrite-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 {{- if .Values.ingress.annotations }}
@@ -172,7 +149,6 @@ metadata:
   labels:
 {{ toYaml .Values.ingress.labels | indent 4 }}
 {{- end }}
-  name: {{ .Release.Name }}-nginx-rewrite-ingress
 spec:
   ingressClassName: nginx
   rules:
@@ -249,6 +225,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: {{ .Release.Name }}-nginx-rewrite-ingress-http-adapter
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 {{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
@@ -264,7 +241,6 @@ metadata:
   labels:
 {{ toYaml .Values.ingress.labels | indent 4 }}
 {{- end }}
-  name: {{ .Release.Name }}-nginx-rewrite-ingress-http-adapter
 spec:
   ingressClassName: nginx
   rules:
@@ -302,26 +278,26 @@ spec:
                 port:
                   number: {{ default .Values.mqtt.adapter.wsPort }}
           {{- end }}
-  {{- if .Values.ingress.tls }}
+{{- if .Values.ingress.tls }}
   tls:
     - hosts:
         - {{ .Values.ingress.tls.hostname }}
       secretName: {{ .Values.ingress.tls.secret }}
-  {{- end }}
+{{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap
-data:
-  1883: "{{ .Release.Namespace }}/{{ .Release.Name }}-envoy:1883"
-  8883: "{{ .Release.Namespace }}/{{ .Release.Name }}-nginx-internal:8883"
 metadata:
   name: tcp-services
   namespace: default
+data:
+  1883: "{{ .Release.Namespace }}/{{ .Release.Name }}-envoy:1883"
+  8883: "{{ .Release.Namespace }}/{{ .Release.Name }}-nginx-internal:8883"
 ---
 apiVersion: v1
 kind: ConfigMap
-data:
-  5683: "{{ .Release.Namespace }}/{{ .Release.Name }}-adapter-coap:5683"
 metadata:
   name: udp-services
   namespace: default
+data:
+  5683: "{{ .Release.Namespace }}/{{ .Release.Name }}-adapter-coap:5683"
