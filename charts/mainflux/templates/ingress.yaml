@@ -43,6 +43,126 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: {{ .Release.Name }}-users-things-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = GET) {
+        proxy_pass http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }};
+        break;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          - path: /(users|groups)/(.+)/(channels|things)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-users:
+                port:
+                  number: {{ .Values.users.httpPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-users-things-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = GET) {
+        proxy_pass http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }};
+        break;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          - path: /(users|groups)/(.+)/(channels|things)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-things-users-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = GET) {
+        proxy_pass http://{{ .Release.Name }}-users:{{ .Values.users.httpPort }};
+        break;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          - path: /(channels|things)/(.+)/(users|groups)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-things
+                port:
+                  number: {{ .Values.things.httpPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-users-domains-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = GET) {
+        proxy_pass http://{{ .Release.Name }}-auth:{{ .Values.auth.httpPort }};
+        break;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          - path: /(users)/(.+)/(domains)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-domains-users-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = GET) {
+        proxy_pass http://{{ .Release.Name }}-users:{{ .Values.users.httpPort }};
+        break;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          - path: /(domains)/(.+)/(users)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-auth
+                port:
+                  number: {{ .Values.auth.httpPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 {{- if .Values.ingress.annotations }}
@@ -59,34 +179,41 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(users.*|password.*|tokens.*)
+          - path: /(domains)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-auth
+                port:
+                  number: {{ .Values.auth.httpPort }}
+          - path: /(users|groups|password|authorize|oauth/callback/[^/]+)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
-          - path: /(things.*|channels.*|connect.*|disconnect.*)
+          - path: /(things|channels|connect|disconnect|identify)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-things
                 port:
                   number: {{ .Values.things.httpPort }}
-          - path: /groups/users/?(.*)
+          - path: /(invitations)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ .Release.Name }}-users
+                name: {{ .Release.Name }}-invitations
                 port:
-                  number: {{ .Values.users.httpPort }}
-          - path: /groups/things/?(.*)
+                  number: {{ .Values.invitations.httpPort }}
+          - path: /(journal)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ .Release.Name }}-things
+                name: {{ .Release.Name }}-journal
                 port:
-                  number: {{ .Values.things.httpPort }}
+                  number: {{ .Values.journal.httpPort }}
 {{- if .Values.certs.enabled }}
           - path: /(certs.*|serials.*)
             pathType: ImplementationSpecific
