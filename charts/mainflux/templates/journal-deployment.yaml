@@ -20,7 +20,7 @@ spec:
         app: {{ .Release.Name }}
         component: journal
     spec:
-      {{- with .Values.defaults.image.imagePullSecrets }}
+      {{- with (default .Values.defaults.image.pullSecrets .Values.journal.image.pullSecrets) }}
       imagePullSecrets:
         {{- toYaml . | nindent 12 }}
       {{- end }}

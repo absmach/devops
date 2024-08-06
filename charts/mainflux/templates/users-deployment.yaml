@@ -35,7 +35,7 @@ spec:
         app: {{ .Release.Name }}
         component: users
     spec:
-      {{- with .Values.defaults.image.imagePullSecrets }}
+      {{- with (default .Values.defaults.image.pullSecrets .Values.users.image.pullSecrets) }}
       imagePullSecrets:
         {{- toYaml . | nindent 12 }}
       {{- end }}

@@ -8,7 +8,7 @@ defaults:
     rootRepository: "magistrala"
     repository: "magistrala"
     tag: "latest"
-    # imagePullSecrets:
+    # pullSecrets:
     #   - {}
   # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
   replicaCount: 3
@@ -415,17 +415,19 @@ ui:
   image: {}
   port: 9095
   pathPrefix: "/ui"
-  hostUrl: "https://stage-domain-name"
-  httpAdapterUrl: "http://magistrala-adapter-http:8008"
-  usersUrl: "http://magistrala-users:9002"
-  thingsUrl: "http://magistrala-things:9000"
-  readerUrl: "http://magistrala-timescale-reader:9011"
-  invitationsUrl: "http:///magistrala-auth:8911"
-  domainsUrl: "http://magistrala-auth:8189"
-  bootstrapUrl: "http://magistrala-boostrap:8888"
+  # hostUrl: "https://domain-name"
+  # httpAdapterUrl: "http://magistrala-adapter-http:8008"
+  # usersUrl: "http://magistrala-users:9002"
+  # thingsUrl: "http://magistrala-things:9000"
+  # readerUrl: "http://magistrala-timescale-reader:9011"
+  # invitationsUrl: "http:///magistrala-auth:9020"
+  # journalUrl: "http:///magistrala-auth:9021"
+  # domainsUrl: "http://magistrala-auth:8189"
+  # bootstrapUrl: "http://magistrala-boostrap:9013"
   googleClientID: ""
   googleClientSecret: ""
-  googleRedirectUrl: "https://stage-domain-name/oauth/callback/google"
+  googleRedirectHostname: "https://stage-domain-name"
+  googleRedirectPath: "/oauth/callback/google"
   googleState: "somerandomstring"
   contentType: "application/senml+json"
   hashKey: "5jx4x2Qg9OUmzpP5dbveWQ"

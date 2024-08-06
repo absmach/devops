@@ -51,10 +51,13 @@ spec:
         app: {{ .Release.Name}}
         component: mqtt
     spec:
-        {{- with .Values.defaults.image.imagePullSecrets }}
-          imagePullSecrets:
-            {{- toYaml . | nindent 12 }}
-        {{- end }}
+      {{- $adapterPullSecrets := .Values.mqtt.adapter.image.pullSecrets | default (dict) }}
+      {{- $brokerPullSecrets := .Values.mqtt.broker.image.pullSecrets | default (dict) }}
+      {{- $combinedPullSecrets := merge $adapterPullSecrets $brokerPullSecrets  }}
+      {{- with (default .Values.defaults.image.pullSecrets $combinedPullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       securityContext:

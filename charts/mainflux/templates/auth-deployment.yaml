@@ -29,9 +29,9 @@ spec:
         app: {{ .Release.Name }}
         component: auth
     spec:
-      {{- with .Values.defaults.image.imagePullSecrets }}
+      {{- with (default .Values.defaults.image.pullSecrets .Values.auth.image.pullSecrets) }}
       imagePullSecrets:
-        {{- toYaml . | nindent 12 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always

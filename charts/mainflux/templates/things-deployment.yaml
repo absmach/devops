@@ -21,7 +21,7 @@ spec:
         app: {{ .Release.Name }}
         component: things
     spec:
-      {{- with .Values.defaults.image.imagePullSecrets }}
+      {{- with (default .Values.defaults.image.pullSecrets .Values.things.image.pullSecrets) }}
       imagePullSecrets:
         {{- toYaml . | nindent 12 }}
       {{- end }}

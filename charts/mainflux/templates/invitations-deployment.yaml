@@ -20,7 +20,7 @@ spec:
         app: {{ .Release.Name }}
         component: invitations
     spec:
-      {{- with .Values.defaults.image.imagePullSecrets }}
+      {{- with (default .Values.defaults.image.pullSecrets .Values.invitations.image.pullSecrets) }}
       imagePullSecrets:
         {{- toYaml . | nindent 12 }}
       {{- end }}

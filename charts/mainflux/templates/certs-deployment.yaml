@@ -21,6 +21,12 @@ spec:
         app: {{ .Release.Name }}
         component: certs
     spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.certs.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
       containers:
         - name: {{ .Release.Name }}-certs
           image: "{{ default .Values.defaults.image.repository .Values.certs.image.repository }}/certs:{{ default .Values.defaults.image.tag .Values.certs.image.tag }}"
@@ -75,10 +81,4 @@ spec:
           ports:
             - containerPort: {{ .Values.certs.httpPort }}
               protocol: TCP
-      {{- with .Values.defaults.image.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 12 }}
-      {{- end }}
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
 {{- end }}

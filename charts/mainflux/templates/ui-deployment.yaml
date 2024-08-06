@@ -17,6 +17,12 @@ spec:
         app: {{ .Release.Name }}
         component: ui
     spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.ui.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
       containers:
         - name: ui
           image: "{{ default .Values.defaults.image.repository .Values.ui.image.repository }}/ui:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
@@ -26,24 +32,29 @@ spec:
               value: {{ default .Values.defaults.logLevel .Values.ui.logLevel | quote }}
             - name: MG_UI_PORT
               value: {{ .Values.ui.port | quote }}
+            {{- $hostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.hostname }}
+            {{- if $hostname }}
             - name: MG_UI_HOST_URL
-              value: {{  .Values.ui.hostUrl | quote  }}
+              value: {{ $hostname | quote }}
+            {{- end }}
             - name: MG_UI_PATH_PREFIX
               value: {{ .Values.ui.pathPrefix | quote  }}
             - name: MG_HTTP_ADAPTER_URL
-              value: {{ .Values.ui.httpAdapterUrl  | quote }}
+              value: {{ default (printf "http://%s-adapter-http:%s " .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
             - name: MG_READER_URL
-              value: {{ .Values.ui.readerUrl | quote }}
+              value: {{ default (printf "http://%s-timescaledb-reader:%s" .Release.Name (.Values.timescaledb.reader.http.port | toString )) .Values.ui.readerUrl }}
             - name: MG_THINGS_URL
-              value: {{ .Values.ui.thingsUrl | quote }}
+              value: {{ default  (printf "http://%s-things:%s" .Release.Name (.Values.things.httpPort | toString )) .Values.ui.thingsUrl }}
             - name: MG_USERS_URL
-              value: {{ .Values.ui.usersUrl | quote  }}
+              value: {{ default  (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString ))  .Values.ui.usersUrl }}
             - name: MG_INVITATIONS_URL
-              value: {{ .Values.ui.invitationsUrl | quote }}
+              value: {{ default  (printf "http://%s-invitations:%s" .Release.Name (.Values.invitations.httpPort | toString ))  .Values.ui.invitationsUrl }}
             - name: MG_DOMAINS_URL
-              value: {{ .Values.ui.domainsUrl | quote }}
+              value: {{ default  (printf "http://%s-auth:%s" .Release.Name (.Values.auth.httpPort | toString )) .Values.ui.authUrl }}
             - name: MG_BOOTSTRAP_URL
-              value: {{ .Values.ui.bootstrapUrl | quote }}
+              value: {{ default  (printf "http://%s-bootstrap:%s" .Release.Name (.Values.bootstrap.httpPort | toString )) .Values.ui.bootstrapUrl }}
+            - name: MG_JOURNAL_URL
+              value: {{ default  (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
             - name: MG_UI_CONTENT_TYPE
               value: {{ .Values.ui.contentType | quote  }}
             - name: MG_UI_DB_HOST
@@ -64,8 +75,9 @@ spec:
               value: {{ .Values.ui.googleClientID | quote  }}
             - name: MG_GOOGLE_CLIENT_SECRET
               value: {{ .Values.ui.googleClientSecret | quote  }}
+            {{- $googleRedirectHostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.googleRedirectHostname }}
             - name: MG_GOOGLE_REDIRECT_URL
-              value: {{ .Values.ui.googleRedirectUrl | quote }}
+              value: {{$googleRedirectHostname}}{{.Values.ui.googleRedirectPath  }}
             - name: MG_GOOGLE_STATE
               value: {{ .Values.ui.googleState | quote  }}
             - name: MG_UI_HASH_KEY
@@ -77,10 +89,4 @@ spec:
               protocol: TCP
           stdin: true
           tty: true
-      {{- with .Values.defaults.image.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 12 }}
-      {{- end }}
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
 {{- end }}
