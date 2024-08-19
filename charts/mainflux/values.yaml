@@ -42,7 +42,6 @@ nginxInternal:
     # tls: "magistrala-server"
     # intermediateCrt: "ca"
 
-
 envoy:
   image:
     pullPolicy: "IfNotPresent"
@@ -264,8 +263,8 @@ redis-things:
 
 bootstrap:
   enabled: true
-  image: {}
   httpPort: 9013
+  redisESPort: 6379
   encKey: "randomstring"
   eventConsumerName: EventConsumerByBootstrap
 
@@ -413,7 +412,7 @@ timescaledb:
 ui:
   enabled: true
   image: {}
-  port: 9095
+  port: 3000
   pathPrefix: "/ui"
   # hostUrl: "https://domain-name"
   # httpAdapterUrl: "http://magistrala-adapter-http:8008"
@@ -432,7 +431,6 @@ ui:
   contentType: "application/senml+json"
   hashKey: "5jx4x2Qg9OUmzpP5dbveWQ"
   blockKey: "UtgZjr92jwRY6SPUndHXiyl9QY8qTUyZ"
-
 
 postgresqlui:
   ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
