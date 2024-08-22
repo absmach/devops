@@ -188,6 +188,7 @@ spicedb:
     pullSecrets: {}
     repository: authzed/spicedb
     tag: latest
+    # pullPolicy: "IfNotPresent"
   grpc:
     presharedKey: "helloworld"
     port: 50051
