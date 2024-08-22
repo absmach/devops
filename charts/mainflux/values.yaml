@@ -83,13 +83,13 @@ nats:
         maxSize: 2Gi
 
 adapter_coap:
-  image: {}
-    # pullSecrets: {}
+  image:
+    # pullSecrets: []
     # If your image repository requires authentication, you can specify image pull secrets here.
     # Example:
     # pullSecrets:
     #   - my-registry-key
-
+    
     # repository: "magistrala"
     # The Docker repository where the adapter_coap image is stored.
     # Set this to your preferred image repository if you are using a custom image.
@@ -135,6 +135,18 @@ adapter_coap:
   #     operator: "Equal"
   #     value: "value1"
   #     effect: "NoSchedule"
+
+adapter_http:
+  image: {}
+    # pullSecrets: {}
+    # repository: "magistrala"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  httpPort: 8008
+  # logLevel: "info"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 mqtt:
   enabled: true
