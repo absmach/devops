@@ -1,6 +1,9 @@
 # Copyright (c) Magistrala
 # SPDX-License-Identifier: Apache-2.0
 
+# The explanations for optional configuration parameters described in the adapter_coap section
+# apply across other services where the same named configuration parameters are used.
+
 defaults:
   logLevel: "info"
   image:
@@ -84,12 +87,12 @@ nats:
 
 adapter_coap:
   image: {}
-    # pullSecrets: []
+    # pullSecrets: {}
     # If your image repository requires authentication, you can specify image pull secrets here.
     # Example:
     # pullSecrets:
     #   - my-registry-key
-    
+
     # repository: "magistrala"
     # The Docker repository where the adapter_coap image is stored.
     # Set this to your preferred image repository if you are using a custom image.
@@ -127,7 +130,7 @@ adapter_coap:
   #                 - my-app
   #         topologyKey: "kubernetes.io/hostname"
 
-  # tolerations: []
+  # tolerations: {}
   # Tolerations for pod scheduling. Use this to allow pods to be scheduled on nodes with specific taints.
   # Example:
   # tolerations:
@@ -142,8 +145,6 @@ adapter_http:
     # repository: "magistrala"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-    # These settings are similar to those defined for the adapter_coap. Refer to the adapter_coap section for details on how to configure pullSecrets, repository, tag, and pullPolicy.
-
   httpPort: 8008
   # logLevel: "info"
   # The logging level for the adapter_http service. Common options are "debug", "info", "warn", "error".
@@ -152,8 +153,6 @@ adapter_http:
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
-  # These settings are analogous to those in the adapter_coap section. Please refer there for examples and explanations on how to configure nodeSelector, affinity, and tolerations.
-
 
 mqtt:
   enabled: true
