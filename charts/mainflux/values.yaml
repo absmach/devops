@@ -83,7 +83,7 @@ nats:
         maxSize: 2Gi
 
 adapter_coap:
-  image:
+  image: {}
     # pullSecrets: []
     # If your image repository requires authentication, you can specify image pull secrets here.
     # Example:
@@ -142,11 +142,18 @@ adapter_http:
     # repository: "magistrala"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
+    # These settings are similar to those defined for the adapter_coap. Refer to the adapter_coap section for details on how to configure pullSecrets, repository, tag, and pullPolicy.
+
   httpPort: 8008
   # logLevel: "info"
+  # The logging level for the adapter_http service. Common options are "debug", "info", "warn", "error".
+  # Adjust this based on the verbosity of logs you require.
+
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
+  # These settings are analogous to those in the adapter_coap section. Please refer there for examples and explanations on how to configure nodeSelector, affinity, and tolerations.
+
 
 mqtt:
   enabled: true
@@ -156,13 +163,18 @@ mqtt:
     fsGroup: 10000
   adapter:
     image:
+      # pullSecrets: {}
       repository: "magistrala/mqtt"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
     mqttPort: 1884
     wsPort: 8081
     logLevel: "debug"
   broker:
     image:
       repository: "magistrala/vernemq"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
     mqttPort: 1883
     wsPort: 8080
     logLevel: "info"
