@@ -564,11 +564,20 @@ timescaledb:
 ui:
   enabled: true
   image: {}
+    # pullSecrets: {}
+    # repository: "magistrala"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: "info"
+  # hostname: ""
+  # contentTypes: "application/senml+json"
   port: 3000
   pathPrefix: "/ui"
   # hostUrl: "https://domain-name"
   # httpAdapterUrl: "http://magistrala-adapter-http:8008"
   # usersUrl: "http://magistrala-users:9002"
+  # authUrl: "http://magistrala-auth:8189"
+  # bootstrapUrl: "http://magistrala-bootstrap:9013"
   # thingsUrl: "http://magistrala-things:9000"
   # readerUrl: "http://magistrala-timescale-reader:9011"
   # invitationsUrl: "http:///magistrala-auth:9020"
