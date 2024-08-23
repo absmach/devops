@@ -441,7 +441,17 @@ postgresqlcerts:
 invitations:
   enabled: true
   image: {}
+    # pullSecrets: {}
+    # repository: "magistrala"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
+  # logLevel: "info"
   httpPort: 9020
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 postgresqlinvitations:
   ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
