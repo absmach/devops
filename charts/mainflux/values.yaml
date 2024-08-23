@@ -236,6 +236,8 @@ auth:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # Log level for the auth service. Common options are "debug", "info", "warn", "error".
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
   httpPort: 8189
   grpcPort: 8181
   secret: "supersecret"
@@ -270,6 +272,13 @@ postgresqlauth:
 
 users:
   image: {}
+     # pullSecrets: {}
+     # repository: "magistrala" 
+     # tag: "latest"
+     # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
+  # logLevel: "info"
   httpPort: 9002
   grpcPort: 7001
   adminEmail: "admin@example.com"
@@ -280,6 +289,9 @@ users:
   allowSelfRegister: true
   deleteInterval: "24h"
   deleteAfter: "720h"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 postgresqlusers:
   ## If you want to use an external database, set this to false and change host & port
