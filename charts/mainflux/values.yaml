@@ -397,6 +397,12 @@ postgresqlbootstrap:
 certs:
   enabled: false
   image: {}
+    # pullSecrets: {}
+    # repository: "magistrala"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
   httpPort: 9019
   logLevel: "info"
   signCAPath: "/etc/ssl/certs/ca.crt"
