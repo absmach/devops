@@ -315,11 +315,19 @@ postgresqlusers:
 
 things:
   image: {}
+    # pullSecrets: {}
+    # repository: "magistrala"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
   httpPort: 9000
   authGrpcPort: 7000
   authHttpPort: 9001
   redisESPort: 6379
   redisCachePort: 6379
+  # logLevel: "info"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 postgresqlthings:
   ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
