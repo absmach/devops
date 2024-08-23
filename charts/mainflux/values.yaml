@@ -231,6 +231,11 @@ postgresqlspicedb:
 auth:
   # logLevel: error
   image: {}
+    # pullSecrets: {}
+    # rootRepository: "magistrala"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # Log level for the auth service. Common options are "debug", "info", "warn", "error".
   httpPort: 8189
   grpcPort: 8181
   secret: "supersecret"
