@@ -357,11 +357,22 @@ redis-things:
   usePassword: false
 
 bootstrap:
+  # image:
+    # pullSecrets: {}
+    # repository: "magistrala"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
+  # logLevel: "info"
   enabled: true
   httpPort: 9013
   redisESPort: 6379
   encKey: "randomstring"
   eventConsumerName: EventConsumerByBootstrap
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 postgresqlbootstrap:
   ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
