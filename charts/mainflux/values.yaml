@@ -519,10 +519,30 @@ timescaledb:
   password: &messagesRwTimescalePassword magistrala
   reader:
     image: {}
+      # pullSecrets: {}
+      # repository: "magistrala"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
+    # jaegerTraceRatio: 10
+    # sendTelemetry: true
+    # logLevel: "info"
     enabled: true
     http: { port: 9011 }
+    # nodeSelector: {}
+    # affinity: {}
+    # tolerations: {}
   writer:
     image: {}
+      # pullSecrets: {}
+      # repository: "magistrala"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
+    # jaegerTraceRatio: 10
+    # sendTelemetry: true
+    # logLevel: "info"
+    # nodeSelector: {}
+    # affinity: {}
+    # tolerations: {}
     enabled: true
     http: { port: 9012 }
   ## Configurations of Bitnami postgres
