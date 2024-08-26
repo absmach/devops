@@ -29,7 +29,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: {{ .Release.Name }}-bootstrap
-          image: "{{ default .Values.defaults.image.repository .Values.bootstrap.image.repository }}/bootstrap:{{ default .Values.defaults.image.tag .Values.bootstrap.image.tag }}"
+          image: "{{ default (printf "%s/bootstrap" .Values.defaults.image.rootRepository) .Values.bootstrap.image.repository }}:{{ default .Values.defaults.image.tag .Values.bootstrap.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.bootstrap.image.pullPolicy }}
           env:
             - name: MG_JAEGER_URL

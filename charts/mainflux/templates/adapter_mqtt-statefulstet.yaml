@@ -65,7 +65,7 @@ spec:
       containers:
           #broker
         - name: {{ .Release.Name }}-broker-mqtt
-          image: "{{ default .Values.defaults.image.repository .Values.mqtt.broker.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.broker.image.tag }}"
+          image: "{{ default (printf "%s/vernemq" .Values.defaults.image.rootRepository) .Values.mqtt.broker.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.broker.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.broker.image.pullPolicy }}
           volumeMounts:
             - name: data
@@ -164,7 +164,7 @@ spec:
             timeoutSeconds: 5
           #adapter
         - name: {{ .Release.Name }}-adapter-mqtt
-          image: "{{ default .Values.defaults.image.repository .Values.mqtt.adapter.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.adapter.image.tag }}"
+          image: "{{ default (printf "%s/mqtt" .Values.defaults.image.rootRepository) .Values.mqtt.adapter.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.adapter.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.adapter.image.pullPolicy}}
           ports:
           - containerPort: {{ .Values.mqtt.adapter.mqttPort }}

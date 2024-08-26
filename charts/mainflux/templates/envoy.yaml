@@ -28,8 +28,8 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}-envoy
-          image: "{{ default .Values.defaults.image.repository .Values.envoy.image.repository }}:{{ default .Values.defaults.image.tag .Values.envoy.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.envoy.image.pullPolicy}}
+          image: "{{.Values.envoy.image.repository }}:{{ .Values.envoy.image.tag }}"
+          imagePullPolicy: {{ .Values.envoy.image.pullPolicy | quote }}
           args:
             - -c /etc/envoy/envoy.yaml
             - --log-level debug

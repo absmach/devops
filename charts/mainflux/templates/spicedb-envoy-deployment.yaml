@@ -25,8 +25,8 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}-spicedb-envoy
-          image: "{{ default .Values.defaults.image.repository .Values.envoy.image.repository }}:{{ default .Values.defaults.image.tag .Values.envoy.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.envoy.image.imagePullPolicy}}
+          image: "{{ .Values.envoy.image.repository }}:{{ .Values.envoy.image.tag }}"
+          imagePullPolicy: {{ .Values.envoy.image.imagePullPolicy | quote }}
           ports:
             - containerPort: {{ .Values.spicedb.grpc.port }}
               protocol: TCP

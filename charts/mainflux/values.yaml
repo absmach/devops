@@ -9,7 +9,6 @@ defaults:
   image:
     pullPolicy: "IfNotPresent"
     rootRepository: "magistrala"
-    repository: "magistrala"
     tag: "latest"
     # pullSecrets:
     #   - {}
@@ -142,7 +141,7 @@ adapter_coap:
 adapter_http:
   image: {}
     # pullSecrets: {}
-    # repository: "magistrala"
+    # repository: "magistrala/adapter-http"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   httpPort: 8008
@@ -163,7 +162,7 @@ mqtt:
   adapter:
     image:
       # pullSecrets: {}
-      repository: "magistrala/mqtt"
+      # repository: "magistrala/mqtt"
       # tag: "latest"
       # pullPolicy: "IfNotPresent"
     mqttPort: 1884
@@ -232,7 +231,7 @@ auth:
   # logLevel: error
   image: {}
     # pullSecrets: {}
-    # rootRepository: "magistrala"
+    # rootRepository: "magistrala/auth"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # Log level for the auth service. Common options are "debug", "info", "warn", "error".
@@ -273,7 +272,7 @@ postgresqlauth:
 users:
   image: {}
      # pullSecrets: {}
-     # repository: "magistrala" 
+     # repository: "magistrala/users"
      # tag: "latest"
      # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 10
@@ -316,7 +315,7 @@ postgresqlusers:
 things:
   image: {}
     # pullSecrets: {}
-    # repository: "magistrala"
+    # repository: "magistrala/things"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   httpPort: 9000
@@ -359,7 +358,7 @@ redis-things:
 bootstrap:
   # image:
     # pullSecrets: {}
-    # repository: "magistrala"
+    # repository: "magistrala/bootstrap"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 10
@@ -398,7 +397,7 @@ certs:
   enabled: false
   image: {}
     # pullSecrets: {}
-    # repository: "magistrala"
+    # repository: "magistrala/certs"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 10
@@ -442,7 +441,7 @@ invitations:
   enabled: true
   image: {}
     # pullSecrets: {}
-    # repository: "magistrala"
+    # repository: "magistrala/invitations"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 10
@@ -477,7 +476,7 @@ journal:
   enabled: true
   image: {}
     # pullSecrets: {}
-    # repository: "magistrala"
+    # repository: "magistrala/journal"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 10
@@ -520,7 +519,7 @@ timescaledb:
   reader:
     image: {}
       # pullSecrets: {}
-      # repository: "magistrala"
+      # repository: "magistrala/timescale-reader"
       # tag: "latest"
       # pullPolicy: "IfNotPresent"
     # jaegerTraceRatio: 10
@@ -534,7 +533,7 @@ timescaledb:
   writer:
     image: {}
       # pullSecrets: {}
-      # repository: "magistrala"
+      # repository: "magistrala/timescale-writer"
       # tag: "latest"
       # pullPolicy: "IfNotPresent"
     # jaegerTraceRatio: 10
@@ -565,7 +564,7 @@ ui:
   enabled: true
   image: {}
     # pullSecrets: {}
-    # repository: "magistrala"
+    # repository: "magistrala/ui"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # logLevel: "info"
