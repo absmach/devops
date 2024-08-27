@@ -161,7 +161,7 @@ mqtt:
     fsGroup: 10000
   adapter:
     image:
-      # pullSecrets: {}
+      pullSecrets: {}
       # repository: "magistrala/mqtt"
       # tag: "latest"
       # pullPolicy: "IfNotPresent"
@@ -356,7 +356,7 @@ redis-things:
   usePassword: false
 
 bootstrap:
-  # image:
+  image: {}
     # pullSecrets: {}
     # repository: "magistrala/bootstrap"
     # tag: "latest"
@@ -570,7 +570,7 @@ ui:
   # logLevel: "info"
   # hostname: ""
   # contentTypes: "application/senml+json"
-  port: 3000
+  port: 9095
   pathPrefix: "/ui"
   # hostUrl: "https://domain-name"
   # httpAdapterUrl: "http://magistrala-adapter-http:8008"
