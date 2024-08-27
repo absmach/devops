@@ -1,0 +1,88 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.bootstrap.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-bootstrap
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: bootstrap
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.bootstrap.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: bootstrap
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.bootstrap.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-bootstrap
+          image: "{{ default (printf "%s/bootstrap" .Values.defaults.image.rootRepository) .Values.bootstrap.image.repository }}:{{ default .Values.defaults.image.tag .Values.bootstrap.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.bootstrap.image.pullPolicy }}
+          env:
+            - name: MG_JAEGER_URL
+              value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
+            - name: MG_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.bootstrap.jaegerTraceRatio | quote }}
+            - name: MG_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.bootstrap.sendTelemetry | quote }}
+            - name: MG_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
+            - name: MG_BOOTSTRAP_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.bootstrap.logLevel | quote }}
+            - name: MG_BOOTSTRAP_HOST
+              value: "0.0.0.0"
+            - name: MG_BOOTSTRAP_PORT
+              value: {{ .Values.bootstrap.httpPort | quote }}
+            - name: MG_THINGS_URL
+              value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
+            - name: MG_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: MG_BOOTSTRAP_ENCRYPT_KEY
+              value: {{ .Values.bootstrap.encKey | quote }}
+            - name: MG_BOOTSTRAP_EVENT_CONSUMER
+              value: {{ .Values.bootstrap.eventConsumerName | quote }}
+            - name: MG_BOOTSTRAP_DB_HOST
+            {{- if .Values.postgresqlbootstrap.enabled }}
+              value: {{ .Release.Name }}-postgresqlbootstrap
+            {{- else }}
+              value: {{ .Values.postgresqlbootstrap.host | quote }}
+            {{- end }}
+            - name: MG_BOOTSTRAP_DB_PORT
+              value: {{ .Values.postgresqlbootstrap.port | quote }}
+            - name: MG_BOOTSTRAP_DB_USER
+              value: {{ .Values.postgresqlbootstrap.username | quote }}
+            - name: MG_BOOTSTRAP_DB_PASS
+              value: {{ .Values.postgresqlbootstrap.password | quote }}
+            - name: MG_BOOTSTRAP_NAME
+              value: {{ .Values.postgresqlbootstrap.database | quote }}
+
+          ports:
+            - containerPort: {{ .Values.bootstrap.httpPort }}
+              protocol: TCP
+      {{- with .Values.bootstrap.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.bootstrap.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.bootstrap.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+{{- end }}

@@ -1,0 +1,613 @@
+# Copyright (c) Magistrala
+# SPDX-License-Identifier: Apache-2.0
+
+# The explanations for optional configuration parameters described in the adapter_coap section
+# apply across other services where the same named configuration parameters are used.
+
+defaults:
+  logLevel: "info"
+  image:
+    pullPolicy: "IfNotPresent"
+    rootRepository: "magistrala"
+    tag: "latest"
+    # pullSecrets:
+    #   - {}
+  # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
+  replicaCount: 3
+  natsPort: 4222
+  jaegerCollectorPort: 4318
+  jaegerTraceRatio: 10
+  sendTelemetry: true
+  eventStreamURL: "magistrala-nats:4222"
+
+ingress:
+  enabled: true
+  annotations: {}
+  labels: {}
+  # Uncomment this block for TLS support in public ingress
+  # hostname: ""
+  # tls:
+  #   hostname: ""
+  #   secret: "magistrala-server"
+
+nginxInternal:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "nginx"
+    tag: "1.19.1-alpine"
+  mtls:
+    # By default mTLS is disabled. If you use mTLS, comment this block.
+    tls: ""
+    intermediateCrt: ""
+    # Uncomment this block for TLS and mTLS support.
+    # Use sh script from /secrets/secrets.sh to create config maps with your certs
+    # tls: "magistrala-server"
+    # intermediateCrt: "ca"
+
+envoy:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "envoyproxy/envoy"
+    tag: "v1.31-latest"
+
+jaeger:
+  fullnameOverride: magistrala-jaeger
+  provisionDataStore:
+    cassandra: true
+  agent:
+    enabled: false
+  allInOne:
+    enabled: false
+  storage:
+    type: memory
+  collector:
+    service:
+      otlp:
+        grpc:
+          name: otlp-grpc
+          port: 4317
+        http:
+          name: otlp-http
+          port: 4318
+nats:
+  config:
+    cluster:
+      enabled: false
+      replicas: 3
+    jetstream:
+      enabled: true
+      fileStore:
+        enabled: true
+        pvc:
+          enabled: true
+      memoryStore:
+        enabled: true
+        maxSize: 2Gi
+
+adapter_coap:
+  image: {}
+    # pullSecrets: {}
+    # If your image repository requires authentication, you can specify image pull secrets here.
+    # Example:
+    # pullSecrets:
+    #   - my-registry-key
+
+    # repository: "magistrala"
+    # The Docker repository where the adapter_coap image is stored.
+    # Set this to your preferred image repository if you are using a custom image.
+
+    # tag: "latest"
+    # The specific tag of the adapter_coap image to use.
+    # Change this to pin to a specific version or use "latest" for the most recent version.
+
+    # pullPolicy: "IfNotPresent"
+    # The image pull policy. This defines when Kubernetes should pull the Docker image.
+    # Options are "Always", "IfNotPresent", or "Never". "IfNotPresent" is generally used to avoid unnecessary pulls.
+
+  port: 5683
+  # logLevel: "info"
+  # The logging level for the adapter_coap service. Common options are "debug", "info", "warn", "error".
+  # Adjust this based on the verbosity of logs you require.
+
+  # nodeSelector: {}
+  # Node selector for pod assignment. This can be used to restrict the pod to run on specific nodes.
+  # Example:
+  # nodeSelector:
+  #   disktype: ssd
+
+  # affinity: {}
+  # Pod affinity and anti-affinity settings. Use this to specify rules about how pods should be placed relative to other pods.
+  # Example:
+  # affinity:
+  #   podAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       - labelSelector:
+  #           matchExpressions:
+  #             - key: app
+  #               operator: In
+  #               values:
+  #                 - my-app
+  #         topologyKey: "kubernetes.io/hostname"
+
+  # tolerations: {}
+  # Tolerations for pod scheduling. Use this to allow pods to be scheduled on nodes with specific taints.
+  # Example:
+  # tolerations:
+  #   - key: "key1"
+  #     operator: "Equal"
+  #     value: "value1"
+  #     effect: "NoSchedule"
+
+adapter_http:
+  image: {}
+    # pullSecrets: {}
+    # repository: "magistrala/adapter-http"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  httpPort: 8008
+  # logLevel: "info"
+  # The logging level for the adapter_http service. Common options are "debug", "info", "warn", "error".
+  # Adjust this based on the verbosity of logs you require.
+
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+mqtt:
+  enabled: true
+  securityContext:
+    runAsUser: 10000
+    runAsGroup: 10000
+    fsGroup: 10000
+  adapter:
+    image:
+      pullSecrets: {}
+      # repository: "magistrala/mqtt"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
+    mqttPort: 1884
+    wsPort: 8081
+    logLevel: "debug"
+  broker:
+    image:
+      repository: "magistrala/vernemq"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
+    mqttPort: 1883
+    wsPort: 8080
+    logLevel: "info"
+    persistentVolume:
+      size: 5Gi
+  redisESPort: 6379
+  redisCachePort: 6379
+
+spicedb:
+  # replicaCount: 1
+  image:
+    pullSecrets: {}
+    repository: authzed/spicedb
+    tag: latest
+    # pullPolicy: "IfNotPresent"
+  grpc:
+    presharedKey: "helloworld"
+    port: 50051
+  datastore:
+    ## engine can be any one of the two options: postgres (default) , memory
+    engine: postgres
+  dispatch:
+    port: 50053
+    enabled: false
+  http:
+    enabled: false
+    port: 8443
+  metrics:
+    enabled: true
+    port: 9090
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+
+postgresqlspicedb:
+  ## If you want to use an external database, set this to false and change host & port
+  enabled: true
+  name: postgresql-spicedb
+  host: postgresql-spicedb
+  port: &postgresqlSpicedbPort 5432
+  database: &postgresqlSpicedbDatabase spicedb
+  username: &postgresqlSpicedbUsername magistrala
+  password: &postgresqlSpicedbPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlSpicedbPassword
+        username: *postgresqlSpicedbUsername
+        password: *postgresqlSpicedbPassword
+        database: *postgresqlSpicedbDatabase
+      service:
+        ports:
+          postgresql: *postgresqlSpicedbPort
+
+auth:
+  # logLevel: error
+  image: {}
+    # pullSecrets: {}
+    # rootRepository: "magistrala/auth"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # Log level for the auth service. Common options are "debug", "info", "warn", "error".
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
+  httpPort: 8189
+  grpcPort: 8181
+  secret: "supersecret"
+  adminEmail: "admin@example.com"
+  adminPassword: "12345678"
+  accessTokenDuration: "1h"
+  refreshTokenDuration: "24h"
+  invitationDuration: "168h"
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+
+postgresqlauth:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-auth
+  host: postgresql-auth
+  port: &postgresqlAuthPort 5432
+  database: &postgresqlAuthDatabase auth
+  username: &postgresqlAuthUsername magistrala
+  password: &postgresqlAuthPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlAuthPassword
+        username: *postgresqlAuthUsername
+        password: *postgresqlAuthPassword
+        database: *postgresqlAuthDatabase
+      service:
+        ports:
+          postgresql: *postgresqlAuthPort
+
+users:
+  image: {}
+     # pullSecrets: {}
+     # repository: "magistrala/users"
+     # tag: "latest"
+     # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
+  # logLevel: "info"
+  httpPort: 9002
+  grpcPort: 7001
+  adminEmail: "admin@example.com"
+  adminPassword: "12345678"
+  secretKey: "secretKey"
+  passwordRegex: "^.{8,}$"
+  tokenResetEndpoint: "/reset-request"
+  allowSelfRegister: true
+  deleteInterval: "24h"
+  deleteAfter: "720h"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqlusers:
+  ## If you want to use an external database, set this to false and change host & port
+  enabled: true
+  name: postgresql-users
+  host: postgresql-users
+  port: &postgresqlUsersPort 5432
+  database: &postgresqlUsersDatabase users
+  username: &postgresqlUsersUsername magistrala
+  password: &postgresqlUsersPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlUsersPassword
+        username: *postgresqlUsersUsername
+        password: *postgresqlUsersPassword
+        database: *postgresqlUsersDatabase
+      service:
+        ports:
+          postgresql: *postgresqlUsersPort
+
+things:
+  image: {}
+    # pullSecrets: {}
+    # repository: "magistrala/things"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  httpPort: 9000
+  authGrpcPort: 7000
+  authHttpPort: 9001
+  redisESPort: 6379
+  redisCachePort: 6379
+  # logLevel: "info"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqlthings:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-things
+  host: postgresql-things
+  port: &postgresqlThingsPort 5432
+  database: &postgresqlThingsDatabase things
+  username: &postgresqlThingsUsername magistrala
+  password: &postgresqlThingsPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlThingsPassword
+        username: *postgresqlThingsUsername
+        password: *postgresqlThingsPassword
+        database: *postgresqlThingsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlThingsPort
+
+redis-things:
+  volumePermissions:
+    enabled: true
+  cluster:
+    enabled: false
+  usePassword: false
+
+bootstrap:
+  image: {}
+    # pullSecrets: {}
+    # repository: "magistrala/bootstrap"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
+  # logLevel: "info"
+  enabled: true
+  httpPort: 9013
+  redisESPort: 6379
+  encKey: "randomstring"
+  eventConsumerName: EventConsumerByBootstrap
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqlbootstrap:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-bootstrap
+  host: postgresql-bootstrap
+  port: &postgresqlBootstrapPort 5432
+  database: &postgresqlBootstrapDatabase bootstrap
+  username: &postgresqlBootstrapUsername magistrala
+  password: &postgresqlBootstrapPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlBootstrapPassword
+        username: *postgresqlBootstrapUsername
+        password: *postgresqlBootstrapPassword
+        database: *postgresqlBootstrapDatabase
+      service:
+        ports:
+          postgresql: *postgresqlBootstrapPort
+
+certs:
+  enabled: false
+  image: {}
+    # pullSecrets: {}
+    # repository: "magistrala/certs"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
+  httpPort: 9019
+  logLevel: "info"
+  signCAPath: "/etc/ssl/certs/ca.crt"
+  signCAKeyPath: "/etc/ssl/certs/ca.key"
+  vault:
+    url: ""
+    approleRoleid: ""
+    approleSecret: ""
+    namespace: ""
+    thingsCertsPkiPath: ""
+    thingsCertsPkiRoleName: ""
+
+vault:
+  enabled: false
+
+postgresqlcerts:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-certs
+  host: postgresql-certs
+  port: &postgresqlCertsPort 5432
+  database: &postgresqlCertsDatabase certs
+  username: &postgresqlCertsUsername magistrala
+  password: &postgresqlCertsPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlCertsPassword
+        username: *postgresqlCertsUsername
+        password: *postgresqlCertsPassword
+        database: *postgresqlCertsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlCertsPort
+
+invitations:
+  enabled: true
+  image: {}
+    # pullSecrets: {}
+    # repository: "magistrala/invitations"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
+  # logLevel: "info"
+  httpPort: 9020
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqlinvitations:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-invitations
+  host: postgresql-invitations
+  port: &postgresqlInvitationsPort 5432
+  database: &postgresqlInvitationsDatabase invitations
+  username: &postgresqlInvitationsUsername magistrala
+  password: &postgresqlInvitationsPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlInvitationsPassword
+        username: *postgresqlInvitationsUsername
+        password: *postgresqlInvitationsPassword
+        database: *postgresqlInvitationsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlInvitationsPort
+
+journal:
+  enabled: true
+  image: {}
+    # pullSecrets: {}
+    # repository: "magistrala/journal"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 10
+  # sendTelemetry: true
+  # logLevel: "info"
+  httpPort: 9021
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqljournal:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-journal
+  host: postgresql-journal
+  port: &postgresqlJournalPort 5432
+  database: &postgresqlJournalDatabase journal
+  username: &postgresqlJournalUsername magistrala
+  password: &postgresqlJournalPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlJournalPassword
+        username: *postgresqlJournalUsername
+        password: *postgresqlJournalPassword
+        database: *postgresqlJournalDatabase
+      service:
+        ports:
+          postgresql: *postgresqlJournalPort
+
+timescaledb:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: timescalerw
+  host: timescalerw
+  port: &messagesRwTimescalePort 5432
+  database: &messagesRwTimescaleDatabase messages
+  username: &messagesRwTimescaleUsername magistrala
+  password: &messagesRwTimescalePassword magistrala
+  reader:
+    image: {}
+      # pullSecrets: {}
+      # repository: "magistrala/timescale-reader"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
+    # jaegerTraceRatio: 10
+    # sendTelemetry: true
+    # logLevel: "info"
+    enabled: true
+    http: { port: 9011 }
+    # nodeSelector: {}
+    # affinity: {}
+    # tolerations: {}
+  writer:
+    image: {}
+      # pullSecrets: {}
+      # repository: "magistrala/timescale-writer"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
+    # jaegerTraceRatio: 10
+    # sendTelemetry: true
+    # logLevel: "info"
+    # nodeSelector: {}
+    # affinity: {}
+    # tolerations: {}
+    enabled: true
+    http: { port: 9012 }
+  ## Configurations of Bitnami postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *messagesRwTimescalePassword
+        username: *messagesRwTimescaleUsername
+        password: *messagesRwTimescalePassword
+        database: *messagesRwTimescaleDatabase
+      service:
+        ports:
+          postgresql: *messagesRwTimescalePort
+  image:
+    registry: docker.io
+    repository: timescale/timescaledb
+    tag: latest-pg12
+
+ui:
+  enabled: true
+  image: {}
+    # pullSecrets: {}
+    # repository: "magistrala/ui"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: "info"
+  # hostname: ""
+  # contentTypes: "application/senml+json"
+  port: 9095
+  pathPrefix: "/ui"
+  # hostUrl: "https://domain-name"
+  # httpAdapterUrl: "http://magistrala-adapter-http:8008"
+  # usersUrl: "http://magistrala-users:9002"
+  # authUrl: "http://magistrala-auth:8189"
+  # bootstrapUrl: "http://magistrala-bootstrap:9013"
+  # thingsUrl: "http://magistrala-things:9000"
+  # readerUrl: "http://magistrala-timescale-reader:9011"
+  # invitationsUrl: "http:///magistrala-auth:9020"
+  # journalUrl: "http:///magistrala-auth:9021"
+  # domainsUrl: "http://magistrala-auth:8189"
+  # bootstrapUrl: "http://magistrala-boostrap:9013"
+  googleClientID: ""
+  googleClientSecret: ""
+  googleRedirectHostname: "https://stage-domain-name"
+  googleRedirectPath: "/oauth/callback/google"
+  googleState: "somerandomstring"
+  contentType: "application/senml+json"
+  hashKey: "5jx4x2Qg9OUmzpP5dbveWQ"
+  blockKey: "UtgZjr92jwRY6SPUndHXiyl9QY8qTUyZ"
+
+postgresqlui:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-ui
+  host: postgresql-ui
+  port: &postgresqlUIPort 5432
+  database: &postgresqlUIDatabase ui
+  username: &postgresqlUIUsername magistrala
+  password: &postgresqlUIPassword magistrala
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlUIPassword
+        username: *postgresqlUIUsername
+        password: *postgresqlUIPassword
+        database: *postgresqlUIDatabase
+      service:
+        ports:
+          postgresql: *postgresqlUIPort

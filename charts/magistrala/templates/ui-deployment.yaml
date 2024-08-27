@@ -1,0 +1,92 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+{{- if .Values.ui.enabled }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ui
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: ui
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: ui
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.ui.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: ui
+          image: "{{ default (printf "%s/ui" .Values.defaults.image.rootRepository) .Values.ui.image.repository }}:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
+          env:
+            - name: MG_UI_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.ui.logLevel | quote }}
+            - name: MG_UI_PORT
+              value: {{ .Values.ui.port | quote }}
+            {{- $hostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.hostname }}
+            {{- if $hostname }}
+            - name: MG_UI_HOST_URL
+              value: {{ $hostname | quote }}
+            {{- end }}
+            - name: MG_UI_PATH_PREFIX
+              value: {{ .Values.ui.pathPrefix | quote  }}
+            - name: MG_HTTP_ADAPTER_URL
+              value: {{ default (printf "http://%s-adapter-http:%s " .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
+            - name: MG_READER_URL
+              value: {{ default (printf "http://%s-timescaledb-reader:%s" .Release.Name (.Values.timescaledb.reader.http.port | toString )) .Values.ui.readerUrl }}
+            - name: MG_THINGS_URL
+              value: {{ default  (printf "http://%s-things:%s" .Release.Name (.Values.things.httpPort | toString )) .Values.ui.thingsUrl }}
+            - name: MG_USERS_URL
+              value: {{ default  (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString ))  .Values.ui.usersUrl }}
+            - name: MG_INVITATIONS_URL
+              value: {{ default  (printf "http://%s-invitations:%s" .Release.Name (.Values.invitations.httpPort | toString ))  .Values.ui.invitationsUrl }}
+            - name: MG_DOMAINS_URL
+              value: {{ default  (printf "http://%s-auth:%s" .Release.Name (.Values.auth.httpPort | toString )) .Values.ui.authUrl }}
+            - name: MG_BOOTSTRAP_URL
+              value: {{ default  (printf "http://%s-bootstrap:%s" .Release.Name (.Values.bootstrap.httpPort | toString )) .Values.ui.bootstrapUrl }}
+            - name: MG_JOURNAL_URL
+              value: {{ default  (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
+            - name: MG_UI_CONTENT_TYPE
+              value: {{ .Values.ui.contentType | quote  }}
+            - name: MG_UI_DB_HOST
+            {{- if .Values.postgresqlui.enabled }}
+              value: {{ .Release.Name }}-postgresqlui
+            {{- else }}
+              value: {{ .Values.postgresqlui.host }}
+            {{- end }}
+            - name: MG_UI_DB_PORT
+              value: {{ .Values.postgresqlui.port | quote }}
+            - name: MG_UI_DB_USER
+              value: {{ .Values.postgresqlui.username | quote  }}
+            - name: MG_UI_DB_PASS
+              value: {{ .Values.postgresqlui.password | quote  }}
+            - name: MG_UI_DB_NAME
+              value: {{ .Values.postgresqlui.database | quote  }}
+            - name: MG_GOOGLE_CLIENT_ID
+              value: {{ .Values.ui.googleClientID | quote  }}
+            - name: MG_GOOGLE_CLIENT_SECRET
+              value: {{ .Values.ui.googleClientSecret | quote  }}
+            {{- $googleRedirectHostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.googleRedirectHostname }}
+            - name: MG_GOOGLE_REDIRECT_URL
+              value: {{$googleRedirectHostname}}{{.Values.ui.googleRedirectPath  }}
+            - name: MG_GOOGLE_STATE
+              value: {{ .Values.ui.googleState | quote  }}
+            - name: MG_UI_HASH_KEY
+              value: {{ .Values.ui.hashKey | quote  }}
+            - name: MG_UI_BLOCK_KEY
+              value: {{ .Values.ui.blockKey | quote  }}
+          ports:
+            - containerPort: {{ .Values.ui.port }}
+              protocol: TCP
+          stdin: true
+          tty: true
+{{- end }}

@@ -1,0 +1,84 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.certs.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-certs
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: certs
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.certs.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: certs
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.certs.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-certs
+          image: "{{ default (printf "%s/certs" .Values.defaults.image.rootRepository) .Values.certs.image.repository }}:{{ default .Values.defaults.image.tag .Values.certs.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.certs.image.pullPolicy }}
+          env:
+            - name: MG_JAEGER_URL
+              value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
+            - name: MG_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.certs.jaegerTraceRatio | quote }}
+            - name: MG_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.certs.sendTelemetry | quote }}
+            - name: MG_CERTS_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.certs.logLevel | quote }}
+            - name: MG_CERTS_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_CERTS_HTTP_PORT
+              value: {{ .Values.certs.httpPort | quote }}
+            - name: MG_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: MG_THINGS_URL
+              value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
+            - name: MG_CERTS_DB_HOST
+            {{- if .Values.postgresqlcerts.enabled }}
+              value: {{ .Release.Name }}-postgresqlcerts
+            {{- else }}
+              value: {{ .Values.postgresqlcerts.host | quote }}
+            {{- end }}
+            - name: MG_CERTS_DB_PORT
+              value: {{ .Values.postgresqlcerts.port | quote }}
+            - name: MG_CERTS_DB_NAME
+              value: {{ .Values.postgresqlcerts.database | quote }}
+            - name: MG_CERTS_DB_USER
+              value: {{ .Values.postgresqlcerts.username | quote }}
+            - name: MG_CERTS_DB_PASS
+              value: {{ .Values.postgresqlcerts.password | quote }}
+            - name: MG_CERTS_SIGN_CA_PATH
+              value: {{ .Values.certs.signCAPath }}
+            - name: MG_CERTS_SIGN_CA_KEY_PATH
+              value: {{ .Values.certs.signCAKeyPath }}
+            - name: MG_CERTS_VAULT_HOST
+              value: {{ .Values.certs.vault.url | quote }}
+            - name:  MG_CERTS_VAULT_APPROLE_ROLEID
+              value: {{ .Values.certs.vault.approleRoleid | quote }}
+            - name: MG_CERTS_VAULT_APPROLE_SECRET
+              value: {{ .Values.certs.vault.approleSecret | quote }}
+            - name: MG_CERTS_VAULT_NAMESPACE
+              value: {{ .Values.certs.vault.namespace | quote }}
+            - name: MG_CERTS_VAULT_THINGS_CERTS_PKI_PATH
+              value: {{ .Values.certs.vault.thingsCertsPkiPath | quote }}
+            - name: MG_CERTS_VAULT_THINGS_CERTS_PKI_ROLE_NAME
+              value: {{ .Values.certs.vault.thingsCertsPkiRoleName | quote }}
+          ports:
+            - containerPort: {{ .Values.certs.httpPort }}
+              protocol: TCP
+{{- end }}

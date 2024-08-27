@@ -1,0 +1,99 @@
+{{- $replicaCount := default .Values.defaults.replicaCount .Values.spicedb.replicaCount | int64 }}
+{{- $databaseHost := .Values.postgresqlspicedb.host | quote -}}
+{{- if .Values.postgresqlspicedb.enabled -}}
+  {{- $databaseHost = printf "%s-postgresqlspicedb" .Release.Name -}}
+{{- end -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-spicedb
+spec:
+  replicas: {{ $replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: spicedb
+  template:
+    metadata:
+      annotations:
+        {{- if .Values.spicedb.metrics.enabled }}
+        prometheus.io/path: /
+        prometheus.io/port: "{{ .Values.spicedb.metrics.port }}"
+        prometheus.io/scrape: "true"
+        {{- end }}
+      labels:
+        app: {{ .Release.Name }}
+        component: spicedb
+    spec:
+      {{- with .Values.spicedb.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-spicedb
+          image: "{{ .Values.spicedb.image.repository }}:{{ .Values.spicedb.image.tag }}"
+          imagePullPolicy:  {{ default .Values.defaults.image.pullPolicy .Values.spicedb.image.pullPolicy }}
+          args:
+            - serve
+            - --grpc-enabled=true
+            - --grpc-preshared-key={{ required "'spicedb.grpc.presharedKey' is required" .Values.spicedb.grpc.presharedKey }}
+            - --grpc-addr=:{{  required "'spicedb.grpc.port' is required" .Values.spicedb.grpc.port }}
+            - --log-level=trace
+            - --datastore-engine={{  include "validateSpiceDBDatastoreEngine"  .Values.spicedb.datastore.engine }}
+            {{- if eq .Values.spicedb.datastore.engine "postgres" }}
+            - --datastore-conn-uri=postgres://{{ .Values.postgresqlspicedb.username }}:{{ .Values.postgresqlspicedb.password }}@{{ $databaseHost }}:{{ .Values.postgresqlspicedb.port }}/{{ .Values.postgresqlspicedb.database }}
+            {{- end }}
+
+            - --dispatch-cluster-enabled={{ .Values.spicedb.dispatch.enabled }}
+            {{- if .Values.spicedb.dispatch.enabled }}
+            - --dispatch-cluster-addr=:{{ .Values.spicedb.dispatch.port }}
+            {{- end }}
+            {{- if and .Values.spicedb.dispatch.enabled (gt $replicaCount 1) }}
+            - --dispatch-upstream-addr=kubernetes://{{ .Release.Name }}-spicedb-dispatch-headless.{{ .Release.Namespace }}:{{ .Values.spicedb.dispatch.port }}
+            {{- end }}
+
+            - --http-enabled={{ .Values.spicedb.http.enabled }}
+            {{- if .Values.spicedb.http.enabled }}
+            - --http-addrr=:{{ .Values.spicedb.http.port }}
+            {{- end }}
+
+            - --metrics-enabled={{ .Values.spicedb.metrics.enabled }}
+            {{- if .Values.spicedb.metrics.enabled }}
+            - --metrics-addr=:{{ .Values.spicedb.metrics.port }}
+            {{- end }}
+
+          ports:
+            - containerPort: {{ .Values.spicedb.grpc.port | int64 }}
+              protocol: TCP
+              name: grpc
+            {{- if .Values.spicedb.http.enabled }}
+            - containerPort: {{ .Values.http.port | int64 }}
+              protocol: TCP
+              name: http
+            {{- end }}
+            {{- if .Values.spicedb.dispatch.enabled }}
+            - containerPort: {{ .Values.spicedb.dispatch.port  | int64 }}
+              protocol: TCP
+              name: dispatch
+            {{- end }}
+            {{- if .Values.spicedb.metrics.enabled }}
+            - containerPort: {{ .Values.spicedb.metrics.port | int64 }}
+              protocol: TCP
+              name: metrics
+            {{- end }}
+      {{- with .Values.spicedb.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.spicedb.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.spicedb.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+

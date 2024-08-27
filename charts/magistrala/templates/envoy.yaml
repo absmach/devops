@@ -1,0 +1,76 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+data:
+  envoy.yaml: |-
+{{ include "magistrala.envoy.config" . | indent 4 }}
+
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-envoy-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-envoy
+spec:
+  replicas: {{ .Values.defaults.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: envoy
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: envoy
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-envoy
+          image: "{{.Values.envoy.image.repository }}:{{ .Values.envoy.image.tag }}"
+          imagePullPolicy: {{ .Values.envoy.image.pullPolicy | quote }}
+          args:
+            - -c /etc/envoy/envoy.yaml
+            - --log-level debug
+          ports:
+            - containerPort: 1883
+              protocol: TCP
+            - containerPort: {{ .Values.auth.grpcPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.things.authGrpcPort }}
+              protocol: TCP
+            - containerPort: 8001
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/envoy/envoy.yaml
+              name: envoy-config
+              subPath: envoy.yaml
+      volumes:
+        - configMap:
+            defaultMode: 292  ## equal to 0444 r-- r-- r--
+            name: {{ .Release.Name }}-envoy-config
+            optional: false
+          name: envoy-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-envoy
+spec:
+  selector:
+    app: {{ .Release.Name }}
+    component: envoy
+  ports:
+    - port: 1883
+      protocol: TCP
+      name: mqtt
+    - port: {{ .Values.auth.grpcPort }}
+      protocol: TCP
+      name: auth-grpc
+    - port: {{ .Values.things.authGrpcPort }}
+      protocol: TCP
+      name: things-grpc
+    - port: 8001
+      protocol: TCP
+      name: admin

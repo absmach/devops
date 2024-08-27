@@ -1,0 +1,117 @@
+# Copyright (c) Magistrala
+# SPDX-License-Identifier: Apache-2.0
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-spicedb-schema-zed
+data:
+  schema.zed: |-
+{{ include "spicedb.schema.zed" . | indent 4 }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-auth
+spec:
+  replicas: {{ .Values.defaults.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: auth
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.auth.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: auth
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.auth.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-auth
+          image: "{{ default (printf "%s/auth" .Values.defaults.image.rootRepository) .Values.auth.image.repository }}:{{ default .Values.defaults.image.tag .Values.auth.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.auth.image.pullPolicy }}
+          env:
+            - name: MG_JAEGER_URL
+              value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
+            - name: MG_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.auth.jaegerTraceRatio | quote }}
+            - name: MG_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.auth.sendTelemetry | quote }}
+            - name: MG_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
+            - name: MG_AUTH_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.auth.logLevel | quote }}
+            - name: MG_AUTH_GRPC_HOST
+              value: "0.0.0.0"
+            - name: MG_AUTH_GRPC_PORT
+              value: {{ .Values.auth.grpcPort | quote }}
+            - name: MG_AUTH_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_AUTH_HTTP_PORT
+              value: {{ .Values.auth.httpPort  | quote }}
+            - name: MG_AUTH_SECRET
+              value: {{ .Values.auth.secret | quote }}
+            - name: MG_AUTH_ACCESS_TOKEN_DURATION
+              value: {{ .Values.auth.accessTokenDuration | quote }}
+            - name: MG_AUTH_REFRESH_TOKEN_DURATION
+              value: {{ .Values.auth.refreshTokenDuration | quote }}
+            - name: MG_AUTH_INVITATION_DURATION
+              value: {{ .Values.auth.invitationDuration | quote }}
+            - name: MG_AUTH_DB_HOST
+            {{- if .Values.postgresqlauth.enabled }}
+              value: {{ .Release.Name }}-postgresqlauth
+            {{- else }}
+              value: {{ .Values.postgresqlauth.host | quote }}
+            {{- end }}
+            - name: MG_AUTH_DB_PORT
+              value: {{ .Values.postgresqlauth.port | quote }}
+            - name: MG_AUTH_DB_NAME
+              value: {{ .Values.postgresqlauth.database | quote }}
+            - name: MG_AUTH_DB_USER
+              value: {{ .Values.postgresqlauth.username | quote }}
+            - name: MG_AUTH_DB_PASS
+              value: {{ .Values.postgresqlauth.password | quote }}
+            - name: MG_SPICEDB_HOST
+              value: {{ .Release.Name }}-spicedb-envoy
+            - name: MG_SPICEDB_PORT
+              value: {{ .Values.spicedb.grpc.port | quote}}
+            - name: MG_SPICEDB_SCHEMA_FILE
+              value: /schema.zed
+            - name: MG_SPICEDB_PRE_SHARED_KEY
+              value: {{.Values.spicedb.grpc.presharedKey | quote }}
+          ports:
+              - containerPort: {{ .Values.auth.httpPort }}
+                protocol: TCP
+              - containerPort: {{ .Values.auth.grpcPort }}
+                protocol: TCP
+          volumeMounts:
+            - mountPath: /schema.zed
+              name: spicedb-schema-zed
+              subPath: schema.zed
+      volumes:
+        - name: spicedb-schema-zed
+          configMap:
+            defaultMode: 256
+            name: {{ .Release.Name }}-spicedb-schema-zed
+            optional: false
+      {{- with .Values.auth.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.auth.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.auth.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

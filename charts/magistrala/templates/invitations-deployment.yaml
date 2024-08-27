@@ -1,0 +1,82 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-invitations
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: invitations
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.invitations.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: invitations
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.invitations.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-invitations
+          image: "{{ default (printf "%s/invitations" .Values.defaults.image.rootRepository) .Values.invitations.image.repository }}:{{ default .Values.defaults.image.tag .Values.invitations.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.invitations.image.pullPolicy }}
+          env:
+            - name: MG_JAEGER_URL
+              value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
+            - name: MG_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.invitations.jaegerTraceRatio | quote  }}
+            - name: MG_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.invitations.sendTelemetry | quote  }}
+            - name: MG_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
+            - name: MG_INVITATIONS_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.invitations.logLevel  | quote }}
+            - name: MG_INVITATIONS_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_INVITATIONS_HTTP_PORT
+              value: {{ .Values.invitations.httpPort  | quote  }}
+            - name : MG_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: MG_USERS_URL
+              value: http://{{ .Release.Name }}-users:{{ .Values.users.httpPort }}
+            - name: MG_DOMAINS_URL
+              value: http://{{ .Release.Name }}-auth:{{ .Values.auth.httpPort }}
+            - name: MG_INVITATIONS_DB_HOST
+            {{- if .Values.postgresqlinvitations.enabled }}
+              value: "{{ .Release.Name }}-postgresqlinvitations"
+            {{- else }}
+              value: {{ .Values.postgresqlinvitations.host | quote }}
+            {{- end }}
+            - name: MG_INVITATIONS_DB_PORT
+              value: {{ .Values.postgresqlinvitations.port  | quote }}
+            - name: MG_INVITATIONS_DB_NAME
+              value: {{ .Values.postgresqlinvitations.database | quote }}
+            - name: MG_INVITATIONS_DB_USER
+              value: {{ .Values.postgresqlinvitations.username | quote }}
+            - name: MG_INVITATIONS_DB_PASS
+              value: {{ .Values.postgresqlinvitations.password | quote }}
+          ports:
+            - containerPort: {{ .Values.invitations.httpPort }}
+              protocol: TCP
+      {{- with .Values.invitations.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.invitations.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.invitations.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

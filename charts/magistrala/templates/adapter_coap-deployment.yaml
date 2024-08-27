@@ -1,0 +1,70 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-adapter-coap
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: adapter-coap
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.adapter_coap.port }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: adapter-coap
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.adapter_coap.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-adapter-coap
+          image: "{{ default (printf "%s/coap" .Values.defaults.image.rootRepository) .Values.adapter_coap.image.repository }}:{{ default .Values.defaults.image.tag .Values.adapter_coap.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_coap.image.pullPolicy }}
+          env:
+            - name: MG_JAEGER_URL
+              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+            - name: MG_MESSAGE_BROKER_URL
+              value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
+            - name: MG_THINGS_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
+            - name: MG_COAP_ADAPTER_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.adapter_coap.logLevel | quote }}
+            - name: MG_COAP_ADAPTER_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_COAP_ADAPTER_HTTP_PORT
+              value: {{ .Values.adapter_coap.port | quote }}
+            - name: MG_COAP_ADAPTER_HOST
+              value: "0.0.0.0"
+            - name: MG_COAP_ADAPTER_PORT
+              value: {{ .Values.adapter_coap.port | quote }}
+          ports:
+            - containerPort: {{ .Values.adapter_coap.port }}
+              protocol: UDP
+              name: "udp-{{ .Values.adapter_coap.port }}"
+            - containerPort: {{ .Values.adapter_coap.port }}
+              name: "tcp-{{ .Values.adapter_coap.port }}"
+              protocol: TCP
+          stdin: true
+          tty: true
+      {{- with .Values.adapter_coap.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.adapter_coap.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.adapter_coap.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

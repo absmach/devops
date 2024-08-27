@@ -1,0 +1,80 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.timescaledb.reader.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-timescaledb-reader
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: timescaledb-reader
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: timescaledb-reader
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.timescaledb.reader.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-timescaledb-reader
+          image: "{{ default (printf "%s/timescale-reader" .Values.defaults.image.rootRepository) .Values.timescaledb.reader.image.repository }}:{{ default .Values.defaults.image.tag .Values.timescaledb.reader.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.timescaledb.reader.image.pullPolicy }}
+          env:
+            - name: MG_JAEGER_URL
+              value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
+            - name: MG_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.timescaledb.reader.jaegerTraceRatio | quote  }}
+            - name: MG_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.timescaledb.reader.sendTelemetry | quote  }}
+            - name: MG_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
+            - name: MG_TIMESCALE_READER_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.timescaledb.reader.logLevel  | quote }}
+            - name: MG_TIMESCALE_READER_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_TIMESCALE_READER_HTTP_PORT
+              value: {{ .Values.timescaledb.reader.http.port | quote }}
+            - name: MG_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: MG_THINGS_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
+            - name: MG_TIMESCALE_HOST
+            {{- if .Values.timescaledb.enabled }}
+              value: "{{ .Release.Name }}-timescaledb"
+            {{- else }}
+              value: {{ .Values.timescaledb.host | quote }}
+            {{- end }}
+            - name: MG_TIMESCALE_PORT
+              value: {{ .Values.timescaledb.port | quote  }}
+            - name: MG_TIMESCALE_USER
+              value: {{ .Values.timescaledb.username | quote  }}
+            - name: MG_TIMESCALE_PASS
+              value: {{ .Values.timescaledb.password | quote  }}
+            - name: MG_TIMESCALE_NAME
+              value: {{ .Values.timescaledb.database | quote }}
+          ports:
+            - containerPort: {{ .Values.timescaledb.reader.http.port }}
+              protocol: TCP
+      {{- with .Values.timescaledb.reader.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.timescaledb.reader.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.timescaledb.reader.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+

@@ -1,0 +1,60 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-adapter-http
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: adapter-http
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.adapter_http.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: adapter-http
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.adapter_http.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-adapter-http
+          image: "{{ default (printf "%s/http" .Values.defaults.image.rootRepository) .Values.adapter_http.image.repository }}:{{ default .Values.defaults.image.tag .Values.adapter_http.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_http.image.pullPolicy }}
+          env:
+            - name: MG_JAEGER_URL
+              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+            - name: MG_HTTP_ADAPTER_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.adapter_http.logLevel | quote }}
+            - name: MG_HTTP_ADAPTER_HOST
+              value: "0.0.0.0"
+            - name: MG_HTTP_ADAPTER_PORT
+              value: {{ .Values.adapter_http.httpPort | quote }}
+            - name: MG_MESSAGE_BROKER_URL
+              value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
+            - name: MG_THINGS_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
+          ports:
+            - containerPort: {{ .Values.adapter_http.httpPort }}
+              protocol: TCP
+      {{- with .Values.adapter_http.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.adapter_http.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.adapter_http.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

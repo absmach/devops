@@ -1,0 +1,17 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.bootstrap.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-bootstrap
+spec:
+  selector:
+    app: {{ .Release.Name }}
+    component: bootstrap
+  ports:
+    - port: {{ .Values.bootstrap.httpPort }}
+      protocol: TCP
+      name: {{ .Release.Name }}-bootstrap-{{ .Values.bootstrap.httpPort }}
+{{- end }}

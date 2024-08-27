@@ -1,0 +1,17 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.certs.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-certs
+spec:
+  selector:
+    app: {{ .Release.Name }}
+    component: certs
+  ports:
+    - port: {{ .Values.certs.httpPort }}
+      protocol: TCP
+      name: {{ .Release.Name }}-certs-{{ .Values.certs.httpPort }}
+{{- end }}
