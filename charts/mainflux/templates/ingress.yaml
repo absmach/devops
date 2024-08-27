@@ -1,9 +1,11 @@
-# Copyright (c) Mainflux
+# Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
+{{- if .Values.ingress.enabled }}
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: {{ .Release.Name }}-nginx-ingress
 {{- if .Values.ingress.annotations }}
   annotations:
 {{ toYaml .Values.ingress.annotations | indent 4 }}
@@ -12,7 +14,6 @@ metadata:
   labels:
 {{ toYaml .Values.ingress.labels | indent 4 }}
 {{- end }}
-  name: {{ .Release.Name }}-nginx-ingress
 spec:
   ingressClassName: nginx
   rules:
@@ -27,7 +28,7 @@ spec:
                 port:
                   number: {{ .Values.ui.port }}
           - path: /health
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: {{ .Release.Name }}-things
@@ -43,6 +44,107 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: {{ .Release.Name }}-users-things-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = GET) {
+        proxy_pass http://{{ .Release.Name }}-things.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.things.httpPort }};
+        break;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          - path: /((users|groups)/(.+)/(channels|things))
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-things-users-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = GET) {
+        proxy_pass http://{{ .Release.Name }}-users.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.users.httpPort }};
+        break;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          - path: /((channels|things)/(.+)/(users|groups))
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-things
+                port:
+                  number: {{ .Values.things.httpPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-users-domains-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = GET) {
+        proxy_pass http://{{ .Release.Name }}-auth.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.auth.httpPort }};
+        break;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          - path: /((users)/(.+)/(domains))
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-domains-users-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_method = GET) {
+        proxy_pass http://{{ .Release.Name }}-users.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.users.httpPort }};
+        break;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          - path: /((domains)/(.+)/(users))
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-auth
+                port:
+                  number: {{ .Values.auth.httpPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-nginx-rewrite-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 {{- if .Values.ingress.annotations }}
@@ -52,101 +154,64 @@ metadata:
   labels:
 {{ toYaml .Values.ingress.labels | indent 4 }}
 {{- end }}
-  name: {{ .Release.Name }}-nginx-rewrite-ingress
 spec:
   ingressClassName: nginx
   rules:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /(users.*|password.*|tokens.*)
-            pathType: Prefix
+          - path: /(domains.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-auth
+                port:
+                  number: {{ .Values.auth.httpPort }}
+          - path: /((users|groups|password|authorize).*|oauth/callback/[^/]+)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
-          - path: /(things.*|channels.*|connect.*|disconnect.*)
-            pathType: Prefix
+          - path: /((things|channels|connect|disconnect|identify).*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-things
                 port:
                   number: {{ .Values.things.httpPort }}
-          - path: /groups/users/?(.*)
-            pathType: Prefix
+          - path: /(invitations.*)
+            pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ .Release.Name }}-users
+                name: {{ .Release.Name }}-invitations
                 port:
-                  number: {{ .Values.users.httpPort }}
-          - path: /groups/things/?(.*)
-            pathType: Prefix
+                  number: {{ .Values.invitations.httpPort }}
+          - path: /(journal.*)
+            pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ .Release.Name }}-things
+                name: {{ .Release.Name }}-journal
                 port:
-                  number: {{ .Values.things.httpPort }}
-{{- if .Values.certs.enabled -}} 
-          - path: /(certs.*|serials.*)
-            pathType: Prefix
+                  number: {{ .Values.journal.httpPort }}
+{{- if .Values.certs.enabled }}
+          - path: /((certs|serials).*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-certs
                 port:
                   number: {{ .Values.certs.httpPort }}
-{{- end }}                 
-{{- if .Values.notifier_smtp.enabled }}
-          - path: /smtp-notifier/?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-notifier-smtp
-                port:
-                  number: {{ .Values.notifier_smtp.httpPort }}
 {{- end }}
 {{- if .Values.bootstrap.enabled }}
           - path: /bootstrap/?(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-bootstrap
                 port:
                   number: {{ .Values.bootstrap.httpPort }}
-          - path: /bs/?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-bootstrap
-                port:
-                  number: {{ .Values.bootstrap.httpPort }}
-{{- end }}
-{{- if .Values.influxdb.enabled }}
-          - path: /reader/?(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name:  {{ .Release.Name }}-influxdb-reader
-                port:
-                  number: {{ .Values.influxdb.reader.httpPort }}
-{{- end }}
-{{- if .Values.twins.enabled }}
-          - path: /(twins.*|states.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-twins
-                port:
-                  number: {{ .Values.twins.httpPort }}
-{{- end }}
-{{- if .Values.adapter_opcua.enabled }}
-          - path: /(browse.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-adapter-opcua
-                port:
-                  number: {{ default .Values.adapter_opcua.httpPort }}
 {{- end }}
 {{- if .Values.ingress.tls }}
   tls:
@@ -158,6 +223,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: {{ .Release.Name }}-nginx-rewrite-ingress-http-adapter
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 {{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
@@ -173,44 +239,43 @@ metadata:
   labels:
 {{ toYaml .Values.ingress.labels | indent 4 }}
 {{- end }}
-  name: {{ .Release.Name }}-nginx-rewrite-ingress-http-adapter
 spec:
   ingressClassName: nginx
   rules:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-{{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
+          {{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
           - path: /(http/?.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-nginx-internal
                 port:
                   number: 80
           - path: /(mqtt)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-nginx-internal
                 port:
                   number: 80
-{{- else }}
+          {{- else }}
           - path: /http/?(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-adapter-http
                 port:
                   number: {{ .Values.adapter_http.httpPort }}
           - path: /(mqtt)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-mqtt
                 port:
                   number: {{ default .Values.mqtt.adapter.wsPort }}
-{{- end }}
+          {{- end }}
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
@@ -220,17 +285,19 @@ spec:
 ---
 apiVersion: v1
 kind: ConfigMap
+metadata:
+  name: tcp-services
+  namespace: default
 data:
   1883: "{{ .Release.Namespace }}/{{ .Release.Name }}-envoy:1883"
   8883: "{{ .Release.Namespace }}/{{ .Release.Name }}-nginx-internal:8883"
-metadata:
-  name: tcp-services
-  namespace: ingress-nginx
 ---
 apiVersion: v1
 kind: ConfigMap
-data:
-  5683: "{{ .Release.Namespace }}/{{ .Release.Name }}-adapter-coap:5683"
 metadata:
   name: udp-services
-  namespace: ingress-nginx
+  namespace: default
+data:
+  5683: "{{ .Release.Namespace }}/{{ .Release.Name }}-adapter-coap:5683"
+
+{{- end }}

@@ -1,4 +1,4 @@
-# Copyright (c) Mainflux
+# Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
 apiVersion: rbac.authorization.k8s.io/v1
@@ -51,33 +51,39 @@ spec:
         app: {{ .Release.Name}}
         component: mqtt
     spec:
-        {{- with .Values.imagePullSecrets }}
-          imagePullSecrets:
-            {{- toYaml . | nindent 12 }}
-        {{- end }}
+      {{- $adapterPullSecrets := .Values.mqtt.adapter.image.pullSecrets | default (dict) }}
+      {{- $brokerPullSecrets := .Values.mqtt.broker.image.pullSecrets | default (dict) }}
+      {{- $combinedPullSecrets := merge $adapterPullSecrets $brokerPullSecrets  }}
+      {{- with (default .Values.defaults.image.pullSecrets $combinedPullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       securityContext:
         {{ toYaml .Values.mqtt.securityContext | nindent 8 }}
       containers:
           #broker
-        - volumeMounts:
+        - name: {{ .Release.Name }}-broker-mqtt
+          image: "{{ default (printf "%s/vernemq" .Values.defaults.image.rootRepository) .Values.mqtt.broker.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.broker.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.broker.image.pullPolicy }}
+          volumeMounts:
             - name: data
               mountPath: /vernemq/data
           env:
-            - name: MF_MQTT_ADAPTER_LOG_LEVEL
+            - name: MG_MQTT_ADAPTER_LOG_LEVEL
               value: {{ .Values.mqtt.broker.logLevel }}
             - name: MY_POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: MF_MQTT_INSTANCE_ID
+            - name: MG_MQTT_INSTANCE_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: DOCKER_VERNEMQ_LOG__CONSOLE__LEVEL
               value: {{ default .Values.defaults.logLevel .Values.mqtt.broker.logLevel }}
-            - name: MF_MQTT_VERNEMQ_GRPC_POOL_SIZE
+            - name: MG_MQTT_VERNEMQ_GRPC_POOL_SIZE
               value: "1000"
             - name: DOCKER_VERNEMQ_ALLOW_ANONYMOUS
               value: "on"
@@ -101,9 +107,6 @@ spec:
               value: "127.0.0.1:1883"
             - name: DOCKER_VERNEMQ_LISTENER__WS__LOCALHOST
               value: "127.0.0.1:8080"
-          image: "{{ default .Values.defaults.image.repository .Values.mqtt.broker.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.broker.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.broker.image.pullPolicy }}
-          name: {{ .Release.Name }}-broker-mqtt
           ports:
             - containerPort: 1883
               protocol: TCP
@@ -161,8 +164,8 @@ spec:
             timeoutSeconds: 5
           #adapter
         - name: {{ .Release.Name }}-adapter-mqtt
-          image: "{{ default .Values.defaults.image.repository .Values.mqtt.adapter.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.adapter.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.adapter.image.imagePullPolicy}}
+          image: "{{ default (printf "%s/mqtt" .Values.defaults.image.rootRepository) .Values.mqtt.adapter.image.repository }}:{{ default .Values.defaults.image.tag .Values.mqtt.adapter.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.mqtt.adapter.image.pullPolicy}}
           ports:
           - containerPort: {{ .Values.mqtt.adapter.mqttPort }}
             protocol: TCP
@@ -171,33 +174,31 @@ spec:
           stdin: true
           tty: true
           env:
-            - name: MF_MQTT_ADAPTER_LOG_LEVEL
+            - name: MG_MQTT_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.mqtt.adapter.logLevel }}
-            - name: MF_MQTT_ADAPTER_MQTT_PORT
-              value: "{{ .Values.mqtt.adapter.mqttPort }}"
-            - name: MF_MQTT_ADAPTER_WS_PORT
-              value: "{{ .Values.mqtt.adapter.wsPort }}"
-            - name: MF_MQTT_ADAPTER_ES_URL
-              value: {{ .Release.Name }}-redis-streams-master:{{ .Values.mqtt.redisESPort }}
-            - name: MF_BROKER_URL
-              value: nats://{{ .Release.Name }}-nats-client:{{ .Values.defaults.natsPort }}
-            - name: MF_THINGS_AUTH_GRPC_URL
+            - name: MG_MQTT_ADAPTER_MQTT_PORT
+              value: {{ .Values.mqtt.adapter.mqttPort | quote }}
+            - name: MG_MQTT_ADAPTER_WS_PORT
+              value: {{ .Values.mqtt.adapter.wsPort | quote }}
+            - name: MG_MESSAGE_BROKER_URL
+              value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
+            - name: MG_THINGS_AUTH_GRPC_URL
               value:  {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
-            - name: MF_JAEGER_URL
-              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
-            - name: MF_MQTT_ADAPTER_MQTT_TARGET_HOST
+            - name: MG_JAEGER_URL
+              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+            - name: MG_MQTT_ADAPTER_MQTT_TARGET_HOST
               value: localhost
-            - name: MF_MQTT_ADAPTER_MQTT_TARGET_PORT
-              value: "{{ .Values.mqtt.broker.mqttPort }}"
-            - name: MF_MQTT_ADAPTER_WS_TARGET_HOST
+            - name: MG_MQTT_ADAPTER_MQTT_TARGET_PORT
+              value: {{ .Values.mqtt.broker.mqttPort | quote }}
+            - name: MG_MQTT_ADAPTER_WS_TARGET_HOST
               value: localhost
-            - name: MF_MQTT_ADAPTER_WS_TARGET_PORT
-              value: "{{ .Values.mqtt.broker.wsPort }}"
-            - name: MF_MQTT_ADAPTER_THINGS_TIMEOUT
+            - name: MG_MQTT_ADAPTER_WS_TARGET_PORT
+              value: {{ .Values.mqtt.broker.wsPort | quote }}
+            - name: MG_MQTT_ADAPTER_THINGS_TIMEOUT
               value: "15"
-            - name: MF_AUTH_CACHE_URL
-              value: {{ .Release.Name }}-redis-auth-master:{{ .Values.mqtt.redisCachePort }}
-            - name: MF_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK
+            - name: MG_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
+            - name: MG_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK
               value: http://localhost:8888/health
           livenessProbe:
             failureThreshold: 3

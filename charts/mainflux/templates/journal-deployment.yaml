@@ -1,0 +1,78 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-journal
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: journal
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.journal.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: journal
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.journal.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-journal
+          image: "{{ default (printf "%s/journal" .Values.defaults.image.rootRepository) .Values.journal.image.repository }}:{{ default .Values.defaults.image.tag .Values.journal.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.journal.image.pullPolicy }}
+          env:
+            - name: MG_JAEGER_URL
+              value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
+            - name: MG_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.journal.jaegerTraceRatio | quote  }}
+            - name: MG_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.journal.sendTelemetry | quote  }}
+            - name: MG_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
+            - name: MG_JOURNAL_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.journal.logLevel  | quote }}
+            - name: MG_JOURNAL_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_JOURNAL_HTTP_PORT
+              value: {{ .Values.journal.httpPort  | quote  }}
+            - name : MG_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: MG_JOURNAL_HOST
+            {{- if .Values.postgresqljournal.enabled }}
+              value: "{{ .Release.Name }}-postgresqljournal"
+            {{- else }}
+              value: {{ .Values.postgresqljournal.host | quote }}
+            {{- end }}
+            - name: MG_JOURNAL_PORT
+              value: {{ .Values.postgresqljournal.port  | quote }}
+            - name: MG_JOURNAL_NAME
+              value: {{ .Values.postgresqljournal.database | quote }}
+            - name: MG_JOURNAL_USER
+              value: {{ .Values.postgresqljournal.username | quote }}
+            - name: MG_JOURNAL_PASS
+              value: {{ .Values.postgresqljournal.password | quote }}
+          ports:
+            - containerPort: {{ .Values.journal.httpPort }}
+              protocol: TCP
+      {{- with .Values.journal.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.journal.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.journal.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,4 +1,4 @@
-# Copyright (c) Mainflux
+# Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
 {{- if .Values.certs.enabled }}
@@ -21,76 +21,64 @@ spec:
         app: {{ .Release.Name }}
         component: certs
     spec:
-      containers:
-        - env:
-            - name: MF_CERTS_LOG_LEVEL
-              value: {{ default .Values.defaults.logLevel .Values.certs.logLevel }}
-            - name: MF_JAEGER_URL
-              value: {{ .Release.Name }}-jaeger-operator-jaeger-agent:{{ .Values.defaults.jaegerPort }}
-            - name: MF_CERTS_DB_HOST
-            {{- if .Values.postgresqlcerts.enabled }}
-              value: {{ .Release.Name }}-postgresqlcerts
-            {{- else }}
-              value: {{ .Values.postgresqlcerts.postgresqlHost | quote }}
-            {{- end }}
-            - name: MF_CERTS_DB
-              value: {{ .Values.postgresqlcerts.postgresqlDatabase | quote }}
-            - name: MF_CERTS_DB_PASS
-              value: {{ .Values.postgresqlcerts.postgresqlPassword | quote }}
-            - name: MF_CERTS_DB_PORT
-              value: "{{ .Values.certs.dbPort }}"
-            - name: MF_CERTS_DB_USER
-              value: {{ .Values.postgresqlcerts.postgresqlUsername | quote }}
-            - name: MF_CERTS_DB_SSL_MODE
-              value: disable
-            - name: MF_CERTS_DB_SSL_CERT
-              value: disable
-            - name: MF_CERTS_DB_SSL_KEY
-              value: disable
-            - name: MF_CERTS_DB_SSL_ROOT_CERT
-              value: disable
-            - name: MF_CERTS_ENCRYPT_KEY
-              value: {{ index .Values "certs" "encryptKey" }}
-            - name: MF_CERTS_CLIENT_TLS
-              value: {{ index .Values "certs" "clientTLS" }}
-            - name: MF_CERTS_SERVER_CERT
-              value: {{ index .Values "certs" "serverCert" }}
-            - name: MF_CERTS_SERVER_KEY
-              value: {{ index .Values "certs" "serverKey" }}
-            - name: MF_CERTS_HTTP_PORT
-              value: "{{ .Values.certs.httpPort }}"
-            - name: MF_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
-            - name: MF_SDK_BASE_URL
-              value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
-            - name: MF_SDK_THINGS_PREFIX
-              value: {{ index .Values "certs" "sdkThingsPrefix" }}
-            - name: MF_CERTS_SIGN_CA_PATH
-              value: {{ index .Values "certs" "signCAPath" }}
-            - name: MF_CERTS_SIGN_CA_KEY_PATH
-              value: {{ index .Values "certs" "signCAKeyPath" }}
-            - name: MF_CERTS_SIGN_HOURS_VALID
-              value: {{ index .Values "certs" "signHoursValid" }}
-            - name: MF_CERTS_SIGN_RSA_BITS
-              value: "{{ .Values.certs.signRSABits }}"
-            - name: MF_CERTS_VAULT_TOKEN
-              value: {{ index .Values "certs" "signVaultToken" }}
-            - name: MF_CERTS_VAULT_HOST
-              value: {{ index .Values "certs" "signVaultHost" }}
-            - name: MF_CERTS_VAULT_PKI_PATH
-              value: {{ index .Values "certs" "signVaultPKIPath" }}
-            - name: MF_CERTS_VAULT_ROLE
-              value: {{ index .Values "certs" "signVaultRole" }}
-          image: "{{ default .Values.defaults.image.repository .Values.certs.image.repository }}/certs:{{ default .Values.defaults.image.tag .Values.certs.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.certs.image.pullPolicy }}
-          name: {{ .Release.Name }}-certs
-          ports:
-            - containerPort: {{ .Values.certs.httpPort }}
-              protocol: TCP
-      {{- with .Values.defaults.image.imagePullSecrets }}
+      {{- with (default .Values.defaults.image.pullSecrets .Values.certs.image.pullSecrets) }}
       imagePullSecrets:
-        {{- toYaml . | nindent 12 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-certs
+          image: "{{ default (printf "%s/certs" .Values.defaults.image.rootRepository) .Values.certs.image.repository }}:{{ default .Values.defaults.image.tag .Values.certs.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.certs.image.pullPolicy }}
+          env:
+            - name: MG_JAEGER_URL
+              value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
+            - name: MG_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.certs.jaegerTraceRatio | quote }}
+            - name: MG_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.certs.sendTelemetry | quote }}
+            - name: MG_CERTS_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.certs.logLevel | quote }}
+            - name: MG_CERTS_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_CERTS_HTTP_PORT
+              value: {{ .Values.certs.httpPort | quote }}
+            - name: MG_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: MG_THINGS_URL
+              value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
+            - name: MG_CERTS_DB_HOST
+            {{- if .Values.postgresqlcerts.enabled }}
+              value: {{ .Release.Name }}-postgresqlcerts
+            {{- else }}
+              value: {{ .Values.postgresqlcerts.host | quote }}
+            {{- end }}
+            - name: MG_CERTS_DB_PORT
+              value: {{ .Values.postgresqlcerts.port | quote }}
+            - name: MG_CERTS_DB_NAME
+              value: {{ .Values.postgresqlcerts.database | quote }}
+            - name: MG_CERTS_DB_USER
+              value: {{ .Values.postgresqlcerts.username | quote }}
+            - name: MG_CERTS_DB_PASS
+              value: {{ .Values.postgresqlcerts.password | quote }}
+            - name: MG_CERTS_SIGN_CA_PATH
+              value: {{ .Values.certs.signCAPath }}
+            - name: MG_CERTS_SIGN_CA_KEY_PATH
+              value: {{ .Values.certs.signCAKeyPath }}
+            - name: MG_CERTS_VAULT_HOST
+              value: {{ .Values.certs.vault.url | quote }}
+            - name:  MG_CERTS_VAULT_APPROLE_ROLEID
+              value: {{ .Values.certs.vault.approleRoleid | quote }}
+            - name: MG_CERTS_VAULT_APPROLE_SECRET
+              value: {{ .Values.certs.vault.approleSecret | quote }}
+            - name: MG_CERTS_VAULT_NAMESPACE
+              value: {{ .Values.certs.vault.namespace | quote }}
+            - name: MG_CERTS_VAULT_THINGS_CERTS_PKI_PATH
+              value: {{ .Values.certs.vault.thingsCertsPkiPath | quote }}
+            - name: MG_CERTS_VAULT_THINGS_CERTS_PKI_ROLE_NAME
+              value: {{ .Values.certs.vault.thingsCertsPkiRoleName | quote }}
+          ports:
+            - containerPort: {{ .Values.certs.httpPort }}
+              protocol: TCP
 {{- end }}

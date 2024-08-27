@@ -4,12 +4,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-users
+  name: {{ .Release.Name }}-journal
 spec:
   selector:
     app: {{ .Release.Name }}
-    component: users
+    component: journal
   ports:
     - protocol: TCP
-      port: {{ .Values.users.httpPort }}
-      name: {{ .Release.Name }}-users-http
+      port: {{ .Values.journal.httpPort }}
+      name: {{ .Release.Name }}-journal-http

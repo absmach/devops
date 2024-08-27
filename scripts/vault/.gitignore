@@ -1,0 +1,6 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+data
+magistrala_things_certs_issue.hcl
+.env
