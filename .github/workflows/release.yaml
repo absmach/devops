@@ -39,4 +39,3 @@ jobs:
           config: cr.yaml
         env:
           CR_TOKEN: "${{ secrets.HELM_RELEASE_TOKEN }}" # The GitHub token of this repository (${{ secrets.GITHUB_TOKEN }})
-
