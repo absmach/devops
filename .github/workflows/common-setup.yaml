@@ -1,0 +1,33 @@
+# Copyright (c) Magistrala
+# SPDX-License-Identifier: Apache-2.0
+
+name: Common Setup
+
+on:
+  workflow_call:
+    inputs:
+      run-tests:
+        required: false
+        type: boolean
+
+jobs:
+  common-steps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: v3.15.4
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - uses: actions/setup-python@v5
+        if: ${{ inputs.run-tests == true }}
+        with:
+          python-version: '3.x'
+          check-latest: true

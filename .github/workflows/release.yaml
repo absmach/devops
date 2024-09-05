@@ -11,26 +11,17 @@ on:
 jobs:
   release:
     permissions:
-      contents: write # to push chart release and create a release (helm/chart-releaser-action)
+      contents: write
 
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Call Common Steps
+        uses: ./.github/workflows/common.yaml
 
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      - name: Install Helm
-        uses: azure/setup-helm@v4.2.0
-        with:
-          version: v3.15.4
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Add Dependencies
         run: |
@@ -47,4 +38,5 @@ jobs:
           charts_dir: charts/magistrala
           config: cr.yaml
         env:
-          CR_TOKEN: "${{ secrets.HELM_RELEASE_TOKEN }}" # The GitHub token of this repository (${{ secrets.GITHUB_TOKEN }})
+          CR_TOKEN: "${{ secrets.HELM_RELEASE_TOKEN }}"
+
