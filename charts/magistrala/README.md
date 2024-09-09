@@ -1,6 +1,6 @@
 # Magistrala Helm Chart
 
-Helm Chart for the Magistrala IoT Platform
+Helm Chart for the Magistrala IoT Platform.
 
 ## Prerequisites
 
@@ -15,6 +15,48 @@ Helm Chart for the Magistrala IoT Platform
 - If using the mTLS setup:
   - Certificate/Key installed as**TLS secret**
   - Intermediate certificate installed as**Generic secret**
+
+## Adding the Helm Repository
+
+The Helm charts are published via GitHub Pages. To add the repository to your Helm configuration, run the following command:
+
+```bash
+helm repo add devops-charts https://absmach.github.io/devops/
+```
+
+Update your local Helm repository cache to fetch the latest charts:
+
+```bash
+helm repo update
+```
+
+## Installing the Chart
+
+Once the repository is added, you can install the chart using Helm. Replace `<release-name>` with your desired release name:
+
+```bash
+helm install <release-name> devops-charts/magistrala
+```
+
+This command will install the `magistrala` chart from the GitHub Pages-hosted Helm repository.
+
+## Upgrading the Chart
+
+To upgrade the chart with a new version or updated configuration, use the following command:
+
+```bash
+helm upgrade <release-name> devops-charts/magistrala
+```
+
+This ensures that your deployment uses the latest version of the chart while retaining any custom configurations.
+
+## Uninstalling the Chart
+
+To uninstall the chart and release, run:
+
+```bash
+helm uninstall <release-name>
+```
 
 ## Configuration
 
@@ -145,7 +187,7 @@ The following table lists the configurable parameters and their default values.
 | influxdb.writer.httpPort                  | InfluxDB writer HTTP port                                                  | 9006                 |
 | influxdb.reader.httpPort                  | InfluxDB reader HTTP port                                                  | 9005                 |
 | influxdb.backup.enabled                   | Enable InfluxDB backup                                                     | false                |
-| influxdb.backup.cronjob.schedule          | Crontab style time schedule for backup execution                           | "0 2 * * *"          |
+| influxdb.backup.cronjob.schedule          | Crontab style time schedule for backup execution                           | "0 2 \* \* \*"       |
 | adapter_opcua.enabled                     | Enable OPC-UA adapter                                                      | false                |
 | adapter_opcua.httpPort                    | OPC-UA adapter HTTP port                                                   | 8188                 |
 | adapter_opcua.redisRouteMapPort           | OPC-UA adapter Redis Auth Cache port                                       | 6379                 |
@@ -160,8 +202,8 @@ The following table lists the configurable parameters and their default values.
 | notifier_smtp.enabled                     | Enable SMTP notifier                                                       | false                |
 | notifier_smtp.emailHost                   | SMTP host                                                                  | false                |
 | notifier_smtp.smtpPort                    | SMTP port                                                                  | false                |
-| notifier_smtp.fromName                    | SMTP notifier `from` name                                                | false                |
-| notifier_smtp.fromEmail                   | SMTP `from` email address                                                | false                |
+| notifier_smtp.fromName                    | SMTP notifier `from` name                                                  | false                |
+| notifier_smtp.fromEmail                   | SMTP `from` email address                                                  | false                |
 | notifier_smtp.username                    | SMTP username                                                              | false                |
 | notifier_smtp.password                    | SMTP password                                                              | false                |
 | notifier_smtp.secret                      | SMTP secret                                                                | false                |
