@@ -1,6 +1,6 @@
 # Magistrala Helm Chart
 
-Helm Chart for the Magistrala IoT Platform
+Helm Chart for the Magistrala IoT Platform.
 
 ## Prerequisites
 
