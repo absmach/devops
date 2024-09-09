@@ -1,6 +1,6 @@
 ## DevOps
 
-DevOps scripts for Magistrala IoT platform.
+DevOps scripts for Magistrala IoT platform
 
 ## Install
 
