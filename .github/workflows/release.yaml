@@ -38,11 +38,8 @@ jobs:
           helm repo add hashicorp https://helm.releases.hashicorp.com
           helm repo add nats https://nats-io.github.io/k8s/helm/charts/
           helm repo update
-        
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
-        with:
-          charts_dir: charts/magistrala
-          config: cr.yaml
         env:
           CR_TOKEN: "${{ secrets.HELM_RELEASE_TOKEN }}"
