@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - master
+  pull_request:
 
 jobs:
   release:
@@ -39,4 +40,3 @@ jobs:
           config: cr.yaml
         env:
           CR_TOKEN: "${{ secrets.HELM_RELEASE_TOKEN }}"
-
