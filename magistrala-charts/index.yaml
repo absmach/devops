@@ -3,7 +3,7 @@ entries:
   magistrala:
   - apiVersion: v2
     appVersion: 0.12.1
-    created: "2024-09-09T15:18:03.552764713+03:00"
+    created: "2024-09-09T15:33:59.826830907+03:00"
     dependencies:
     - name: nats
       repository: '@nats'
@@ -86,4 +86,4 @@ entries:
     urls:
     - https://absmach.github.io/devops/magistrala-charts/magistrala-1.0.3.tgz
     version: 1.0.3
-generated: "2024-09-09T15:18:03.483419433+03:00"
+generated: "2024-09-09T15:33:59.785670689+03:00"
