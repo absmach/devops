@@ -52,7 +52,7 @@ jobs:
       - name: Run chart-testing (lint)
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-          ct lint --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts
+          ct lint --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts/magistrala/charts
 
       - name: Create kind cluster
         if: steps.list-changed.outputs.changed == 'true'
@@ -61,4 +61,4 @@ jobs:
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-          ct install --target-branch ${{ github.event.repository.default_branch }} --all
+          ct install --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts/magistrala/charts
