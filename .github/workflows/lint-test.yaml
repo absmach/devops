@@ -19,7 +19,7 @@ jobs:
         with:
           version: v3.15.4
 
-      - name: Add Helm dependencies
+      - name: Add Helm repositories and update
         run: |
           helm repo add nats https://nats-io.github.io/k8s/helm/charts/
           helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
@@ -27,6 +27,12 @@ jobs:
           helm repo add hashicorp https://helm.releases.hashicorp.com
           helm repo update
 
+      - name: Update Helm dependencies
+        run: |
+          helm dependency update charts/magistrala
+
+      # Python is required because `ct lint` runs Yamale (https://github.com/23andMe/Yamale) and
+      # yamllint (https://github.com/adrienverge/yamllint) which require Python
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
