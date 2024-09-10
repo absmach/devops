@@ -19,6 +19,14 @@ jobs:
         with:
           version: v3.15.4
 
+      - name: Add Helm dependencies
+        run: |
+          helm repo add nats https://nats-io.github.io/k8s/helm/charts/
+          helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add hashicorp https://helm.releases.hashicorp.com
+          helm repo update
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
