@@ -46,7 +46,7 @@ jobs:
       - name: Run chart-testing (lint)
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-          ct lint --remote https://github.com/absmach/devops --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts --check-version-increment true
+          ct lint --remote https://github.com/absmach/devops/tree --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts --check-version-increment true
 
       - name: Create kind cluster
         if: steps.list-changed.outputs.changed == 'true'
@@ -55,4 +55,4 @@ jobs:
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-          ct install --remote https://github.com/absmach/devops --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts
+          ct install --remote https://github.com/absmach/devops/tree --target-branch ${{ github.event.repository.default_branch }} --chart-dirs charts
