@@ -48,7 +48,7 @@ This ensures that your Helm client is aware of the latest available versions of 
 
 ### Step 4: Update Chart Dependencies
 
-If your Helm chart has dependencies specified in `Chart.yaml`, you need to resolve and download them by running:
+Since the Helm chart has dependencies specified in `Chart.yaml`, you need to resolve and download them by running:
 
 ```bash
 helm dependency update charts/magistrala
@@ -64,7 +64,7 @@ To install the Magistrala chart, run:
 helm install my-magistrala magistrala-devops/magistrala --version 1.0.6
 ```
 
-- `my-magistrala`: Choose a release name for the installation.
+- `my-magistrala`: release name for the installation. You can use any name of your choice
 - `magistrala-devops/magistrala`: Refers to the chart in the added repository.
 - `--version 1.0.6`: Installs version 1.0.6 of the chart.
 
