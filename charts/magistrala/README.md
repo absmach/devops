@@ -1,8 +1,8 @@
 # magistrala
 
-![Version: 1.0.6](https://img.shields.io/badge/Version-1.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.14.0](https://img.shields.io/badge/AppVersion-0.14.0-informational?style=flat-square)
-
 Magistrala IoT Platform
+
+![Version: 1.0.6](https://img.shields.io/badge/Version-1.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.14.0](https://img.shields.io/badge/AppVersion-0.14.0-informational?style=flat-square)
 
 **Homepage:** <https://abstractmachines.fr/magistrala.html>
 
@@ -309,4 +309,3 @@ Magistrala IoT Platform
 | users.secretKey | string | `"secretKey"` |  |
 | users.tokenResetEndpoint | string | `"/reset-request"` |  |
 | vault.enabled | bool | `false` |  |
-
