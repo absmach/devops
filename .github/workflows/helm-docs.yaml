@@ -6,6 +6,6 @@ jobs:
   update-chart-metadata:    
     runs-on: ubuntu-latest    
     steps:      
-      - uses: actions/checkout@v3      
-      - uses: gabe565/setup-helm-docs-action@v1      
+      - uses: actions/checkout@v4      
+      - uses: gabe565/setup-helm-docs-action@v1.0.4      
       - run: helm-docs
