@@ -1,14 +1,30 @@
-name: Update Chart Metadata
+# Copyright (c) Magistrala
+# SPDX-License-Identifier: Apache-2.0
+
+name: Generate Helm Docs
 
 on:
   pull_request:
     branches:
       - '*'
 
-jobs:  
-  update-chart-metadata:    
-    runs-on: ubuntu-latest    
-    steps:      
-      - uses: actions/checkout@v4      
-      - uses: gabe565/setup-helm-docs-action@v1.0.4      
-      - run: helm-docs
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Generate Helm Docs
+        uses: losisin/helm-docs-github-action@v1.3.1
+        with:
+          chart-search-root: "charts/magistrala"
+          values-file: "values.yaml"
+          output-file: "README.md"
+          template-files: "README.md.gotmpl"
+          git-push: false
+          fail-on-diff: true
