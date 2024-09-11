@@ -1,12 +1,9 @@
-# Copyright (c) Magistrala
-# SPDX-License-Identifier: Apache-2.0
-
 name: Generate Helm Docs
 
 on:
   pull_request:
     branches:
-      - '*'
+      - '*'  # Run on all pull requests
 
 jobs:
   generate-docs:
@@ -28,3 +25,11 @@ jobs:
           template-files: "README.md.gotmpl"
           git-push: false
           fail-on-diff: true
+
+      # Show the output of the README.md file after it's generated
+      - name: Show README.md content
+        run: cat charts/magistrala/README.md
+
+      # Show the diff between the current README and the generated one (if fail-on-diff: true fails)
+      - name: Show README diff
+        run: git diff charts/magistrala/README.md
