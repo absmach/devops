@@ -23,7 +23,7 @@ jobs:
         uses: losisin/helm-docs-github-action@v1.3.1
         with:
           chart-search-root: "charts/magistrala"
-          values-file: "charts/magistrala/values.yaml"
+          values-file: "values.yaml"
           output-file: "README.md"
           template-files: "README.md.gotmpl"
           git-push: true
