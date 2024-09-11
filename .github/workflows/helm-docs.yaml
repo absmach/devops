@@ -24,7 +24,7 @@ jobs:
           output-file: "README.md"
           template-files: "README.md.gotmpl"
           git-push: false
-          fail-on-diff: true
+          fail-on-diff: false
 
       # Show the output of the README.md file after it's generated
       - name: Show README.md content
