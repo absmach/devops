@@ -1,9 +1,12 @@
+# Copyright (c) Magistrala
+# SPDX-License-Identifier: Apache-2.0
+
 name: Generate Helm Docs
 
 on:
-  pull_request:
+  push:
     branches:
-      - '*'  # Run on all pull requests
+      - master
 
 jobs:
   generate-docs:
@@ -12,8 +15,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref }}
           fetch-depth: 0
 
       - name: Generate Helm Docs
@@ -25,4 +28,3 @@ jobs:
           template-files: "README.md.gotmpl"
           git-push: false
           fail-on-diff: true
-
