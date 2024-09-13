@@ -20,6 +20,7 @@ jobs:
           fetch-depth: 0
 
       - name: Generate Helm Docs
+        id: helm-docs
         uses: losisin/helm-docs-github-action@v1.3.1
         with:
           chart-search-root: "charts/magistrala"
@@ -30,4 +31,7 @@ jobs:
           fail-on-diff: true
 
       - name: Show README diff
-        run: git diff charts/magistrala/README.md
+        if: failure()  # Run only if the Helm Docs generation step fails
+        run: |
+          echo "README.md changes detected. Showing diff:"
+          git diff charts/magistrala/README.md || echo "No git diff available."
