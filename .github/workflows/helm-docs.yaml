@@ -28,3 +28,6 @@ jobs:
           template-files: "README.md.gotmpl"
           git-push: false
           fail-on-diff: true
+
+      - name: Show README diff
+        run: git diff charts/magistrala/README.md
