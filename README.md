@@ -35,12 +35,12 @@ helm search repo [keyword] [flags]
 To install the Magistrala chart, run the following command:
 
 ```bash
-helm install my-magistrala magistrala-devops/magistrala --version 1.0.5
+helm install my-magistrala magistrala-devops/magistrala --version 0.14.0
 ```
 
 - `my-magistrala` is the release name you choose for the installation. You can modify this to suit your needs.
 - `magistrala-devops/magistrala` specifies the chart name from the added repository.
-- `--version 1.0.5` ensures you install the specific version of the chart.
+- `--version 0.14.0` ensures you install the specific version of the chart.
 
 You can also add additional flags as needed, such as specifying a custom `values.yaml` file, enabling debugging, or overriding values directly in the command.
 
