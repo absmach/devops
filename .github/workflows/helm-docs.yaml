@@ -14,10 +14,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository }}
-          ref: ${{ github.ref }}
-          fetch-depth: 0
 
       - name: Generate Helm Docs
         id: helm-docs
@@ -31,7 +27,5 @@ jobs:
           fail-on-diff: true
 
       - name: Show README diff
-        if: failure()  # Run only if the Helm Docs generation step fails
-        run: |
-          echo "README.md changes detected. Showing diff:"
-          git diff charts/magistrala/README.md || echo "No git diff available."
+        if: failure() && steps.helm-docs.outcome == 'failure'
+        run: git diff charts/magistrala/README.md || echo "No git diff available."
