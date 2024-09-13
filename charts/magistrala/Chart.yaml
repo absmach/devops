@@ -6,8 +6,8 @@ name: magistrala
 description: Magistrala IoT Platform
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
-version: "latest" # The chart version should ideally be aligned with the app version, but for now we are using 'latest' for convenience.
-appVersion: "latest" # The application version. This should be updated when the app is modified.
+version: "o.14.0" # The chart version should ideally be aligned with the app version, but for now we are using 'latest' for convenience.
+appVersion: "0.14.0" # The application version. This should be updated when the app is modified.
 home: https://abstractmachines.fr/magistrala.html
 sources:
   - https://hub.docker.com/u/magistrala
