@@ -393,7 +393,7 @@ postgresqlbootstrap:
           postgresql: *postgresqlBootstrapPort
 
 certs:
-  enabled: false
+  enabled: true
   image: {}
     # pullSecrets: {}
     # repository: "magistrala/certs"
@@ -414,7 +414,7 @@ certs:
     thingsCertsPkiRoleName: ""
 
 vault:
-  enabled: false
+  enabled: true
 
 postgresqlcerts:
   ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
