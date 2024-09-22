@@ -360,10 +360,10 @@ bootstrap:
     pullSecrets: {}
     repository: "magistrala/bootstrap"
     tag: "latest"
-    pullPolicy: "Always"
+    pullPolicy: "IfNotPresent"
   jaegerTraceRatio: 10
   sendTelemetry: true
-  logLevel: "debug"
+  logLevel: "info"
   httpPort: 9013
   redisESPort: 6379
   encKey: "randomstring"
