@@ -406,12 +406,12 @@ certs:
   signCAPath: "/etc/ssl/certs/ca.crt"
   signCAKeyPath: "/etc/ssl/certs/ca.key"
   vault:
-    url: ""
-    approleRoleid: ""
-    approleSecret: ""
-    namespace: ""
-    thingsCertsPkiPath: ""
-    thingsCertsPkiRoleName: ""
+    url: "http://magistrala-vault:8200"
+    approleRoleid: magistrala
+    approleSecret: magistrala
+    namespace: magistrala
+    thingsCertsPkiPath: pki_int
+    thingsCertsPkiRoleName: magistrala_things_certs
 
 vault:
   enabled: true
