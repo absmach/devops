@@ -10,8 +10,7 @@ defaults:
     pullPolicy: "IfNotPresent"
     rootRepository: "magistrala"
     tag: "latest"
-    # pullSecrets:
-    #   - {}
+    # pullSecrets: {}
   # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
   replicaCount: 3
   natsPort: 4222
@@ -356,15 +355,15 @@ redis-things:
   usePassword: false
 
 bootstrap:
-  image: {}
-    # pullSecrets: {}
-    # repository: "magistrala/bootstrap"
-    # tag: "latest"
-    # pullPolicy: "IfNotPresent"
-  # jaegerTraceRatio: 10
-  # sendTelemetry: true
-  # logLevel: "info"
   enabled: true
+  image:
+    pullSecrets: {}
+    repository: "magistrala/bootstrap"
+    tag: "latest"
+    pullPolicy: "Always"
+  jaegerTraceRatio: 10
+  sendTelemetry: true
+  logLevel: "debug"
   httpPort: 9013
   redisESPort: 6379
   encKey: "randomstring"
@@ -567,7 +566,7 @@ ui:
     # repository: "magistrala/ui"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-  # logLevel: "info"
+    # logLevel: "info"
   # hostname: ""
   # contentTypes: "application/senml+json"
   port: 9095
@@ -582,7 +581,6 @@ ui:
   # invitationsUrl: "http:///magistrala-auth:9020"
   # journalUrl: "http:///magistrala-auth:9021"
   # domainsUrl: "http://magistrala-auth:8189"
-  # bootstrapUrl: "http://magistrala-boostrap:9013"
   googleClientID: ""
   googleClientSecret: ""
   googleRedirectHostname: "https://stage-domain-name"
