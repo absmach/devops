@@ -10,7 +10,7 @@ Magistrala IoT Platform
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| drasko | <draasko.draskovic@abstractmachines.fr> |  |
+| drasko | <drasko.draskovic@abstractmachines.fr> |  |
 | dusan | <dusan.borovcanin@abstractmachines.fr> |  |
 
 ## Source Code
@@ -60,26 +60,32 @@ Magistrala IoT Platform
 | bootstrap.encKey | string | `"randomstring"` |  |
 | bootstrap.eventConsumerName | string | `"EventConsumerByBootstrap"` |  |
 | bootstrap.httpPort | int | `9013` |  |
-| bootstrap.image | object | `{}` |  |
+| bootstrap.image.pullPolicy | string | `"IfNotPresent"` |  |
+| bootstrap.image.pullSecrets | object | `{}` |  |
+| bootstrap.image.repository | string | `"magistrala/bootstrap"` |  |
+| bootstrap.image.tag | string | `"latest"` |  |
+| bootstrap.jaegerTraceRatio | float | `1` |  |
+| bootstrap.logLevel | string | `"info"` |  |
 | bootstrap.redisESPort | int | `6379` |  |
-| certs.enabled | bool | `false` |  |
+| bootstrap.sendTelemetry | bool | `true` |  |
+| certs.enabled | bool | `true` |  |
 | certs.httpPort | int | `9019` |  |
 | certs.image | object | `{}` |  |
 | certs.logLevel | string | `"info"` |  |
 | certs.signCAKeyPath | string | `"/etc/ssl/certs/ca.key"` |  |
 | certs.signCAPath | string | `"/etc/ssl/certs/ca.crt"` |  |
-| certs.vault.approleRoleid | string | `""` |  |
-| certs.vault.approleSecret | string | `""` |  |
-| certs.vault.namespace | string | `""` |  |
-| certs.vault.thingsCertsPkiPath | string | `""` |  |
-| certs.vault.thingsCertsPkiRoleName | string | `""` |  |
-| certs.vault.url | string | `""` |  |
+| certs.vault.approleRoleid | string | `"magistrala"` |  |
+| certs.vault.approleSecret | string | `"magistrala"` |  |
+| certs.vault.namespace | string | `"magistrala"` |  |
+| certs.vault.thingsCertsPkiPath | string | `"pki_int"` |  |
+| certs.vault.thingsCertsPkiRoleName | string | `"magistrala_things_certs"` |  |
+| certs.vault.url | string | `"http://magistrala-vault:8200"` |  |
 | defaults.eventStreamURL | string | `"magistrala-nats:4222"` |  |
 | defaults.image.pullPolicy | string | `"IfNotPresent"` |  |
 | defaults.image.rootRepository | string | `"magistrala"` |  |
 | defaults.image.tag | string | `"latest"` |  |
 | defaults.jaegerCollectorPort | int | `4318` |  |
-| defaults.jaegerTraceRatio | int | `10` |  |
+| defaults.jaegerTraceRatio | float | `1` |  |
 | defaults.logLevel | string | `"info"` |  |
 | defaults.natsPort | int | `4222` |  |
 | defaults.replicaCount | int | `3` |  |
@@ -308,4 +314,4 @@ Magistrala IoT Platform
 | users.passwordRegex | string | `"^.{8,}$"` |  |
 | users.secretKey | string | `"secretKey"` |  |
 | users.tokenResetEndpoint | string | `"/reset-request"` |  |
-| vault.enabled | bool | `false` |  |
+| vault.enabled | bool | `true` |  |
