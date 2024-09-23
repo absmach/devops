@@ -15,7 +15,7 @@ defaults:
   replicaCount: 3
   natsPort: 4222
   jaegerCollectorPort: 4318
-  jaegerTraceRatio: 10
+  jaegerTraceRatio: 1.0
   sendTelemetry: true
   eventStreamURL: "magistrala-nats:4222"
 
@@ -234,7 +234,7 @@ auth:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # Log level for the auth service. Common options are "debug", "info", "warn", "error".
-  # jaegerTraceRatio: 10
+  # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   httpPort: 8189
   grpcPort: 8181
@@ -274,7 +274,7 @@ users:
      # repository: "magistrala/users"
      # tag: "latest"
      # pullPolicy: "IfNotPresent"
-  # jaegerTraceRatio: 10
+  # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   # logLevel: "info"
   httpPort: 9002
@@ -361,7 +361,7 @@ bootstrap:
     repository: "magistrala/bootstrap"
     tag: "latest"
     pullPolicy: "IfNotPresent"
-  jaegerTraceRatio: 10
+  jaegerTraceRatio: 1.0
   sendTelemetry: true
   logLevel: "info"
   httpPort: 9013
@@ -399,7 +399,7 @@ certs:
     # repository: "magistrala/certs"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-  # jaegerTraceRatio: 10
+  # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   httpPort: 9019
   logLevel: "info"
@@ -443,7 +443,7 @@ invitations:
     # repository: "magistrala/invitations"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-  # jaegerTraceRatio: 10
+  # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   # logLevel: "info"
   httpPort: 9020
@@ -478,7 +478,7 @@ journal:
     # repository: "magistrala/journal"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-  # jaegerTraceRatio: 10
+  # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   # logLevel: "info"
   httpPort: 9021
@@ -521,7 +521,7 @@ timescaledb:
       # repository: "magistrala/timescale-reader"
       # tag: "latest"
       # pullPolicy: "IfNotPresent"
-    # jaegerTraceRatio: 10
+    # jaegerTraceRatio: 1.0
     # sendTelemetry: true
     # logLevel: "info"
     enabled: true
@@ -535,7 +535,7 @@ timescaledb:
       # repository: "magistrala/timescale-writer"
       # tag: "latest"
       # pullPolicy: "IfNotPresent"
-    # jaegerTraceRatio: 10
+    # jaegerTraceRatio: 1.0
     # sendTelemetry: true
     # logLevel: "info"
     # nodeSelector: {}
