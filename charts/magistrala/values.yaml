@@ -414,7 +414,7 @@ certs:
     thingsCertsPkiRoleName: magistrala_things_certs
 
 vault:
-  enabled: true
+  enabled: false
 
 postgresqlcerts:
   ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
