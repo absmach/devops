@@ -13,7 +13,7 @@ sources:
   - https://hub.docker.com/u/magistrala
 maintainers:
   - name: drasko
-    email: draasko.draskovic@abstractmachines.fr
+    email: drasko.draskovic@abstractmachines.fr
   - name: dusan
     email: dusan.borovcanin@abstractmachines.fr
 

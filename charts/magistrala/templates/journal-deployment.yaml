@@ -47,19 +47,19 @@ spec:
               value: {{ .Values.journal.httpPort  | quote  }}
             - name : MG_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
-            - name: MG_JOURNAL_HOST
+            - name: MG_JOURNAL_DB_HOST
             {{- if .Values.postgresqljournal.enabled }}
               value: "{{ .Release.Name }}-postgresqljournal"
             {{- else }}
               value: {{ .Values.postgresqljournal.host | quote }}
             {{- end }}
-            - name: MG_JOURNAL_PORT
+            - name: MG_JOURNAL_DB_PORT
               value: {{ .Values.postgresqljournal.port  | quote }}
-            - name: MG_JOURNAL_NAME
+            - name: MG_JOURNAL_DB_NAME
               value: {{ .Values.postgresqljournal.database | quote }}
-            - name: MG_JOURNAL_USER
+            - name: MG_JOURNAL_DB_USER
               value: {{ .Values.postgresqljournal.username | quote }}
-            - name: MG_JOURNAL_PASS
+            - name: MG_JOURNAL_DB_PASS
               value: {{ .Values.postgresqljournal.password | quote }}
           ports:
             - containerPort: {{ .Values.journal.httpPort }}
