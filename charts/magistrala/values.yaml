@@ -58,7 +58,22 @@ jaeger:
   allInOne:
     enabled: false
   storage:
-    type: memory
+    type: cassandra
+  cassandra:
+    persistence:
+      enabled: true
+      storageClass: "do-block-storage"
+      size: 10Gi
+    resources:
+      requests:
+        memory: "4Gi"
+        cpu: "1000m"
+      limits:
+        memory: "6Gi"
+        cpu: "2000m"
+    env:
+      MAX_HEAP_SIZE: "4096M" 
+      HEAP_NEWSIZE: "1024M"
   collector:
     service:
       otlp:
