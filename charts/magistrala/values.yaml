@@ -59,20 +59,29 @@ jaeger:
     enabled: false
   storage:
     type: cassandra
+    cassandra:
+      host: magistrala-cassandra.mg.svc.cluster.local
+      port: 9042
+      schemaJobEnabled: true
+      tls:
+        enabled: false
+      user: cassandra_user
+      usePassword: true
+      password: cassandra_password
+      keyspace: jaeger_v1
   cassandra:
     persistence:
       enabled: true
       storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
       size: 10Gi
-  collector:
-    service:
-      otlp:
-        grpc:
-          name: otlp-grpc
-          port: 4317
-        http:
-          name: otlp-http
-          port: 4318
+    config:
+      cluster_name: jaeger
+      seed_size: 1
+      dc_name: dc1
+      rack_name: rack1
+      endpoint_snitch: GossipingPropertyFileSnitch
 nats:
   config:
     cluster:
