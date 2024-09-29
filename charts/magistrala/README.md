@@ -60,14 +60,8 @@ Magistrala IoT Platform
 | bootstrap.encKey | string | `"randomstring"` |  |
 | bootstrap.eventConsumerName | string | `"EventConsumerByBootstrap"` |  |
 | bootstrap.httpPort | int | `9013` |  |
-| bootstrap.image.pullPolicy | string | `"IfNotPresent"` |  |
-| bootstrap.image.pullSecrets | object | `{}` |  |
-| bootstrap.image.repository | string | `"magistrala/bootstrap"` |  |
-| bootstrap.image.tag | string | `"latest"` |  |
-| bootstrap.jaegerTraceRatio | float | `1` |  |
-| bootstrap.logLevel | string | `"info"` |  |
+| bootstrap.image | object | `{}` |  |
 | bootstrap.redisESPort | int | `6379` |  |
-| bootstrap.sendTelemetry | bool | `true` |  |
 | certs.enabled | bool | `true` |  |
 | certs.httpPort | int | `9019` |  |
 | certs.image | object | `{}` |  |
@@ -327,4 +321,4 @@ Magistrala IoT Platform
 | users.passwordRegex | string | `"^.{8,}$"` |  |
 | users.secretKey | string | `"secretKey"` |  |
 | users.tokenResetEndpoint | string | `"/reset-request"` |  |
-| vault.enabled | bool | `true` |  |
+| vault.enabled | bool | `false` |  |
