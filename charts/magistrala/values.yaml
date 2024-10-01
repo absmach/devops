@@ -58,7 +58,14 @@ jaeger:
   allInOne:
     enabled: false
   storage:
-    type: memory
+    type: cassandra
+  cassandra:
+    persistence:
+      enabled: true
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
+      size: 10Gi
   collector:
     service:
       otlp:
@@ -68,6 +75,7 @@ jaeger:
         http:
           name: otlp-http
           port: 4318
+
 nats:
   config:
     cluster:
@@ -84,7 +92,8 @@ nats:
         maxSize: 2Gi
 
 adapter_coap:
-  image: {}
+  image:
+    {}
     # pullSecrets: {}
     # If your image repository requires authentication, you can specify image pull secrets here.
     # Example:
@@ -138,7 +147,8 @@ adapter_coap:
   #     effect: "NoSchedule"
 
 adapter_http:
-  image: {}
+  image:
+    {}
     # pullSecrets: {}
     # repository: "magistrala/adapter-http"
     # tag: "latest"
@@ -228,7 +238,8 @@ postgresqlspicedb:
 
 auth:
   # logLevel: error
-  image: {}
+  image:
+    {}
     # pullSecrets: {}
     # rootRepository: "magistrala/auth"
     # tag: "latest"
@@ -269,11 +280,12 @@ postgresqlauth:
           postgresql: *postgresqlAuthPort
 
 users:
-  image: {}
-     # pullSecrets: {}
-     # repository: "magistrala/users"
-     # tag: "latest"
-     # pullPolicy: "IfNotPresent"
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "magistrala/users"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   # logLevel: "info"
@@ -312,7 +324,8 @@ postgresqlusers:
           postgresql: *postgresqlUsersPort
 
 things:
-  image: {}
+  image:
+    {}
     # pullSecrets: {}
     # repository: "magistrala/things"
     # tag: "latest"
@@ -356,14 +369,14 @@ redis-things:
 
 bootstrap:
   enabled: true
-  image:
-    pullSecrets: {}
-    repository: "magistrala/bootstrap"
-    tag: "latest"
-    pullPolicy: "IfNotPresent"
-  jaegerTraceRatio: 1.0
-  sendTelemetry: true
-  logLevel: "info"
+  image: {}
+  #   pullSecrets: {}
+  #   repository: "magistrala/bootstrap"
+  #   tag: "latest"
+  #   pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  # logLevel: "info"
   httpPort: 9013
   redisESPort: 6379
   encKey: "randomstring"
@@ -394,7 +407,8 @@ postgresqlbootstrap:
 
 certs:
   enabled: true
-  image: {}
+  image:
+    {}
     # pullSecrets: {}
     # repository: "magistrala/certs"
     # tag: "latest"
@@ -438,7 +452,8 @@ postgresqlcerts:
 
 invitations:
   enabled: true
-  image: {}
+  image:
+    {}
     # pullSecrets: {}
     # repository: "magistrala/invitations"
     # tag: "latest"
@@ -473,7 +488,8 @@ postgresqlinvitations:
 
 journal:
   enabled: true
-  image: {}
+  image:
+    {}
     # pullSecrets: {}
     # repository: "magistrala/journal"
     # tag: "latest"
@@ -516,7 +532,8 @@ timescaledb:
   username: &messagesRwTimescaleUsername magistrala
   password: &messagesRwTimescalePassword magistrala
   reader:
-    image: {}
+    image:
+      {}
       # pullSecrets: {}
       # repository: "magistrala/timescale-reader"
       # tag: "latest"
@@ -525,12 +542,13 @@ timescaledb:
     # sendTelemetry: true
     # logLevel: "info"
     enabled: true
-    http: {port: 9011}
+    http: { port: 9011 }
     # nodeSelector: {}
     # affinity: {}
     # tolerations: {}
   writer:
-    image: {}
+    image:
+      {}
       # pullSecrets: {}
       # repository: "magistrala/timescale-writer"
       # tag: "latest"
@@ -542,7 +560,7 @@ timescaledb:
     # affinity: {}
     # tolerations: {}
     enabled: true
-    http: {port: 9012}
+    http: { port: 9012 }
   ## Configurations of Bitnami postgres
   global:
     postgresql:
@@ -561,7 +579,8 @@ timescaledb:
 
 ui:
   enabled: true
-  image: {}
+  image:
+    {}
     # pullSecrets: {}
     # repository: "magistrala/ui"
     # tag: "latest"
