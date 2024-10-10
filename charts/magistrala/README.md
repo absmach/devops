@@ -2,7 +2,7 @@
 
 Magistrala IoT Platform
 
-![Version: 0.14.1](https://img.shields.io/badge/Version-0.14.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.14.0](https://img.shields.io/badge/AppVersion-0.14.0-informational?style=flat-square)
+![Version: 0.14.2](https://img.shields.io/badge/Version-0.14.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.14.0](https://img.shields.io/badge/AppVersion-0.14.0-informational?style=flat-square)
 
 **Homepage:** <https://abstractmachines.fr/magistrala.html>
 
@@ -95,25 +95,16 @@ Magistrala IoT Platform
 | invitations.image | object | `{}` |  |
 | jaeger.agent.enabled | bool | `false` |  |
 | jaeger.allInOne.enabled | bool | `false` |  |
-| jaeger.cassandra.config.cluster_name | string | `"jaeger"` |  |
-| jaeger.cassandra.config.dc_name | string | `"dc1"` |  |
-| jaeger.cassandra.config.endpoint_snitch | string | `"GossipingPropertyFileSnitch"` |  |
-| jaeger.cassandra.config.rack_name | string | `"rack1"` |  |
-| jaeger.cassandra.config.seed_size | int | `1` |  |
 | jaeger.cassandra.persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | jaeger.cassandra.persistence.enabled | bool | `true` |  |
 | jaeger.cassandra.persistence.size | string | `"10Gi"` |  |
 | jaeger.cassandra.persistence.storageClass | string | `"do-block-storage"` |  |
+| jaeger.collector.service.otlp.grpc.name | string | `"otlp-grpc"` |  |
+| jaeger.collector.service.otlp.grpc.port | int | `4317` |  |
+| jaeger.collector.service.otlp.http.name | string | `"otlp-http"` |  |
+| jaeger.collector.service.otlp.http.port | int | `4318` |  |
 | jaeger.fullnameOverride | string | `"magistrala-jaeger"` |  |
 | jaeger.provisionDataStore.cassandra | bool | `true` |  |
-| jaeger.storage.cassandra.host | string | `"magistrala-cassandra.mg.svc.cluster.local"` |  |
-| jaeger.storage.cassandra.keyspace | string | `"jaeger_v1"` |  |
-| jaeger.storage.cassandra.password | string | `"cassandra_password"` |  |
-| jaeger.storage.cassandra.port | int | `9042` |  |
-| jaeger.storage.cassandra.schemaJobEnabled | bool | `true` |  |
-| jaeger.storage.cassandra.tls.enabled | bool | `false` |  |
-| jaeger.storage.cassandra.usePassword | bool | `true` |  |
-| jaeger.storage.cassandra.user | string | `"cassandra_user"` |  |
 | jaeger.storage.type | string | `"cassandra"` |  |
 | journal.enabled | bool | `true` |  |
 | journal.httpPort | int | `9021` |  |

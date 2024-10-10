@@ -542,7 +542,7 @@ timescaledb:
     # sendTelemetry: true
     # logLevel: "info"
     enabled: true
-    http: { port: 9011 }
+    http: {port: 9011}
     # nodeSelector: {}
     # affinity: {}
     # tolerations: {}
@@ -560,7 +560,7 @@ timescaledb:
     # affinity: {}
     # tolerations: {}
     enabled: true
-    http: { port: 9012 }
+    http: {port: 9012}
   ## Configurations of Bitnami postgres
   global:
     postgresql:
