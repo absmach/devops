@@ -57,6 +57,32 @@ git push origin <your-branch>
 
 Replace `<your-branch>` with the branch you are working on.
 
+### Vault Setup Update
+
+To add the Vault scripts from the `magistrala` repository as a subtree into the `devops` repository, run the following commands:
+
+```bash
+git remote add magistrala https://github.com/absmach/magistrala.git
+git fetch magistrala
+git subtree split --prefix=docker/addons/vault --branch magistrala-vault-split magistrala/main
+git subtree add --prefix=scripts/vault magistrala-vault-split --squash
+git subtree pull --prefix=scripts/vault magistrala docker/addons/vault --squash
+```
+
+Since we have added the `magistrala` Vault directory as a subtree in the `devops` repository, we only include the `docker/addons/vault` directory and its contents in `scripts/vault` directory. We do not include `docker/.env` or other unrelated directories from the `magistrala` repository.
+
+As a result, running the Vault setup scripts from within the `scripts/vault/scripts` directory may throw the following error:
+
+```bash
+scripts/vault/scripts/vault_init.sh: line 36: docker/.env: No such file or directory
+```
+
+This is because the vault scripts from `magistrala` set the default `.env` file path to `docker/.env` but we do not have this directory in our repository structure. To resolve this, you need to explicitly pass the path to the `.env` file when running the Vault scripts, as shown below:
+
+```bash
+scripts/vault/scripts/vault_init.sh --env-file scripts/vault/scripts/.env
+```
+
 ## License
 
 This project is licensed under the [Apache-2.0](LICENSE).
