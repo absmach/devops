@@ -66,7 +66,6 @@ git remote add magistrala https://github.com/absmach/magistrala.git
 git fetch magistrala
 git subtree split --prefix=docker/addons/vault --branch magistrala-vault-split magistrala/main
 git subtree add --prefix=scripts/vault magistrala-vault-split --squash
-git subtree pull --prefix=scripts/vault magistrala docker/addons/vault --squash
 ```
 
 Since we have added the `magistrala` Vault directory as a subtree in the `devops` repository, we only include the `docker/addons/vault` directory and its contents in `scripts/vault` directory. We do not include `docker/.env` or other unrelated directories from the `magistrala` repository.
