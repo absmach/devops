@@ -57,20 +57,6 @@ git push origin <your-branch>
 
 Replace `<your-branch>` with the branch you are working on.
 
-### Running Vault Setup Scripts with `--env-file`
-
-To run a Vault setup script, use the `--env-file` option to specify the path to your `.env` file:
-
-```bash
-./<script-name>.sh --env-file <path-to-your-env-file>
-```
-
-For example:
-
-```bash
-scripts/vault/scripts/vault_init.sh --env-file scripts/vault/.env
-```
-
 ## License
 
 This project is licensed under the [Apache-2.0](LICENSE).
