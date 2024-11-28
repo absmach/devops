@@ -66,7 +66,7 @@ spec:
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.amcerts.image.pullPolicy }}
           env:
             - name: AM_JAEGER_URL
-              value: "http://{{ .Values.magistrala.jaeger.fullnameOverride }}-collector:{{ .Values.magistrala.jaeger.collector.service.otlp.http.port }}/v1/traces"
+              value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
             - name: AM_CERTS_JAEGER_TRACE_RATIO
               value: {{ default .Values.defaults.jaegerTraceRatio .Values.amcerts.jaegerTraceRatio | quote }}
             - name: AM_CERTS_LOG_LEVEL
@@ -80,9 +80,9 @@ spec:
             - name: AM_CERTS_GRPC_PORT
               value: {{ .Values.amcerts.grpcPort | quote }}
             - name: AM_CERTS_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.magistrala.auth.grpcPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: MG_THINGS_URL
-              value: http://{{ .Release.Name }}-things:{{ .Values.magistrala.things.httpPort }}
+              value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
             - name: AM_CERTS_DB_HOST
             {{- if .Values.postgresqlamcerts.enabled }}
               value: {{ .Release.Name }}-postgresqlcerts
@@ -98,9 +98,9 @@ spec:
             - name: AM_CERTS_DB_PASS
               value: {{ .Values.postgresqlamcerts.password | quote }}
             - name: MG_CERTS_SIGN_CA_PATH
-              value: {{ .Values.magistrala.certs.signCAPath }}
+              value: {{ .Values.certs.signCAPath }}
             - name: MG_CERTS_SIGN_CA_KEY_PATH
-              value: {{ .Values.magistrala.certs.signCAKeyPath }}
+              value: {{ .Values.certs.signCAKeyPath }}
           ports:
             - containerPort: {{ .Values.amcerts.httpPort }}
               protocol: TCP
