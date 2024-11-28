@@ -90,6 +90,14 @@ spec:
               value: {{ .Values.postgresqlusers.username | quote }}
             - name: MG_USERS_DB_PASS
               value: {{ .Values.postgresqlusers.password | quote }}
+            - name: MG_USERS_GRPC_HOST
+              value: "0.0.0.0"
+            - name : MG_USERS_GRPC_PORT
+              value: {{ .Values.users.grpcPort | quote }}
+            - name: MG_SPICEDB_HOST
+              value: {{ .Release.Name }}-spicedb
+            - name: MG_SPICEDB_PORT
+              value: {{ .Values.spicedb.grpc.port | quote }}
             - name : MG_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
           ports:
