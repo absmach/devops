@@ -1,0 +1,113 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.amcerts.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-amcerts-config
+data:
+  config.yml: |
+    common_name: "AbstractMachines_Selfsigned_ca"
+    organization:
+      - "AbstractMachines"
+    organizational_unit:
+      - "AbstractMachines_ca"
+    country:
+      - "France"
+    province:
+      - "Paris"
+    locality:
+      - "Quai de Valmy"
+    postal_code:
+      - "75010 Paris"
+    dns_names:
+      - "localhost"
+    ip_addresses:
+      - "localhost"
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-amcerts
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: amcerts
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.amcerts.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: amcerts
+    spec:
+      {{- if (or .Values.amcerts.image.pullSecrets .Values.defaults.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- range (or .Values.amcerts.image.pullSecrets .Values.defaults.image.pullSecrets) }}
+        - name: {{ . }}
+        {{- end }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            defaultMode: 256
+            name: {{ .Release.Name }}-amcerts-config
+            optional: false
+          name: amcerts-config
+      containers:
+        - name: {{ .Release.Name }}-amcerts
+          image: "{{ default (printf "%s/amcerts" .Values.defaults.image.rootRepository) .Values.amcerts.image.repository }}:{{ default .Values.defaults.image.tag .Values.amcerts.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.amcerts.image.pullPolicy }}
+          env:
+            - name: AM_JAEGER_URL
+              value: "http://{{ .Values.magistrala.jaeger.fullnameOverride }}-collector:{{ .Values.magistrala.jaeger.collector.service.otlp.http.port }}/v1/traces"
+            - name: AM_CERTS_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.amcerts.jaegerTraceRatio | quote }}
+            - name: AM_CERTS_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.amcerts.logLevel | quote }}
+            - name: AM_CERTS_HTTP_HOST
+              value: "0.0.0.0"
+            - name: AM_CERTS_HTTP_PORT
+              value: {{ .Values.amcerts.httpPort | quote }}
+            - name: AM_CERTS_GRPC_HOST
+              value: "0.0.0.0"
+            - name: AM_CERTS_GRPC_PORT
+              value: {{ .Values.amcerts.grpcPort | quote }}
+            - name: AM_CERTS_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.magistrala.auth.grpcPort }}
+            - name: MG_THINGS_URL
+              value: http://{{ .Release.Name }}-things:{{ .Values.magistrala.things.httpPort }}
+            - name: AM_CERTS_DB_HOST
+            {{- if .Values.postgresqlamcerts.enabled }}
+              value: {{ .Release.Name }}-postgresqlcerts
+            {{- else }}
+              value: {{ .Values.postgresqlamcerts.host | quote }}
+            {{- end }}
+            - name: AM_CERTS_DB_PORT
+              value: {{ .Values.postgresqlamcerts.port | quote }}
+            - name: AM_CERTS_DB_NAME
+              value: {{ .Values.postgresqlamcerts.database | quote }}
+            - name: AM_CERTS_DB_USER
+              value: {{ .Values.postgresqlamcerts.username | quote }}
+            - name: AM_CERTS_DB_PASS
+              value: {{ .Values.postgresqlamcerts.password | quote }}
+            - name: MG_CERTS_SIGN_CA_PATH
+              value: {{ .Values.magistrala.certs.signCAPath }}
+            - name: MG_CERTS_SIGN_CA_KEY_PATH
+              value: {{ .Values.magistrala.certs.signCAKeyPath }}
+          ports:
+            - containerPort: {{ .Values.amcerts.httpPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.amcerts.grpcPort }}
+              protocol: TCP
+          volumeMounts:
+            - name: amcerts-config
+              mountPath: /config/config.yml
+              subPath: config.yml
+{{- end }}
