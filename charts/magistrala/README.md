@@ -2,7 +2,7 @@
 
 Magistrala IoT Platform
 
-![Version: 0.14.2](https://img.shields.io/badge/Version-0.14.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.14.0](https://img.shields.io/badge/AppVersion-0.14.0-informational?style=flat-square)
+![Version: 0.15.0](https://img.shields.io/badge/Version-0.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.15.0](https://img.shields.io/badge/AppVersion-0.15.0-informational?style=flat-square)
 
 **Homepage:** <https://abstractmachines.fr/magistrala.html>
 
@@ -44,6 +44,11 @@ Magistrala IoT Platform
 | adapter_coap.port | int | `5683` |  |
 | adapter_http.httpPort | int | `8008` |  |
 | adapter_http.image | object | `{}` |  |
+| amcerts.enabled | bool | `true` |  |
+| amcerts.grpcPort | int | `7012` |  |
+| amcerts.httpPort | int | `9010` |  |
+| amcerts.image.repository | string | `"ghcr.io/absmach/certs"` |  |
+| amcerts.image.tag | string | `"latest"` |  |
 | auth.accessTokenDuration | string | `"1h"` |  |
 | auth.adminEmail | string | `"admin@example.com"` |  |
 | auth.adminPassword | string | `"12345678"` |  |
@@ -136,6 +141,18 @@ Magistrala IoT Platform
 | nginxInternal.image.tag | string | `"1.19.1-alpine"` |  |
 | nginxInternal.mtls.intermediateCrt | string | `""` |  |
 | nginxInternal.mtls.tls | string | `""` |  |
+| postgresqlamcerts.database | string | `"certs"` |  |
+| postgresqlamcerts.enabled | bool | `true` |  |
+| postgresqlamcerts.global.postgresql.auth.database | string | `"certs"` |  |
+| postgresqlamcerts.global.postgresql.auth.password | string | `"magistrala"` |  |
+| postgresqlamcerts.global.postgresql.auth.postgresPassword | string | `"magistrala"` |  |
+| postgresqlamcerts.global.postgresql.auth.username | string | `"magistrala"` |  |
+| postgresqlamcerts.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlamcerts.host | string | `"postgresql-certs"` |  |
+| postgresqlamcerts.name | string | `"postgresql-certs"` |  |
+| postgresqlamcerts.password | string | `"magistrala"` |  |
+| postgresqlamcerts.port | int | `5432` |  |
+| postgresqlamcerts.username | string | `"magistrala"` |  |
 | postgresqlauth.database | string | `"auth"` |  |
 | postgresqlauth.enabled | bool | `true` |  |
 | postgresqlauth.global.postgresql.auth.database | string | `"auth"` |  |
@@ -252,7 +269,7 @@ Magistrala IoT Platform
 | spicedb.dispatch.enabled | bool | `false` |  |
 | spicedb.dispatch.port | int | `50053` |  |
 | spicedb.grpc.port | int | `50051` |  |
-| spicedb.grpc.presharedKey | string | `"helloworld"` |  |
+| spicedb.grpc.presharedKey | string | `"12345678"` |  |
 | spicedb.http.enabled | bool | `false` |  |
 | spicedb.http.port | int | `8443` |  |
 | spicedb.image.pullSecrets | object | `{}` |  |
