@@ -33,7 +33,7 @@ domains:
     host: "0.0.0.0"
     port: 7003
   http:
-    host: ""0.0.0.0""
+    host: "0.0.0.0"
     port: 9003
   cache:
     url: "redis://domains-redis:6379/0"
@@ -342,9 +342,7 @@ users:
   http:
     host: "0.0.0.0"
     port: 9002
-  grpc:
-    port: 7001
-    timeout: 300s
+  grpcPort: 7001
   tokenResetEndpoint: "/reset-request"
   allowSelfRegister: true
   deleteInterval: "24h"
