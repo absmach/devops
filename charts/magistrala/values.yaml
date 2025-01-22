@@ -367,44 +367,6 @@ redis-things:
     enabled: false
   usePassword: false
 
-bootstrap:
-  enabled: true
-  image: {}
-  #   pullSecrets: {}
-  #   repository: "magistrala/bootstrap"
-  #   tag: "latest"
-  #   pullPolicy: "IfNotPresent"
-  # jaegerTraceRatio: 1.0
-  # sendTelemetry: true
-  # logLevel: "info"
-  httpPort: 9013
-  redisESPort: 6379
-  encKey: "randomstring"
-  eventConsumerName: EventConsumerByBootstrap
-  # nodeSelector: {}
-  # affinity: {}
-  # tolerations: {}
-
-postgresqlbootstrap:
-  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
-  enabled: true
-  name: postgresql-bootstrap
-  host: postgresql-bootstrap
-  port: &postgresqlBootstrapPort 5432
-  database: &postgresqlBootstrapDatabase bootstrap
-  username: &postgresqlBootstrapUsername magistrala
-  password: &postgresqlBootstrapPassword magistrala
-  global:
-    postgresql:
-      auth:
-        postgresPassword: *postgresqlBootstrapPassword
-        username: *postgresqlBootstrapUsername
-        password: *postgresqlBootstrapPassword
-        database: *postgresqlBootstrapDatabase
-      service:
-        ports:
-          postgresql: *postgresqlBootstrapPort
-
 certs:
   enabled: true
   image:
@@ -542,7 +504,7 @@ timescaledb:
     # sendTelemetry: true
     # logLevel: "info"
     enabled: true
-    http: {port: 9011}
+    http: { port: 9011 }
     # nodeSelector: {}
     # affinity: {}
     # tolerations: {}
@@ -560,7 +522,7 @@ timescaledb:
     # affinity: {}
     # tolerations: {}
     enabled: true
-    http: {port: 9012}
+    http: { port: 9012 }
   ## Configurations of Bitnami postgres
   global:
     postgresql:
