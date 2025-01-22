@@ -1,4 +1,4 @@
-# Copyright (c) Magistrala
+# Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
 # The explanations for optional configuration parameters described in the adapter_coap section
@@ -8,16 +8,16 @@ defaults:
   logLevel: "info"
   image:
     pullPolicy: "IfNotPresent"
-    rootRepository: "magistrala"
+    rootRepository: "supermq"
     tag: "latest"
     # pullSecrets: {}
-  # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
+  # Replicas of MQTT adapter, NATS, Clients, Envoy and Auth
   replicaCount: 3
   natsPort: 4222
   jaegerCollectorPort: 4318
   jaegerTraceRatio: 1.0
   sendTelemetry: true
-  eventStreamURL: "magistrala-nats:4222"
+  eventStreamURL: "supermq-nats:4222"
 
 ingress:
   enabled: true
