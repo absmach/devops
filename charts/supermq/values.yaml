@@ -342,7 +342,9 @@ users:
   http:
     host: "0.0.0.0"
     port: 9002
-  grpcPort: 7001
+  grpc:
+    port: 7001
+    timeout: 300s
   tokenResetEndpoint: "/reset-request"
   allowSelfRegister: true
   deleteInterval: "24h"

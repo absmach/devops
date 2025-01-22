@@ -60,9 +60,9 @@ spec:
             - name: SMQ_JAEGER_URL
               value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
             - name: SMQ_JAEGER_TRACE_RATIO
-              value: {{ default .Values.defaults.jaegerTraceRatio .Values.users.jaegerTraceRatio | quote  }}
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.domains.jaegerTraceRatio | quote  }}
             - name: SMQ_SEND_TELEMETRY
-              value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
+              value: {{ default .Values.defaults.sendTelemetry .Values.domains.sendTelemetry | quote  }}
           ports:
             - containerPort: {{ .Values.domains.grpc.port }}
               name: grpc
