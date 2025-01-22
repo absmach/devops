@@ -11,5 +11,5 @@ spec:
     component: users
   ports:
     - protocol: TCP
-      port: {{ .Values.users.httpPort }}
+      port: {{ .Values.users.http.port }}
       name: {{ .Release.Name }}-users-http

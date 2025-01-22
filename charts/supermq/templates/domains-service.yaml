@@ -1,0 +1,18 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-domains
+spec:
+  selector:
+    app: {{ .Release.Name }}
+    component: domains
+  ports:
+    - protocol: TCP
+      port: {{ .Values.domains.http.port }}
+      name: {{ .Release.Name }}-domains-http
+    - protocol: TCP
+      port: {{ .Values.domains.grpc.port }}
+      name: {{ .Release.Name }}-domains-grpc

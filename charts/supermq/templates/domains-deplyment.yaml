@@ -1,0 +1,70 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-domains
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: domains
+  template:
+    metadata:
+      annotations:
+          prometheus.io/path: /metrics
+          prometheus.io/port: "{{ .Values.domains.http.port }}"
+          prometheus.io/scrape: "true"
+        labels:
+          app: {{ .Release.Name }}
+          component: domains
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.domains.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-domains
+          image: "{{ default (printf "%s/domains" .Values.defaults.image.rootRepository) .Values.domains.image.repository }}:{{ default .Values.defaults.image.tag .Values.domains.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.domains.image.pullPolicy }}
+          env:
+            - name: SMQ_DOMAINS_LOG_LEVEL
+              value: {{  default .Values.defaults.logLevel .Values.domains.logLevel | quote }}
+            - name: SMQ_DOMAINS_GRPC_HOST
+              value: {{ .Values.domains.grpc.host | quote }}
+            - name: SMQ_DOMAINS_GRPC_PORT
+              value: "{{ .Values.domains.grpc.port | quote }}"
+            - name: SMQ_DOMAINS_HTTP_HOST
+              value: {{ .Values.domains.http.host | quote }}
+            - name: SMQ_DOMAINS_HTTP_PORT
+              value: "{{ .Values.domains.http.port | quote }}"
+            - name: SMQ_DOMAINS_DB_HOST
+            {{- if .Values.postgresqldomains.enabled }}
+              value: "{{ .Release.Name }}-postgresqldomains"
+            {{- else }}
+              value: {{ .Values.postgresqldomains.host | quote }}
+            {{- end }}
+            - name: SMQ_DOMAINS_DB_PORT
+              value: "{{ .Values.domains.db.port | quote }}"
+            - name: SMQ_DOMAINS_DB_USER
+              value: {{ .Values.domains.db.user | quote }}
+            - name: SMQ_DOMAINS_DB_PASS
+              value: {{ .Values.domains.db.password | quote }}
+            - name: SMQ_DOMAINS_DB_NAME
+              value: {{ .Values.domains.db.database | quote }}
+            - name: SMQ_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
+            - name: SMQ_JAEGER_URL
+              value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
+            - name: SMQ_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.users.jaegerTraceRatio | quote  }}
+            - name: SMQ_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
+          ports:
+            - containerPort: {{ .Values.domains.grpc.port }}
+              name: grpc
+            - containerPort: {{ .Values.domains.http.port }}
+              name: http

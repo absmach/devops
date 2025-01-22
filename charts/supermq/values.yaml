@@ -19,6 +19,46 @@ defaults:
   sendTelemetry: true
   eventStreamURL: "supermq-nats:4222"
 
+domains:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/domains"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: "info"
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  grpc:
+    host: "0.0.0.0"
+    port: 7003
+  http:
+    host: ""0.0.0.0""
+    port: 9003
+  cache:
+    url: "redis://domains-redis:6379/0"
+    keyDuration: "10m"
+
+postgresqldomains:
+  ## If you want to use an external database, set this to false and change host & port
+  enabled: true
+  name: postgresql-domains
+  host: postgresql-domains
+  port: &postgresqlUsersPort 5432
+  database: &postgresqlUsersDatabase domains
+  username: &postgresqlUsersUsername supermq
+  password: &postgresqlUsersPassword supermq
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlUsersPassword
+        username: *postgresqlUsersUsername
+        password: *postgresqlUsersPassword
+        database: *postgresqlUsersDatabase
+      service:
+        ports:
+          postgresql: *postgresqlUsersPort
+
 ingress:
   enabled: true
   annotations: {}
