@@ -26,7 +26,7 @@ domains:
     # repository: "supermq/domains"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-  # logLevel: "info"
+  logLevel: "info"
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   grpc:
