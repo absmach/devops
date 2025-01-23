@@ -283,7 +283,7 @@ users:
   image:
     {}
     # pullSecrets: {}
-    # repository: "magistrala/users"
+    # repository: "supermq/users"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
@@ -291,9 +291,15 @@ users:
   # logLevel: "info"
   httpPort: 9002
   grpcPort: 7001
-  adminEmail: "admin@example.com"
-  adminPassword: "12345678"
-  secretKey: "secretKey"
+  admin:
+    email: "admin@example.com"
+    password: "12345678"
+    username: "admin"
+    firstname: "super"
+    lastname: "admin"
+  secretKey: "HyE2D4RUt9nnKG6v8zKEqAp6g6ka8hhZsqUpzgKvnwpXrNVQSH"
+  accessTokenDuration: "15m"
+  refreshTokenDuration: "24h"
   passwordRegex: "^.{8,}$"
   tokenResetEndpoint: "/reset-request"
   allowSelfRegister: true
@@ -310,8 +316,8 @@ postgresqlusers:
   host: postgresql-users
   port: &postgresqlUsersPort 5432
   database: &postgresqlUsersDatabase users
-  username: &postgresqlUsersUsername magistrala
-  password: &postgresqlUsersPassword magistrala
+  username: &postgresqlUsersUsername supermq
+  password: &postgresqlUsersPassword supermq
   global:
     postgresql:
       auth:

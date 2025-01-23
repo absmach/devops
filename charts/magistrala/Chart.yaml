@@ -6,8 +6,8 @@ name: magistrala
 description: Magistrala IoT Platform
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
-version: 0.14.2  # Incremented chart version if the chart is updated
-appVersion: "0.14.0"  # Update application version if the app is updated
+version: 0.14.2 # Incremented chart version if the chart is updated
+appVersion: "0.14.0" # Update application version if the app is updated
 home: https://abstractmachines.fr/magistrala.html
 sources:
   - https://hub.docker.com/u/magistrala
@@ -53,12 +53,6 @@ dependencies:
   - name: postgresql
     version: "12.5.6"
     repository: "@bitnami"
-    alias: postgresqlbootstrap
-    condition: postgresqlbootstrap.enabled
-
-  - name: postgresql
-    version: "12.5.6"
-    repository: "@bitnami"
     alias: postgresqlcerts
     condition: postgresqlcerts.enabled
 
@@ -73,12 +67,6 @@ dependencies:
     repository: "@bitnami"
     alias: postgresqljournal
     condition: postgresqljournal.enabled
-
-  - name: postgresql
-    version: "12.5.6"
-    repository: "@bitnami"
-    alias: timescaledb
-    condition: timescaledb.enabled
 
   - name: postgresql
     version: "12.5.6"
