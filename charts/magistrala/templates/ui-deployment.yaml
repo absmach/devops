@@ -41,8 +41,6 @@ spec:
               value: {{ .Values.ui.pathPrefix | quote  }}
             - name: MG_HTTP_ADAPTER_URL
               value: {{ default (printf "http://%s-adapter-http:%s " .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
-            - name: MG_READER_URL
-              value: {{ default (printf "http://%s-timescaledb-reader:%s" .Release.Name (.Values.timescaledb.reader.http.port | toString )) .Values.ui.readerUrl }}
             - name: MG_THINGS_URL
               value: {{ default  (printf "http://%s-things:%s" .Release.Name (.Values.things.httpPort | toString )) .Values.ui.thingsUrl }}
             - name: MG_USERS_URL
