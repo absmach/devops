@@ -51,8 +51,6 @@ spec:
               value: {{ default  (printf "http://%s-invitations:%s" .Release.Name (.Values.invitations.httpPort | toString ))  .Values.ui.invitationsUrl }}
             - name: MG_DOMAINS_URL
               value: {{ default  (printf "http://%s-auth:%s" .Release.Name (.Values.auth.httpPort | toString )) .Values.ui.authUrl }}
-            - name: MG_BOOTSTRAP_URL
-              value: {{ default  (printf "http://%s-bootstrap:%s" .Release.Name (.Values.bootstrap.httpPort | toString )) .Values.ui.bootstrapUrl }}
             - name: MG_JOURNAL_URL
               value: {{ default  (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
             - name: MG_UI_CONTENT_TYPE
