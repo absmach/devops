@@ -32,41 +32,41 @@ spec:
           image: "{{ default (printf "%s/things" .Values.defaults.image.rootRepository) .Values.things.image.repository }}:{{ default .Values.defaults.image.tag .Values.things.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.things.image.pullPolicy }}
           env:
-            - name: MG_JAEGER_URL
+            - name: SMQ_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
-            - name: MG_THINGS_AUTH_GRPC_HOST
+            - name: SMQ_THINGS_AUTH_GRPC_HOST
               value: "0.0.0.0"
-            - name: MG_THINGS_AUTH_GRPC_PORT
+            - name: SMQ_THINGS_AUTH_GRPC_PORT
               value: {{ .Values.things.authGrpcPort | quote}}
-            - name: MG_THINGS_AUTH_HTTP_HOST
+            - name: SMQ_THINGS_AUTH_HTTP_HOST
               value: "0.0.0.0"
-            - name: MG_THINGS_AUTH_HTTP_PORT
+            - name: SMQ_THINGS_AUTH_HTTP_PORT
               value: {{ .Values.things.authHttpPort | quote}}
-            - name: MG_THINGS_CACHE_URL
+            - name: SMQ_THINGS_CACHE_URL
               value: redis://{{ .Release.Name }}-redis-things-master:{{ .Values.things.redisCachePort }}/0
-            - name: MG_THINGS_DB_HOST
+            - name: SMQ_THINGS_DB_HOST
             {{- if .Values.postgresqlthings.enabled }}
               value: {{ .Release.Name }}-postgresqlthings
             {{- else }}
               value: {{ .Values.postgresqlthings.host | quote}}
             {{- end }}
-            - name: MG_THINGS_DB_PORT
+            - name: SMQ_THINGS_DB_PORT
               value: {{ .Values.postgresqlthings.port | quote}}
-            - name: MG_THINGS_DB_USER
+            - name: SMQ_THINGS_DB_USER
               value: {{ .Values.postgresqlthings.username | quote }}
-            - name: MG_THINGS_DB_PASS
+            - name: SMQ_THINGS_DB_PASS
               value: {{ .Values.postgresqlthings.password | quote }}
-            - name: MG_THINGS_DB_NAME
+            - name: SMQ_THINGS_DB_NAME
               value: {{ .Values.postgresqlthings.database | quote }}
-            - name: MG_ES_URL
+            - name: SMQ_ES_URL
               value: {{ .Values.defaults.eventStreamURL | quote }}
-            - name: MG_THINGS_HTTP_HOST
+            - name: SMQ_THINGS_HTTP_HOST
               value: "0.0.0.0"
-            - name: MG_THINGS_HTTP_PORT
+            - name: SMQ_THINGS_HTTP_PORT
               value: {{ .Values.things.httpPort | quote }}
-            - name: MG_THINGS_LOG_LEVEL
+            - name: SMQ_THINGS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.things.logLevel | quote }}
-            - name: MG_AUTH_GRPC_URL
+            - name: SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
           ports:
             - containerPort: {{ .Values.things.httpPort }}
