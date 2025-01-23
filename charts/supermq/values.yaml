@@ -532,61 +532,6 @@ postgresqljournal:
         ports:
           postgresql: *postgresqlJournalPort
 
-timescaledb:
-  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
-  enabled: true
-  name: timescalerw
-  host: timescalerw
-  port: &messagesRwTimescalePort 5432
-  database: &messagesRwTimescaleDatabase messages
-  username: &messagesRwTimescaleUsername magistrala
-  password: &messagesRwTimescalePassword magistrala
-  reader:
-    image:
-      {}
-      # pullSecrets: {}
-      # repository: "magistrala/timescale-reader"
-      # tag: "latest"
-      # pullPolicy: "IfNotPresent"
-    # jaegerTraceRatio: 1.0
-    # sendTelemetry: true
-    # logLevel: "info"
-    enabled: true
-    http: { port: 9011 }
-    # nodeSelector: {}
-    # affinity: {}
-    # tolerations: {}
-  writer:
-    image:
-      {}
-      # pullSecrets: {}
-      # repository: "magistrala/timescale-writer"
-      # tag: "latest"
-      # pullPolicy: "IfNotPresent"
-    # jaegerTraceRatio: 1.0
-    # sendTelemetry: true
-    # logLevel: "info"
-    # nodeSelector: {}
-    # affinity: {}
-    # tolerations: {}
-    enabled: true
-    http: { port: 9012 }
-  ## Configurations of Bitnami postgres
-  global:
-    postgresql:
-      auth:
-        postgresPassword: *messagesRwTimescalePassword
-        username: *messagesRwTimescaleUsername
-        password: *messagesRwTimescalePassword
-        database: *messagesRwTimescaleDatabase
-      service:
-        ports:
-          postgresql: *messagesRwTimescalePort
-  image:
-    registry: docker.io
-    repository: timescale/timescaledb
-    tag: latest-pg12
-
 ui:
   enabled: true
   image:
@@ -606,7 +551,6 @@ ui:
   # authUrl: "http://magistrala-auth:8189"
   # bootstrapUrl: "http://magistrala-bootstrap:9013"
   # thingsUrl: "http://magistrala-things:9000"
-  # readerUrl: "http://magistrala-timescale-reader:9011"
   # invitationsUrl: "http:///magistrala-auth:9020"
   # journalUrl: "http:///magistrala-auth:9021"
   # domainsUrl: "http://magistrala-auth:8189"
