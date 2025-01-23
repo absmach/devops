@@ -113,6 +113,22 @@ adapter_coap:
     # Options are "Always", "IfNotPresent", or "Never". "IfNotPresent" is generally used to avoid unnecessary pulls.
 
   port: 5683
+  # The primary port used by the CoAP adapter for communication.
+  # Default: 5683 (standard CoAP UDP port).
+
+  jaegerTraceRatio: 1.0
+  # Defines the fraction of requests to trace using Jaeger. Distributed tracing monitors requests across services.
+  # Value range:
+  # - 1.0: Trace all requests (100% sampling)
+  # - 0.5: Trace 50% of requests
+  # - 0.0: Disable tracing (0% sampling)
+  # Adjust this based on your observability needs and performance considerations.
+
+  sendTelemetry: true
+  # Enables or disables telemetry data reporting. Telemetry collects metrics and events for monitoring.
+  # If true, the service will send telemetry data to the configured telemetry backend.
+  # Set to false if telemetry reporting is not required or should be disabled for privacy concerns.
+
   # logLevel: "info"
   # The logging level for the adapter_coap service. Common options are "debug", "info", "warn", "error".
   # Adjust this based on the verbosity of logs you require.
@@ -161,6 +177,10 @@ adapter_http:
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
+
+channels:
+  grpcPort: 7005
+  grpcTimeout: "1s"
 
 mqtt:
   enabled: true
@@ -336,8 +356,9 @@ clients:
     # repository: "supermq/clients"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-  httpPort: 9000
-  authGrpcPort: 7000
+  httpPort: 9006
+  authGrpcPort: 7006
+  grpcTimeout: "1s"
   authHttpPort: 9001
   redisESPort: 6379
   redisCachePort: 6379
