@@ -5,7 +5,7 @@
 # apply across other services where the same named configuration parameters are used.
 
 defaults:
-  logLevel: "info"
+  logLevel: "debug"
   image:
     pullPolicy: "IfNotPresent"
     rootRepository: "supermq"
@@ -17,7 +17,7 @@ defaults:
   jaegerCollectorPort: 4318
   jaegerTraceRatio: 1.0
   sendTelemetry: true
-  eventStreamURL: "supermq-nats:4222"
+  eventStreamURL: "magistrala-nats:4222"
 
 ingress:
   enabled: true
