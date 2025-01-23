@@ -2,15 +2,15 @@
 # SPDX-License-Identifier: Apache-2.0
 
 apiVersion: v2
-name: magistrala
-description: Magistrala IoT Platform
+name: supermq
+description: Event-driven Infrastructure for Modern Cloud
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
 version: 0.14.2 # Incremented chart version if the chart is updated
 appVersion: "0.14.0" # Update application version if the app is updated
 home: https://abstractmachines.fr/magistrala.html
 sources:
-  - https://hub.docker.com/u/magistrala
+  - https://hub.docker.com/u/supermq
 maintainers:
   - name: drasko
     email: drasko.draskovic@abstractmachines.fr
