@@ -1,4 +1,4 @@
-{{- define "magistrala.envoy.config" -}}
+{{- define "supermq.envoy.config" -}}
 static_resources:
   listeners:
     - address:

@@ -4,7 +4,7 @@
 apiVersion: v1
 data:
   envoy.yaml: |-
-{{ include "magistrala.envoy.config" . | indent 4 }}
+{{ include "supermq.envoy.config" . | indent 4 }}
 
 kind: ConfigMap
 metadata:

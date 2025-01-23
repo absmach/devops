@@ -8,7 +8,7 @@ defaults:
   logLevel: "info"
   image:
     pullPolicy: "IfNotPresent"
-    rootRepository: "magistrala"
+    rootRepository: "supermq"
     tag: "latest"
     # pullSecrets: {}
   # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
@@ -17,7 +17,7 @@ defaults:
   jaegerCollectorPort: 4318
   jaegerTraceRatio: 1.0
   sendTelemetry: true
-  eventStreamURL: "magistrala-nats:4222"
+  eventStreamURL: "supermq-nats:4222"
 
 ingress:
   enabled: true
@@ -27,7 +27,7 @@ ingress:
   # hostname: ""
   # tls:
   #   hostname: ""
-  #   secret: "magistrala-server"
+  #   secret: "supermq-server"
 
 nginxInternal:
   image:
@@ -40,7 +40,7 @@ nginxInternal:
     intermediateCrt: ""
     # Uncomment this block for TLS and mTLS support.
     # Use sh script from /secrets/secrets.sh to create config maps with your certs
-    # tls: "magistrala-server"
+    # tls: "supermq-server"
     # intermediateCrt: "ca"
 
 envoy:
@@ -50,7 +50,7 @@ envoy:
     tag: "v1.31-latest"
 
 jaeger:
-  fullnameOverride: magistrala-jaeger
+  fullnameOverride: supermq-jaeger
   provisionDataStore:
     cassandra: true
   agent:
@@ -100,7 +100,7 @@ adapter_coap:
     # pullSecrets:
     #   - my-registry-key
 
-    # repository: "magistrala"
+    # repository: "supermq"
     # The Docker repository where the adapter_coap image is stored.
     # Set this to your preferred image repository if you are using a custom image.
 
@@ -150,7 +150,7 @@ adapter_http:
   image:
     {}
     # pullSecrets: {}
-    # repository: "magistrala/adapter-http"
+    # repository: "supermq/adapter-http"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   httpPort: 8008
@@ -171,7 +171,7 @@ mqtt:
   adapter:
     image:
       pullSecrets: {}
-      # repository: "magistrala/mqtt"
+      # repository: "supermq/mqtt"
       # tag: "latest"
       # pullPolicy: "IfNotPresent"
     mqttPort: 1884
@@ -179,7 +179,7 @@ mqtt:
     logLevel: "debug"
   broker:
     image:
-      repository: "magistrala/vernemq"
+      repository: "supermq/vernemq"
       # tag: "latest"
       # pullPolicy: "IfNotPresent"
     mqttPort: 1883
@@ -223,8 +223,8 @@ postgresqlspicedb:
   host: postgresql-spicedb
   port: &postgresqlSpicedbPort 5432
   database: &postgresqlSpicedbDatabase spicedb
-  username: &postgresqlSpicedbUsername magistrala
-  password: &postgresqlSpicedbPassword magistrala
+  username: &postgresqlSpicedbUsername supermq
+  password: &postgresqlSpicedbPassword supermq
   global:
     postgresql:
       auth:
@@ -241,7 +241,7 @@ auth:
   image:
     {}
     # pullSecrets: {}
-    # rootRepository: "magistrala/auth"
+    # rootRepository: "supermq/auth"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # Log level for the auth service. Common options are "debug", "info", "warn", "error".
@@ -266,8 +266,8 @@ postgresqlauth:
   host: postgresql-auth
   port: &postgresqlAuthPort 5432
   database: &postgresqlAuthDatabase auth
-  username: &postgresqlAuthUsername magistrala
-  password: &postgresqlAuthPassword magistrala
+  username: &postgresqlAuthUsername supermq
+  password: &postgresqlAuthPassword supermq
   global:
     postgresql:
       auth:
@@ -333,7 +333,7 @@ clients:
   image:
     {}
     # pullSecrets: {}
-    # repository: "magistrala/clients"
+    # repository: "supermq/clients"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   httpPort: 9000
@@ -354,8 +354,8 @@ postgresqlclients:
   host: postgresql-clients
   port: &postgresqlThingsPort 5432
   database: &postgresqlThingsDatabase clients
-  username: &postgresqlThingsUsername magistrala
-  password: &postgresqlThingsPassword magistrala
+  username: &postgresqlThingsUsername supermq
+  password: &postgresqlThingsPassword supermq
   global:
     postgresql:
       auth:
@@ -379,7 +379,7 @@ certs:
   image:
     {}
     # pullSecrets: {}
-    # repository: "magistrala/certs"
+    # repository: "supermq/certs"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
@@ -389,12 +389,12 @@ certs:
   signCAPath: "/etc/ssl/certs/ca.crt"
   signCAKeyPath: "/etc/ssl/certs/ca.key"
   vault:
-    url: "http://magistrala-vault:8200"
-    approleRoleid: magistrala
-    approleSecret: magistrala
-    namespace: magistrala
+    url: "http://supermq-vault:8200"
+    approleRoleid: supermq
+    approleSecret: supermq
+    namespace: supermq
     thingsCertsPkiPath: pki_int
-    thingsCertsPkiRoleName: magistrala_things_certs
+    thingsCertsPkiRoleName: supermq_things_certs
 
 vault:
   enabled: false
@@ -406,8 +406,8 @@ postgresqlcerts:
   host: postgresql-certs
   port: &postgresqlCertsPort 5432
   database: &postgresqlCertsDatabase certs
-  username: &postgresqlCertsUsername magistrala
-  password: &postgresqlCertsPassword magistrala
+  username: &postgresqlCertsUsername supermq
+  password: &postgresqlCertsPassword supermq
   global:
     postgresql:
       auth:
@@ -424,7 +424,7 @@ invitations:
   image:
     {}
     # pullSecrets: {}
-    # repository: "magistrala/invitations"
+    # repository: "supermq/invitations"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
@@ -442,8 +442,8 @@ postgresqlinvitations:
   host: postgresql-invitations
   port: &postgresqlInvitationsPort 5432
   database: &postgresqlInvitationsDatabase invitations
-  username: &postgresqlInvitationsUsername magistrala
-  password: &postgresqlInvitationsPassword magistrala
+  username: &postgresqlInvitationsUsername supermq
+  password: &postgresqlInvitationsPassword supermq
   global:
     postgresql:
       auth:
@@ -460,7 +460,7 @@ journal:
   image:
     {}
     # pullSecrets: {}
-    # repository: "magistrala/journal"
+    # repository: "supermq/journal"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
@@ -478,8 +478,8 @@ postgresqljournal:
   host: postgresql-journal
   port: &postgresqlJournalPort 5432
   database: &postgresqlJournalDatabase journal
-  username: &postgresqlJournalUsername magistrala
-  password: &postgresqlJournalPassword magistrala
+  username: &postgresqlJournalUsername supermq
+  password: &postgresqlJournalPassword supermq
   global:
     postgresql:
       auth:
@@ -496,7 +496,7 @@ ui:
   image:
     {}
     # pullSecrets: {}
-    # repository: "magistrala/ui"
+    # repository: "supermq/ui"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
     # logLevel: "info"
@@ -505,13 +505,13 @@ ui:
   port: 9095
   pathPrefix: "/ui"
   # hostUrl: "https://domain-name"
-  # httpAdapterUrl: "http://magistrala-adapter-http:8008"
-  # usersUrl: "http://magistrala-users:9002"
-  # authUrl: "http://magistrala-auth:8189"
-  # clientsUrl: "http://magistrala-clients:9000"
-  # invitationsUrl: "http:///magistrala-auth:9020"
-  # journalUrl: "http:///magistrala-auth:9021"
-  # domainsUrl: "http://magistrala-auth:8189"
+  # httpAdapterUrl: "http://supermq-adapter-http:8008"
+  # usersUrl: "http://supermq-users:9002"
+  # authUrl: "http://supermq-auth:8189"
+  # clientsUrl: "http://supermq-clients:9000"
+  # invitationsUrl: "http:///supermq-auth:9020"
+  # journalUrl: "http:///supermq-auth:9021"
+  # domainsUrl: "http://supermq-auth:8189"
   googleClientID: ""
   googleClientSecret: ""
   googleRedirectHostname: "https://stage-domain-name"
@@ -528,8 +528,8 @@ postgresqlui:
   host: postgresql-ui
   port: &postgresqlUIPort 5432
   database: &postgresqlUIDatabase ui
-  username: &postgresqlUIUsername magistrala
-  password: &postgresqlUIPassword magistrala
+  username: &postgresqlUIUsername supermq
+  password: &postgresqlUIPassword supermq
   global:
     postgresql:
       auth:
