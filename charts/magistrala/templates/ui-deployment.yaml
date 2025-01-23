@@ -28,57 +28,57 @@ spec:
           image: "{{ default (printf "%s/ui" .Values.defaults.image.rootRepository) .Values.ui.image.repository }}:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
           env:
-            - name: MG_UI_LOG_LEVEL
+            - name: SMQ_UI_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.ui.logLevel | quote }}
-            - name: MG_UI_PORT
+            - name: SMQ_UI_PORT
               value: {{ .Values.ui.port | quote }}
             {{- $hostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.hostname }}
             {{- if $hostname }}
-            - name: MG_UI_HOST_URL
+            - name: SMQ_UI_HOST_URL
               value: {{ $hostname | quote }}
             {{- end }}
-            - name: MG_UI_PATH_PREFIX
+            - name: SMQ_UI_PATH_PREFIX
               value: {{ .Values.ui.pathPrefix | quote  }}
-            - name: MG_HTTP_ADAPTER_URL
+            - name: SMQ_HTTP_ADAPTER_URL
               value: {{ default (printf "http://%s-adapter-http:%s " .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
-            - name: MG_THINGS_URL
+            - name: SMQ_THINGS_URL
               value: {{ default  (printf "http://%s-clients:%s" .Release.Name (.Values.clients.httpPort | toString )) .Values.ui.clientsUrl }}
-            - name: MG_USERS_URL
+            - name: SMQ_USERS_URL
               value: {{ default  (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString ))  .Values.ui.usersUrl }}
-            - name: MG_INVITATIONS_URL
+            - name: SMQ_INVITATIONS_URL
               value: {{ default  (printf "http://%s-invitations:%s" .Release.Name (.Values.invitations.httpPort | toString ))  .Values.ui.invitationsUrl }}
-            - name: MG_DOMAINS_URL
+            - name: SMQ_DOMAINS_URL
               value: {{ default  (printf "http://%s-auth:%s" .Release.Name (.Values.auth.httpPort | toString )) .Values.ui.authUrl }}
-            - name: MG_JOURNAL_URL
+            - name: SMQ_JOURNAL_URL
               value: {{ default  (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
-            - name: MG_UI_CONTENT_TYPE
+            - name: SMQ_UI_CONTENT_TYPE
               value: {{ .Values.ui.contentType | quote  }}
-            - name: MG_UI_DB_HOST
+            - name: SMQ_UI_DB_HOST
             {{- if .Values.postgresqlui.enabled }}
               value: {{ .Release.Name }}-postgresqlui
             {{- else }}
               value: {{ .Values.postgresqlui.host }}
             {{- end }}
-            - name: MG_UI_DB_PORT
+            - name: SMQ_UI_DB_PORT
               value: {{ .Values.postgresqlui.port | quote }}
-            - name: MG_UI_DB_USER
+            - name: SMQ_UI_DB_USER
               value: {{ .Values.postgresqlui.username | quote  }}
-            - name: MG_UI_DB_PASS
+            - name: SMQ_UI_DB_PASS
               value: {{ .Values.postgresqlui.password | quote  }}
-            - name: MG_UI_DB_NAME
+            - name: SMQ_UI_DB_NAME
               value: {{ .Values.postgresqlui.database | quote  }}
-            - name: MG_GOOGLE_CLIENT_ID
+            - name: SMQ_GOOGLE_CLIENT_ID
               value: {{ .Values.ui.googleClientID | quote  }}
-            - name: MG_GOOGLE_CLIENT_SECRET
+            - name: SMQ_GOOGLE_CLIENT_SECRET
               value: {{ .Values.ui.googleClientSecret | quote  }}
             {{- $googleRedirectHostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.googleRedirectHostname }}
-            - name: MG_GOOGLE_REDIRECT_URL
+            - name: SMQ_GOOGLE_REDIRECT_URL
               value: {{$googleRedirectHostname}}{{.Values.ui.googleRedirectPath  }}
-            - name: MG_GOOGLE_STATE
+            - name: SMQ_GOOGLE_STATE
               value: {{ .Values.ui.googleState | quote  }}
-            - name: MG_UI_HASH_KEY
+            - name: SMQ_UI_HASH_KEY
               value: {{ .Values.ui.hashKey | quote  }}
-            - name: MG_UI_BLOCK_KEY
+            - name: SMQ_UI_BLOCK_KEY
               value: {{ .Values.ui.blockKey | quote  }}
           ports:
             - containerPort: {{ .Values.ui.port }}

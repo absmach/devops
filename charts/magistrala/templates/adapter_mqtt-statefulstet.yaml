@@ -71,19 +71,19 @@ spec:
             - name: data
               mountPath: /vernemq/data
           env:
-            - name: MG_MQTT_ADAPTER_LOG_LEVEL
+            - name: SMQ_MQTT_ADAPTER_LOG_LEVEL
               value: {{ .Values.mqtt.broker.logLevel }}
             - name: MY_POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: MG_MQTT_INSTANCE_ID
+            - name: SMQ_MQTT_INSTANCE_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: DOCKER_VERNEMQ_LOG__CONSOLE__LEVEL
               value: {{ default .Values.defaults.logLevel .Values.mqtt.broker.logLevel }}
-            - name: MG_MQTT_VERNEMQ_GRPC_POOL_SIZE
+            - name: SMQ_MQTT_VERNEMQ_GRPC_POOL_SIZE
               value: "1000"
             - name: DOCKER_VERNEMQ_ALLOW_ANONYMOUS
               value: "on"
@@ -174,31 +174,31 @@ spec:
           stdin: true
           tty: true
           env:
-            - name: MG_MQTT_ADAPTER_LOG_LEVEL
+            - name: SMQ_MQTT_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.mqtt.adapter.logLevel }}
-            - name: MG_MQTT_ADAPTER_MQTT_PORT
+            - name: SMQ_MQTT_ADAPTER_MQTT_PORT
               value: {{ .Values.mqtt.adapter.mqttPort | quote }}
-            - name: MG_MQTT_ADAPTER_WS_PORT
+            - name: SMQ_MQTT_ADAPTER_WS_PORT
               value: {{ .Values.mqtt.adapter.wsPort | quote }}
-            - name: MG_MESSAGE_BROKER_URL
+            - name: SMQ_MESSAGE_BROKER_URL
               value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
-            - name: MG_THINGS_AUTH_GRPC_URL
+            - name: SMQ_THINGS_AUTH_GRPC_URL
               value:  {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
-            - name: MG_JAEGER_URL
+            - name: SMQ_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
-            - name: MG_MQTT_ADAPTER_MQTT_TARGET_HOST
+            - name: SMQ_MQTT_ADAPTER_MQTT_TARGET_HOST
               value: localhost
-            - name: MG_MQTT_ADAPTER_MQTT_TARGET_PORT
+            - name: SMQ_MQTT_ADAPTER_MQTT_TARGET_PORT
               value: {{ .Values.mqtt.broker.mqttPort | quote }}
-            - name: MG_MQTT_ADAPTER_WS_TARGET_HOST
+            - name: SMQ_MQTT_ADAPTER_WS_TARGET_HOST
               value: localhost
-            - name: MG_MQTT_ADAPTER_WS_TARGET_PORT
+            - name: SMQ_MQTT_ADAPTER_WS_TARGET_PORT
               value: {{ .Values.mqtt.broker.wsPort | quote }}
-            - name: MG_MQTT_ADAPTER_THINGS_TIMEOUT
+            - name: SMQ_MQTT_ADAPTER_THINGS_TIMEOUT
               value: "15"
-            - name: MG_ES_URL
+            - name: SMQ_ES_URL
               value: {{ .Values.defaults.eventStreamURL | quote }}
-            - name: MG_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK
+            - name: SMQ_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK
               value: http://localhost:8888/health
           livenessProbe:
             failureThreshold: 3
