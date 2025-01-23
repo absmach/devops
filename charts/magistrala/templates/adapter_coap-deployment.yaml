@@ -36,7 +36,7 @@ spec:
             - name: MG_MESSAGE_BROKER_URL
               value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
             - name: MG_THINGS_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
             - name: MG_COAP_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_coap.logLevel | quote }}
             - name: MG_COAP_ADAPTER_HTTP_HOST

@@ -47,7 +47,7 @@ spec:
             - name: MG_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: MG_THINGS_URL
-              value: http://{{ .Release.Name }}-things:{{ .Values.things.httpPort }}
+              value: http://{{ .Release.Name }}-clients:{{ .Values.clients.httpPort }}
             - name: MG_CERTS_DB_HOST
             {{- if .Values.postgresqlcerts.enabled }}
               value: {{ .Release.Name }}-postgresqlcerts
@@ -75,9 +75,9 @@ spec:
             - name: MG_CERTS_VAULT_NAMESPACE
               value: {{ .Values.certs.vault.namespace | quote }}
             - name: MG_CERTS_VAULT_THINGS_CERTS_PKI_PATH
-              value: {{ .Values.certs.vault.thingsCertsPkiPath | quote }}
+              value: {{ .Values.certs.vault.clientsCertsPkiPath | quote }}
             - name: MG_CERTS_VAULT_THINGS_CERTS_PKI_ROLE_NAME
-              value: {{ .Values.certs.vault.thingsCertsPkiRoleName | quote }}
+              value: {{ .Values.certs.vault.clientsCertsPkiRoleName | quote }}
           ports:
             - containerPort: {{ .Values.certs.httpPort }}
               protocol: TCP

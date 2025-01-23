@@ -4,86 +4,86 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-things
+  name: {{ .Release.Name }}-clients
 spec:
   replicas: {{ .Values.defaults.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
-      component: things
+      component: clients
   template:
     metadata:
       annotations:
         prometheus.io/path: /metrics
-        prometheus.io/port: "{{ .Values.things.httpPort }}"
+        prometheus.io/port: "{{ .Values.clients.httpPort }}"
         prometheus.io/scrape: "true"
       labels:
         app: {{ .Release.Name }}
-        component: things
+        component: clients
     spec:
-      {{- with (default .Values.defaults.image.pullSecrets .Values.things.image.pullSecrets) }}
+      {{- with (default .Values.defaults.image.pullSecrets .Values.clients.image.pullSecrets) }}
       imagePullSecrets:
         {{- toYaml . | nindent 12 }}
       {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       containers:
-        - name: {{ .Release.Name }}-things
-          image: "{{ default (printf "%s/things" .Values.defaults.image.rootRepository) .Values.things.image.repository }}:{{ default .Values.defaults.image.tag .Values.things.image.tag }}"
-          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.things.image.pullPolicy }}
+        - name: {{ .Release.Name }}-clients
+          image: "{{ default (printf "%s/clients" .Values.defaults.image.rootRepository) .Values.clients.image.repository }}:{{ default .Values.defaults.image.tag .Values.clients.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.clients.image.pullPolicy }}
           env:
             - name: SMQ_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
-            - name: SMQ_THINGS_AUTH_GRPC_HOST
+            - name: SMQ_CLIENTS_AUTH_GRPC_HOST
               value: "0.0.0.0"
-            - name: SMQ_THINGS_AUTH_GRPC_PORT
-              value: {{ .Values.things.authGrpcPort | quote}}
-            - name: SMQ_THINGS_AUTH_HTTP_HOST
+            - name: SMQ_CLIENTS_AUTH_GRPC_PORT
+              value: {{ .Values.clients.authGrpcPort | quote}}
+            - name: SMQ_CLIENTS_AUTH_HTTP_HOST
               value: "0.0.0.0"
-            - name: SMQ_THINGS_AUTH_HTTP_PORT
-              value: {{ .Values.things.authHttpPort | quote}}
-            - name: SMQ_THINGS_CACHE_URL
-              value: redis://{{ .Release.Name }}-redis-things-master:{{ .Values.things.redisCachePort }}/0
-            - name: SMQ_THINGS_DB_HOST
-            {{- if .Values.postgresqlthings.enabled }}
-              value: {{ .Release.Name }}-postgresqlthings
+            - name: SMQ_CLIENTS_AUTH_HTTP_PORT
+              value: {{ .Values.clients.authHttpPort | quote}}
+            - name: SMQ_CLIENTS_CACHE_URL
+              value: redis://{{ .Release.Name }}-redis-clients-master:{{ .Values.clients.redisCachePort }}/0
+            - name: SMQ_CLIENTS_DB_HOST
+            {{- if .Values.postgresqlclients.enabled }}
+              value: {{ .Release.Name }}-postgresqlclients
             {{- else }}
-              value: {{ .Values.postgresqlthings.host | quote}}
+              value: {{ .Values.postgresqlclients.host | quote}}
             {{- end }}
-            - name: SMQ_THINGS_DB_PORT
-              value: {{ .Values.postgresqlthings.port | quote}}
-            - name: SMQ_THINGS_DB_USER
-              value: {{ .Values.postgresqlthings.username | quote }}
-            - name: SMQ_THINGS_DB_PASS
-              value: {{ .Values.postgresqlthings.password | quote }}
-            - name: SMQ_THINGS_DB_NAME
-              value: {{ .Values.postgresqlthings.database | quote }}
+            - name: SMQ_CLIENTS_DB_PORT
+              value: {{ .Values.postgresqlclients.port | quote}}
+            - name: SMQ_CLIENTS_DB_USER
+              value: {{ .Values.postgresqlclients.username | quote }}
+            - name: SMQ_CLIENTS_DB_PASS
+              value: {{ .Values.postgresqlclients.password | quote }}
+            - name: SMQ_CLIENTS_DB_NAME
+              value: {{ .Values.postgresqlclients.database | quote }}
             - name: SMQ_ES_URL
               value: {{ .Values.defaults.eventStreamURL | quote }}
-            - name: SMQ_THINGS_HTTP_HOST
+            - name: SMQ_CLIENTS_HTTP_HOST
               value: "0.0.0.0"
-            - name: SMQ_THINGS_HTTP_PORT
-              value: {{ .Values.things.httpPort | quote }}
-            - name: SMQ_THINGS_LOG_LEVEL
-              value: {{ default .Values.defaults.logLevel .Values.things.logLevel | quote }}
+            - name: SMQ_CLIENTS_HTTP_PORT
+              value: {{ .Values.clients.httpPort | quote }}
+            - name: SMQ_CLIENTS_CACHE_KEY_DURATION
+              value: {{ .Values.clients.cacheKeyduration | quote }}
             - name: SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
           ports:
-            - containerPort: {{ .Values.things.httpPort }}
+            - containerPort: {{ .Values.clients.httpPort }}
               protocol: TCP
-            - containerPort: {{ .Values.things.authGrpcPort }}
+            - containerPort: {{ .Values.clients.authGrpcPort }}
               protocol: TCP
-            - containerPort: {{ .Values.things.authHttpPort }}
+            - containerPort: {{ .Values.clients.authHttpPort }}
               protocol: TCP
-      {{- with .Values.things.nodeSelector }}
+      {{- with .Values.clients.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.things.affinity }}
+      {{- with .Values.clients.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.things.tolerations }}
+      {{- with .Values.clients.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

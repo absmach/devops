@@ -31,9 +31,9 @@ spec:
             pathType: Exact
             backend:
               service:
-                name: {{ .Release.Name }}-things
+                name: {{ .Release.Name }}-clients
                 port:
-                  number: {{ .Values.things.httpPort }}
+                  number: {{ .Values.clients.httpPort }}
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
@@ -44,12 +44,12 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-users-things-ingress
+  name: {{ .Release.Name }}-users-clients-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($request_method = GET) {
-        proxy_pass http://{{ .Release.Name }}-things.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.things.httpPort }};
+        proxy_pass http://{{ .Release.Name }}-clients.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.clients.httpPort }};
         break;
       }
 spec:
@@ -58,7 +58,7 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /((users|groups)/(.+)/(channels|things))
+          - path: /((users|groups)/(.+)/(channels|clients))
             pathType: ImplementationSpecific
             backend:
               service:
@@ -69,7 +69,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-things-users-ingress
+  name: {{ .Release.Name }}-clients-users-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -83,13 +83,13 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          - path: /((channels|things)/(.+)/(users|groups))
+          - path: /((channels|clients)/(.+)/(users|groups))
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ .Release.Name }}-things
+                name: {{ .Release.Name }}-clients
                 port:
-                  number: {{ .Values.things.httpPort }}
+                  number: {{ .Values.clients.httpPort }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -174,13 +174,13 @@ spec:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
-          - path: /((things|channels|connect|disconnect|identify).*)
+          - path: /((clients|channels|connect|disconnect|identify).*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ .Release.Name }}-things
+                name: {{ .Release.Name }}-clients
                 port:
-                  number: {{ .Values.things.httpPort }}
+                  number: {{ .Values.clients.httpPort }}
           - path: /(invitations.*)
             pathType: ImplementationSpecific
             backend:

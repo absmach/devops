@@ -42,7 +42,7 @@ spec:
             - name: MG_HTTP_ADAPTER_URL
               value: {{ default (printf "http://%s-adapter-http:%s " .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
             - name: MG_THINGS_URL
-              value: {{ default  (printf "http://%s-things:%s" .Release.Name (.Values.things.httpPort | toString )) .Values.ui.thingsUrl }}
+              value: {{ default  (printf "http://%s-clients:%s" .Release.Name (.Values.clients.httpPort | toString )) .Values.ui.clientsUrl }}
             - name: MG_USERS_URL
               value: {{ default  (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString ))  .Values.ui.usersUrl }}
             - name: MG_INVITATIONS_URL

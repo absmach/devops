@@ -42,7 +42,7 @@ spec:
             - name: MG_MESSAGE_BROKER_URL
               value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
             - name: MG_THINGS_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
           ports:
             - containerPort: {{ .Values.adapter_http.httpPort }}
               protocol: TCP

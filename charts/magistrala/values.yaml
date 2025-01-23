@@ -329,11 +329,11 @@ postgresqlusers:
         ports:
           postgresql: *postgresqlUsersPort
 
-things:
+clients:
   image:
     {}
     # pullSecrets: {}
-    # repository: "magistrala/things"
+    # repository: "magistrala/clients"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   httpPort: 9000
@@ -341,18 +341,19 @@ things:
   authHttpPort: 9001
   redisESPort: 6379
   redisCachePort: 6379
+  cacheKeyduration: "10m"
   # logLevel: "info"
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
 
-postgresqlthings:
+postgresqlclients:
   ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
   enabled: true
-  name: postgresql-things
-  host: postgresql-things
+  name: postgresql-clients
+  host: postgresql-clients
   port: &postgresqlThingsPort 5432
-  database: &postgresqlThingsDatabase things
+  database: &postgresqlThingsDatabase clients
   username: &postgresqlThingsUsername magistrala
   password: &postgresqlThingsPassword magistrala
   global:
@@ -366,7 +367,7 @@ postgresqlthings:
         ports:
           postgresql: *postgresqlThingsPort
 
-redis-things:
+redis-clients:
   volumePermissions:
     enabled: true
   cluster:
@@ -507,7 +508,7 @@ ui:
   # httpAdapterUrl: "http://magistrala-adapter-http:8008"
   # usersUrl: "http://magistrala-users:9002"
   # authUrl: "http://magistrala-auth:8189"
-  # thingsUrl: "http://magistrala-things:9000"
+  # clientsUrl: "http://magistrala-clients:9000"
   # invitationsUrl: "http:///magistrala-auth:9020"
   # journalUrl: "http:///magistrala-auth:9021"
   # domainsUrl: "http://magistrala-auth:8189"

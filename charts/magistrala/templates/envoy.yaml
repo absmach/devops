@@ -38,7 +38,7 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.auth.grpcPort }}
               protocol: TCP
-            - containerPort: {{ .Values.things.authGrpcPort }}
+            - containerPort: {{ .Values.clients.authGrpcPort }}
               protocol: TCP
             - containerPort: 8001
               protocol: TCP
@@ -68,9 +68,9 @@ spec:
     - port: {{ .Values.auth.grpcPort }}
       protocol: TCP
       name: auth-grpc
-    - port: {{ .Values.things.authGrpcPort }}
+    - port: {{ .Values.clients.authGrpcPort }}
       protocol: TCP
-      name: things-grpc
+      name: clients-grpc
     - port: 8001
       protocol: TCP
       name: admin

@@ -4,38 +4,38 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-things
+  name: {{ .Release.Name }}-clients
 spec:
   selector:
     app: {{ .Release.Name }}
-    component: things
+    component: clients
   ports:
-    - port: {{ .Values.things.httpPort }}
+    - port: {{ .Values.clients.httpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.httpPort }}
-    - port: {{ .Values.things.authGrpcPort }}
+      name: {{ .Release.Name }}-clients-{{ .Values.clients.httpPort }}
+    - port: {{ .Values.clients.authGrpcPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.authGrpcPort }}
-    - port: {{ .Values.things.authHttpPort }}
+      name: {{ .Release.Name }}-clients-{{ .Values.clients.authGrpcPort }}
+    - port: {{ .Values.clients.authHttpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.authHttpPort }}
+      name: {{ .Release.Name }}-clients-{{ .Values.clients.authHttpPort }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-things-headless
+  name: {{ .Release.Name }}-clients-headless
 spec:
   selector:
     app: {{ .Release.Name }}
-    component: things
+    component: clients
   ports:
-    - port: {{ .Values.things.httpPort }}
+    - port: {{ .Values.clients.httpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.httpPort }}
-    - port: {{ .Values.things.authGrpcPort }}
+      name: {{ .Release.Name }}-clients-{{ .Values.clients.httpPort }}
+    - port: {{ .Values.clients.authGrpcPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.authGrpcPort }}
-    - port: {{ .Values.things.authHttpPort }}
+      name: {{ .Release.Name }}-clients-{{ .Values.clients.authGrpcPort }}
+    - port: {{ .Values.clients.authHttpPort }}
       protocol: TCP
-      name: {{ .Release.Name }}-things-{{ .Values.things.authHttpPort }}
+      name: {{ .Release.Name }}-clients-{{ .Values.clients.authHttpPort }}
   clusterIP: None

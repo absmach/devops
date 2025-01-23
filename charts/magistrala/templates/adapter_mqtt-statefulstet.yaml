@@ -183,7 +183,7 @@ spec:
             - name: MG_MESSAGE_BROKER_URL
               value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
             - name: MG_THINGS_AUTH_GRPC_URL
-              value:  {{ .Release.Name }}-envoy:{{ .Values.things.authGrpcPort }}
+              value:  {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
             - name: MG_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
             - name: MG_MQTT_ADAPTER_MQTT_TARGET_HOST
