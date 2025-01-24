@@ -179,16 +179,47 @@ adapter_http:
   # tolerations: {}
 
 domains:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/domains"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
   httpPort: 9003
   grpcPort: 7003
+  redisTCPPort: 6379
+  cacheKeyduration: "10m"
   grpcTimeout: "300s"
   grpcClientCert: "./ssl/certs/domains-grpc-client.crt"
-  grpcClientKey: "./ssl/certs/domains-grpc-client.key"
   grpcClientCaCerts: "./ssl/certs/ca.crt"
 
+postgresqldomains:
+  ## If you want to use an external database, set this to false and change host & port
+  enabled: true
+  name: postgresql-domains
+  host: postgresql-domains
+  port: &postgresqlDomainsPort 5432
+  database: &postgresqlDomainsDatabase domains
+  username: &postgresqlDomainsUsername supermq
+  password: &postgresqlDomainsPassword supermq
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlDomainsPassword
+        username: *postgresqlDomainsUsername
+        password: *postgresqlDomainsPassword
+        database: *postgresqlDomainsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlDomainsPort
+
 channels:
+  httpPort: 9005
   grpcPort: 7005
   grpcTimeout: "1s"
+  grpcClientCert: "./ssl/certs/channels-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/channels-grpc-client.key"
+  grpcServerCaCerts: "./ssl/certs/ca.crt"
 
 mqtt:
   enabled: true
@@ -242,8 +273,6 @@ spicedb:
   metrics:
     enabled: true
     port: 9090
-  # Add the value for SMQ_SPICEDB_SCHEMA_FILE
-  # schemaFile: "/path/to/spicedb/schema.zed"
   nodeSelector: {}
   affinity: {}
   tolerations: {}
@@ -269,14 +298,13 @@ postgresqlspicedb:
           postgresql: *postgresqlSpicedbPort
 
 auth:
-  # logLevel: error
   image:
     {}
     # pullSecrets: {}
     # rootRepository: "supermq/auth"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-  # Log level for the auth service. Common options are "debug", "info", "warn", "error".
+  # logLevel: error
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   httpPort: 8189
@@ -314,6 +342,38 @@ postgresqlauth:
       service:
         ports:
           postgresql: *postgresqlAuthPort
+
+groups:
+  image:
+    {}
+    # pullSecrets: {}
+    # rootRepository: "supermq/groups"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: "debug"
+  httpPort: "9004"
+  grpcPort: "7004"
+  grpcServerCert: "./ssl/certs/groups-grpc-server.crt" # Path to the GRPC server certificate
+  grpcServerKey: "./ssl/certs/groups-grpc-server.key" # Path to the GRPC server key
+  grpcServerCaCerts: "./ssl/certs/ca.crt"
+  dbHost: "groups-db" # Database host for the Groups service
+  dbPort: "5432" # Database port for the Groups service
+  dbUser: "supermq" # Database username
+  dbPass: "supermq" # Database password
+  dbName: "groups" # Database name
+  dbSslMode: "disable" # SSL mode for the database connection
+  dbSslCert: "" # Path to the database SSL certificate
+  dbSslKey: "" # Path to the database SSL key
+  dbSslRootCert: "" # Path to the database SSL root certificate
+  instanceId: "" # Instance ID for the Groups service
+
+groupsClient:
+  url: "groups:9004" # URL for the Groups service client
+  grpcUrl: "groups:7004" # GRPC URL for the Groups service client
+  grpcTimeout: "300s"
+  grpcClientCert: "./ssl/certs/groups-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/groups-grpc-client.key"
+  grpcClientCaCerts: "./ssl/certs/ca.crt" # Path to the client GRPC CA certificates
 
 users:
   image:
