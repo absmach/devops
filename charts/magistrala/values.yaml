@@ -178,6 +178,14 @@ adapter_http:
   # affinity: {}
   # tolerations: {}
 
+domains:
+  httpPort: 9003
+  grpcPort: 7003
+  grpcTimeout: "300s"
+  grpcClientCert: "./ssl/certs/domains-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/domains-grpc-client.key"
+  grpcClientCaCerts: "./ssl/certs/ca.crt"
+
 channels:
   grpcPort: 7005
   grpcTimeout: "1s"
@@ -197,6 +205,8 @@ mqtt:
     mqttPort: 1884
     wsPort: 8081
     logLevel: "debug"
+    forwarderTimeout: "30s"
+    qos: "2"
   broker:
     image:
       repository: "supermq/vernemq"
@@ -218,7 +228,7 @@ spicedb:
     tag: latest
     # pullPolicy: "IfNotPresent"
   grpc:
-    presharedKey: "helloworld"
+    presharedKey: "12345678"
     port: 50051
   datastore:
     ## engine can be any one of the two options: postgres (default) , memory
@@ -269,12 +279,16 @@ auth:
   # sendTelemetry: true
   httpPort: 8189
   grpcPort: 8181
-  secret: "supersecret"
+  grpcTimeout: "300s"
+  secretKey: "HyE2D4RUt9nnKG6v8zKEqAp6g6ka8hhZsqUpzgKvnwpXrNVQSH"
   adminEmail: "admin@example.com"
   adminPassword: "12345678"
   accessTokenDuration: "1h"
   refreshTokenDuration: "24h"
   invitationDuration: "168h"
+  grpcClientCert: "./ssl/certs/auth-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/auth-grpc-client.key"
+  grpcServerCaCerts: "./ssl/certs/ca.crt"
   nodeSelector: {}
   affinity: {}
   tolerations: {}
@@ -409,6 +423,9 @@ certs:
   logLevel: "info"
   signCAPath: "/etc/ssl/certs/ca.crt"
   signCAKeyPath: "/etc/ssl/certs/ca.key"
+  sdkHost: "http://supermq-am-certs"
+  sdkCertsUrl: "${SMQ_CERTS_SDK_HOST}:9010"
+  sdkTlsVerification: "false"
   vault:
     url: "http://supermq-vault:8200"
     approleRoleid: supermq

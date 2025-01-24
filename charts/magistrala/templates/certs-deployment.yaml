@@ -44,9 +44,17 @@ spec:
               value: "0.0.0.0"
             - name: SMQ_CERTS_HTTP_PORT
               value: {{ .Values.certs.httpPort | quote }}
+            - name: SMQ_CERTS_SDK_HOST
+              value: {{ .Values.certs.sdkHost | quote }}
+            - name: SMQ_CERTS_SDK_CERTS_URL
+              value: {{ .Values.certs.sdkCertsUrl | quote }}
+            - name: SMQ_CERTS_SDK_TLS_VERIFICATION
+              value: {{ .Values.certs.sdkTlsVerification | quote }}
             - name: SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
-            - name: SMQ_THINGS_URL
+            - name: SMQ_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
+            - name: SMQ_CLIENTS_URL
               value: http://{{ .Release.Name }}-clients:{{ .Values.clients.httpPort }}
             - name: SMQ_CERTS_DB_HOST
             {{- if .Values.postgresqlcerts.enabled }}
@@ -74,9 +82,9 @@ spec:
               value: {{ .Values.certs.vault.approleSecret | quote }}
             - name: SMQ_CERTS_VAULT_NAMESPACE
               value: {{ .Values.certs.vault.namespace | quote }}
-            - name: SMQ_CERTS_VAULT_THINGS_CERTS_PKI_PATH
+            - name: SMQ_CERTS_VAULT_CLIENTS_CERTS_PKI_PATH
               value: {{ .Values.certs.vault.clientsCertsPkiPath | quote }}
-            - name: SMQ_CERTS_VAULT_THINGS_CERTS_PKI_ROLE_NAME
+            - name: SMQ_CERTS_VAULT_CLIENTS_CERTS_PKI_ROLE_NAME
               value: {{ .Values.certs.vault.clientsCertsPkiRoleName | quote }}
           ports:
             - containerPort: {{ .Values.certs.httpPort }}

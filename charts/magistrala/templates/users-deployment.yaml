@@ -86,6 +86,14 @@ spec:
               value: {{ .Values.users.deleteInterval | quote  }}
             - name: SMQ_USERS_DELETE_AFTER
               value: {{ .Values.users.deleteAfter | quote  }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_KEY
+              value: {{ .Values.domains.grpcClientKey | quote }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
+              value: {{ .Values.domains.grpcClientCert | quote }}
+            - name: SMQ_DOMAINS_GRPC_TIMEOUT
+              value: {{ .Values.domains.grpcTimeout | quote }}
+            - name: SMQ_DOMAINS_GRPC_URL
+              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort | quote }}
             - name: SMQ_USERS_DB_HOST
             {{- if .Values.postgresqlusers.enabled }}
               value: "{{ .Release.Name }}-postgresqlusers"

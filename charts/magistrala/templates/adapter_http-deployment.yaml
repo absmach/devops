@@ -33,16 +33,30 @@ spec:
           env:
             - name: SMQ_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+            - name: SMQ_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.users.jaegerTraceRatio | quote  }}
+            - name: SMQ_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
             - name: SMQ_HTTP_ADAPTER_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.adapter_http.logLevel | quote }}
             - name: SMQ_HTTP_ADAPTER_HOST
               value: "0.0.0.0"
             - name: SMQ_HTTP_ADAPTER_PORT
               value: {{ .Values.adapter_http.httpPort | quote }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort | quote }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.clients.grpcTimeout | quote }}
+            - name: SMQ_CHANNELS_GRPC_URL
+              value: {{ .Release.Name }}-channels:{{ .Values.channels.grpcPort | quote }}
+            - name: SMQ_CHANNELS_GRPC_TIMEOUT
+              value: {{ .Values.channels.grpcTimeout | quote }}
+            - name : SMQ_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort | quote }}
+            - name: SMQ_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
             - name: SMQ_MESSAGE_BROKER_URL
               value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
-            - name: SMQ_THINGS_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
           ports:
             - containerPort: {{ .Values.adapter_http.httpPort }}
               protocol: TCP

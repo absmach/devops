@@ -47,6 +47,22 @@ spec:
               value: {{ .Values.journal.httpPort  | quote  }}
             - name : SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: SMQ_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
+            - name: SMQ_AUTH_GRPC_CLIENT_KEY
+              value: {{ .Values.journal.authGrpcClientKey | quote }}
+            - name: SMQ_AUTH_GRPC_SERVER_CA_CERTS
+              value: {{ .Values.journal.authGrpcServerCaCerts | quote }}
+            - name: SMQ_AUTH_GRPC_CLIENT_CERT
+              value: {{ .Values.auth.grpcClientCert | quote }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
+              value: {{ .Values.domains.grpcClientCert | quote }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_KEY
+              value: {{ .Values.domains.grpcClientKey | quote }}
+            - name: SMQ_DOMAINS_GRPC_TIMEOUT
+              value: {{ .Values.domains.grpcTimeout | quote }}
+            - name: SMQ_DOMAINS_GRPC_URL
+              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort | quote }}
             - name: SMQ_JOURNAL_DB_HOST
             {{- if .Values.postgresqljournal.enabled }}
               value: "{{ .Release.Name }}-postgresqljournal"

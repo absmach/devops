@@ -34,23 +34,35 @@ spec:
             - name: SMQ_JAEGER_URL
               value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
             - name: SMQ_JAEGER_TRACE_RATIO
-              value: {{ default .Values.defaults.jaegerTraceRatio .Values.invitations.jaegerTraceRatio | quote  }}
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.invitations.jaegerTraceRatio | quote }}
             - name: SMQ_SEND_TELEMETRY
-              value: {{ default .Values.defaults.sendTelemetry .Values.invitations.sendTelemetry | quote  }}
+              value: {{ default .Values.defaults.sendTelemetry .Values.invitations.sendTelemetry | quote }}
             - name: SMQ_ES_URL
               value: {{ .Values.defaults.eventStreamURL | quote }}
             - name: SMQ_INVITATIONS_LOG_LEVEL
-              value: {{ default .Values.defaults.logLevel .Values.invitations.logLevel  | quote }}
+              value: {{ default .Values.defaults.logLevel .Values.invitations.logLevel | quote }}
             - name: SMQ_INVITATIONS_HTTP_HOST
               value: "0.0.0.0"
             - name: SMQ_INVITATIONS_HTTP_PORT
-              value: {{ .Values.invitations.httpPort  | quote  }}
-            - name : SMQ_AUTH_GRPC_URL
+              value: {{ .Values.invitations.httpPort | quote }}
+            - name: SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: SMQ_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
             - name: SMQ_USERS_URL
               value: http://{{ .Release.Name }}-users:{{ .Values.users.httpPort }}
             - name: SMQ_DOMAINS_URL
-              value: http://{{ .Release.Name }}-auth:{{ .Values.auth.httpPort }}
+              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.httpPort | quote }}
+            - name: SMQ_DOMAINS_GRPC_URL
+              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort | quote }}
+            - name: SMQ_DOMAINS_GRPC_TIMEOUT
+              value: {{ .Values.domains.grpcTimeout | quote }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
+              value: {{ .Values.domains.grpcClientCert | quote }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_KEY
+              value: {{ .Values.domains.grpcClientKey | quote }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_CA_CERTS
+              value: {{ .Values.domains.grpcClientCaCerts | quote }}
             - name: SMQ_INVITATIONS_DB_HOST
             {{- if .Values.postgresqlinvitations.enabled }}
               value: "{{ .Release.Name }}-postgresqlinvitations"
@@ -58,7 +70,7 @@ spec:
               value: {{ .Values.postgresqlinvitations.host | quote }}
             {{- end }}
             - name: SMQ_INVITATIONS_DB_PORT
-              value: {{ .Values.postgresqlinvitations.port  | quote }}
+              value: {{ .Values.postgresqlinvitations.port | quote }}
             - name: SMQ_INVITATIONS_DB_NAME
               value: {{ .Values.postgresqlinvitations.database | quote }}
             - name: SMQ_INVITATIONS_DB_USER
