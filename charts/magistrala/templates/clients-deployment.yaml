@@ -44,6 +44,8 @@ spec:
               value: {{ .Values.clients.authHttpPort | quote}}
             - name: SMQ_CLIENTS_CACHE_URL
               value: redis://{{ .Release.Name }}-redis-clients-master:{{ .Values.clients.redisCachePort }}/0
+            {% comment %} - name: SMQ_SPICEDB_SCHEMA_FILE
+              value: "{{ .Values.spicedb.schemaFile | quote }}" {% endcomment %}
             - name: SMQ_CLIENTS_DB_HOST
             {{- if .Values.postgresqlclients.enabled }}
               value: {{ .Release.Name }}-postgresqlclients

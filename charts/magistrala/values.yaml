@@ -242,6 +242,8 @@ spicedb:
   metrics:
     enabled: true
     port: 9090
+  # Add the value for SMQ_SPICEDB_SCHEMA_FILE
+  # schemaFile: "/path/to/spicedb/schema.zed"
   nodeSelector: {}
   affinity: {}
   tolerations: {}
