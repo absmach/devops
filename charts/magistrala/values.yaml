@@ -19,78 +19,6 @@ defaults:
   sendTelemetry: true
   eventStreamURL: "magistrala-nats:4222"
 
-ingress:
-  enabled: true
-  annotations: {}
-  labels: {}
-  # Uncomment this block for TLS support in public ingress
-  # hostname: ""
-  # tls:
-  #   hostname: ""
-  #   secret: "supermq-server"
-
-nginxInternal:
-  image:
-    pullPolicy: "IfNotPresent"
-    repository: "nginx"
-    tag: "1.19.1-alpine"
-  mtls:
-    # By default mTLS is disabled. If you use mTLS, comment this block.
-    tls: ""
-    intermediateCrt: ""
-    # Uncomment this block for TLS and mTLS support.
-    # Use sh script from /secrets/secrets.sh to create config maps with your certs
-    # tls: "supermq-server"
-    # intermediateCrt: "ca"
-
-envoy:
-  image:
-    pullPolicy: "IfNotPresent"
-    repository: "envoyproxy/envoy"
-    tag: "v1.31-latest"
-
-jaeger:
-  fullnameOverride: supermq-jaeger
-  provisionDataStore:
-    cassandra: true
-  agent:
-    enabled: false
-  allInOne:
-    enabled: false
-  storage:
-    type: cassandra
-  cassandra:
-    persistence:
-      enabled: true
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
-      size: 10Gi
-  collector:
-    service:
-      otlp:
-        grpc:
-          name: otlp-grpc
-          port: 4317
-        http:
-          name: otlp-http
-          port: 4318
-
-nats:
-  config:
-    cluster:
-      enabled: false
-      replicas: 3
-    jetstream:
-      enabled: true
-      fileStore:
-        enabled: true
-        pvc:
-          enabled: true
-      memoryStore:
-        enabled: true
-        maxSize: 2Gi
-
 adapter_coap:
   image:
     {}
@@ -178,6 +106,184 @@ adapter_http:
   # affinity: {}
   # tolerations: {}
 
+auth:
+  image:
+    {}
+    # pullSecrets: {}
+    # rootRepository: "supermq/auth"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: error
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  httpPort: 8189
+  grpcPort: 8181
+  grpcTimeout: "300s"
+  secretKey: "HyE2D4RUt9nnKG6v8zKEqAp6g6ka8hhZsqUpzgKvnwpXrNVQSH"
+  adminEmail: "admin@example.com"
+  adminPassword: "12345678"
+  accessTokenDuration: "1h"
+  refreshTokenDuration: "24h"
+  invitationDuration: "168h"
+  grpcClientCert: "./ssl/certs/auth-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/auth-grpc-client.key"
+  grpcServerCaCerts: "./ssl/certs/ca.crt"
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+
+postgresqlauth:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-auth
+  host: postgresql-auth
+  port: &postgresqlAuthPort 5432
+  database: &postgresqlAuthDatabase auth
+  username: &postgresqlAuthUsername supermq
+  password: &postgresqlAuthPassword supermq
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlAuthPassword
+        username: *postgresqlAuthUsername
+        password: *postgresqlAuthPassword
+        database: *postgresqlAuthDatabase
+      service:
+        ports:
+          postgresql: *postgresqlAuthPort
+
+certs:
+  enabled: true
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/certs"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  httpPort: 9019
+  logLevel: "info"
+  signCAPath: "/etc/ssl/certs/ca.crt"
+  signCAKeyPath: "/etc/ssl/certs/ca.key"
+  sdkHost: "http://supermq-am-certs"
+  sdkCertsUrl: "${SMQ_CERTS_SDK_HOST}:9010"
+  sdkTlsVerification: "false"
+  vault:
+    url: "http://supermq-vault:8200"
+    approleRoleid: supermq
+    approleSecret: supermq
+    namespace: supermq
+    thingsCertsPkiPath: pki_int
+    thingsCertsPkiRoleName: supermq_things_certs
+
+postgresqlcerts:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-certs
+  host: postgresql-certs
+  port: &postgresqlCertsPort 5432
+  database: &postgresqlCertsDatabase certs
+  username: &postgresqlCertsUsername supermq
+  password: &postgresqlCertsPassword supermq
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlCertsPassword
+        username: *postgresqlCertsUsername
+        password: *postgresqlCertsPassword
+        database: *postgresqlCertsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlCertsPort
+
+channels:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/channels"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # sendTelemetry: true
+  # jaegerTraceRatio: 1.0
+  httpPort: 9005
+  grpcPort: 7005
+  grpcTimeout: "1s"
+  grpcClientCert: "./ssl/certs/channels-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/channels-grpc-client.key"
+  grpcServerCert: "./ssl/certs/channels-grpc-server.crt"
+  grpcServerKey: "./ssl/certs/channels-grpc-server.key"
+  grpcServerCaCerts: "./ssl/certs/ca.crt"
+  grpcClientCaCerts: "./ssl/certs/ca.crt"
+
+postgresqlchannels:
+  enabled: true
+  name: postgresql-channels
+  host: channels-db
+  port: &postgresqlChannelsPort 5432
+  database: &postgresqlChannelsDatabase channels
+  username: &postgresqlChannelsUsername supermq
+  password: &postgresqlChannelsPassword supermq
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlChannelsPassword
+        username: *postgresqlChannelsUsername
+        password: *postgresqlChannelsPassword
+        database: *postgresqlChannelsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlChannelsPort
+
+clients:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/clients"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  httpPort: 9006
+  authGrpcPort: 7006
+  grpcTimeout: "1s"
+  grpcClientCert: "./ssl/certs/clients-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/clients-grpc-client.key"
+  grpcServerCaCerts: "./ssl/certs/ca.crt"
+  authHttpPort: 9001
+  redisESPort: 6379
+  redisCachePort: 6379
+  cacheKeyduration: "10m"
+  # logLevel: "info"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqlclients:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-clients
+  host: postgresql-clients
+  port: &postgresqlThingsPort 5432
+  database: &postgresqlThingsDatabase clients
+  username: &postgresqlThingsUsername supermq
+  password: &postgresqlThingsPassword supermq
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlThingsPassword
+        username: *postgresqlThingsUsername
+        password: *postgresqlThingsPassword
+        database: *postgresqlThingsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlThingsPort
+
+redis-clients:
+  volumePermissions:
+    enabled: true
+  cluster:
+    enabled: false
+  usePassword: false
+
 domains:
   image:
     {}
@@ -185,6 +291,7 @@ domains:
     # repository: "supermq/domains"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
+  # sendTelemetry: true
   httpPort: 9003
   grpcPort: 7003
   redisTCPPort: 6379
@@ -213,13 +320,181 @@ postgresqldomains:
         ports:
           postgresql: *postgresqlDomainsPort
 
-channels:
-  httpPort: 9005
-  grpcPort: 7005
-  grpcTimeout: "1s"
-  grpcClientCert: "./ssl/certs/channels-grpc-client.crt"
-  grpcClientKey: "./ssl/certs/channels-grpc-client.key"
+envoy:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "envoyproxy/envoy"
+    tag: "v1.31-latest"
+
+groups:
+  image:
+    {}
+    # pullSecrets: {}
+    # rootRepository: "supermq/groups"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: "debug"
+  httpPort: "9004"
+  grpcPort: "7004"
+  grpcServerCert: "./ssl/certs/groups-grpc-server.crt" # Path to the GRPC server certificate
+  grpcServerKey: "./ssl/certs/groups-grpc-server.key" # Path to the GRPC server key
   grpcServerCaCerts: "./ssl/certs/ca.crt"
+  dbHost: "groups-db" # Database host for the Groups service
+  dbPort: "5432" # Database port for the Groups service
+  dbUser: "supermq" # Database username
+  dbPass: "supermq" # Database password
+  dbName: "groups" # Database name
+  dbSslMode: "disable" # SSL mode for the database connection
+  dbSslCert: "" # Path to the database SSL certificate
+  dbSslKey: "" # Path to the database SSL key
+  dbSslRootCert: "" # Path to the database SSL root certificate
+  instanceId: "" # Instance ID for the Groups service
+
+groupsClient:
+  url: "groups:9004" # URL for the Groups service client
+  grpcUrl: "groups:7004" # GRPC URL for the Groups service client
+  grpcTimeout: "300s"
+  grpcClientCert: "./ssl/certs/groups-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/groups-grpc-client.key"
+  grpcClientCaCerts: "./ssl/certs/ca.crt" # Path to the client GRPC CA certificates
+
+ingress:
+  enabled: true
+  annotations: {}
+  labels: {}
+  # Uncomment this block for TLS support in public ingress
+  # hostname: ""
+  # tls:
+  #   hostname: ""
+  #   secret: "supermq-server"
+
+invitations:
+  enabled: true
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/invitations"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  # logLevel: "info"
+  httpPort: 9020
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqlinvitations:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-invitations
+  host: postgresql-invitations
+  port: &postgresqlInvitationsPort 5432
+  database: &postgresqlInvitationsDatabase invitations
+  username: &postgresqlInvitationsUsername supermq
+  password: &postgresqlInvitationsPassword supermq
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlInvitationsPassword
+        username: *postgresqlInvitationsUsername
+        password: *postgresqlInvitationsPassword
+        database: *postgresqlInvitationsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlInvitationsPort
+
+jaeger:
+  fullnameOverride: supermq-jaeger
+  provisionDataStore:
+    cassandra: true
+  agent:
+    enabled: false
+  allInOne:
+    enabled: false
+  storage:
+    type: cassandra
+  cassandra:
+    persistence:
+      enabled: true
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
+      size: 10Gi
+  collector:
+    service:
+      otlp:
+        grpc:
+          name: otlp-grpc
+          port: 4317
+        http:
+          name: otlp-http
+          port: 4318
+
+journal:
+  enabled: true
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/journal"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  # logLevel: "info"
+  httpPort: 9021
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqljournal:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-journal
+  host: postgresql-journal
+  port: &postgresqlJournalPort 5432
+  database: &postgresqlJournalDatabase journal
+  username: &postgresqlJournalUsername supermq
+  password: &postgresqlJournalPassword supermq
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlJournalPassword
+        username: *postgresqlJournalUsername
+        password: *postgresqlJournalPassword
+        database: *postgresqlJournalDatabase
+      service:
+        ports:
+          postgresql: *postgresqlJournalPort
+
+nats:
+  config:
+    cluster:
+      enabled: false
+      replicas: 3
+    jetstream:
+      enabled: true
+      fileStore:
+        enabled: true
+        pvc:
+          enabled: true
+      memoryStore:
+        enabled: true
+        maxSize: 2Gi
+
+nginxInternal:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "nginx"
+    tag: "1.19.1-alpine"
+  mtls:
+    # By default mTLS is disabled. If you use mTLS, comment this block.
+    tls: ""
+    intermediateCrt: ""
+    # Uncomment this block for TLS and mTLS support.
+    # Use sh script from /secrets/secrets.sh to create config maps with your certs
+    # tls: "supermq-server"
+    # intermediateCrt: "ca"
 
 mqtt:
   enabled: true
@@ -297,84 +572,6 @@ postgresqlspicedb:
         ports:
           postgresql: *postgresqlSpicedbPort
 
-auth:
-  image:
-    {}
-    # pullSecrets: {}
-    # rootRepository: "supermq/auth"
-    # tag: "latest"
-    # pullPolicy: "IfNotPresent"
-  # logLevel: error
-  # jaegerTraceRatio: 1.0
-  # sendTelemetry: true
-  httpPort: 8189
-  grpcPort: 8181
-  grpcTimeout: "300s"
-  secretKey: "HyE2D4RUt9nnKG6v8zKEqAp6g6ka8hhZsqUpzgKvnwpXrNVQSH"
-  adminEmail: "admin@example.com"
-  adminPassword: "12345678"
-  accessTokenDuration: "1h"
-  refreshTokenDuration: "24h"
-  invitationDuration: "168h"
-  grpcClientCert: "./ssl/certs/auth-grpc-client.crt"
-  grpcClientKey: "./ssl/certs/auth-grpc-client.key"
-  grpcServerCaCerts: "./ssl/certs/ca.crt"
-  nodeSelector: {}
-  affinity: {}
-  tolerations: {}
-
-postgresqlauth:
-  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
-  enabled: true
-  name: postgresql-auth
-  host: postgresql-auth
-  port: &postgresqlAuthPort 5432
-  database: &postgresqlAuthDatabase auth
-  username: &postgresqlAuthUsername supermq
-  password: &postgresqlAuthPassword supermq
-  global:
-    postgresql:
-      auth:
-        postgresPassword: *postgresqlAuthPassword
-        username: *postgresqlAuthUsername
-        password: *postgresqlAuthPassword
-        database: *postgresqlAuthDatabase
-      service:
-        ports:
-          postgresql: *postgresqlAuthPort
-
-groups:
-  image:
-    {}
-    # pullSecrets: {}
-    # rootRepository: "supermq/groups"
-    # tag: "latest"
-    # pullPolicy: "IfNotPresent"
-  # logLevel: "debug"
-  httpPort: "9004"
-  grpcPort: "7004"
-  grpcServerCert: "./ssl/certs/groups-grpc-server.crt" # Path to the GRPC server certificate
-  grpcServerKey: "./ssl/certs/groups-grpc-server.key" # Path to the GRPC server key
-  grpcServerCaCerts: "./ssl/certs/ca.crt"
-  dbHost: "groups-db" # Database host for the Groups service
-  dbPort: "5432" # Database port for the Groups service
-  dbUser: "supermq" # Database username
-  dbPass: "supermq" # Database password
-  dbName: "groups" # Database name
-  dbSslMode: "disable" # SSL mode for the database connection
-  dbSslCert: "" # Path to the database SSL certificate
-  dbSslKey: "" # Path to the database SSL key
-  dbSslRootCert: "" # Path to the database SSL root certificate
-  instanceId: "" # Instance ID for the Groups service
-
-groupsClient:
-  url: "groups:9004" # URL for the Groups service client
-  grpcUrl: "groups:7004" # GRPC URL for the Groups service client
-  grpcTimeout: "300s"
-  grpcClientCert: "./ssl/certs/groups-grpc-client.crt"
-  grpcClientKey: "./ssl/certs/groups-grpc-client.key"
-  grpcClientCaCerts: "./ssl/certs/ca.crt" # Path to the client GRPC CA certificates
-
 users:
   image:
     {}
@@ -425,172 +622,6 @@ postgresqlusers:
         ports:
           postgresql: *postgresqlUsersPort
 
-clients:
-  image:
-    {}
-    # pullSecrets: {}
-    # repository: "supermq/clients"
-    # tag: "latest"
-    # pullPolicy: "IfNotPresent"
-  httpPort: 9006
-  authGrpcPort: 7006
-  grpcTimeout: "1s"
-  authHttpPort: 9001
-  redisESPort: 6379
-  redisCachePort: 6379
-  cacheKeyduration: "10m"
-  # logLevel: "info"
-  # nodeSelector: {}
-  # affinity: {}
-  # tolerations: {}
-
-postgresqlclients:
-  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
-  enabled: true
-  name: postgresql-clients
-  host: postgresql-clients
-  port: &postgresqlThingsPort 5432
-  database: &postgresqlThingsDatabase clients
-  username: &postgresqlThingsUsername supermq
-  password: &postgresqlThingsPassword supermq
-  global:
-    postgresql:
-      auth:
-        postgresPassword: *postgresqlThingsPassword
-        username: *postgresqlThingsUsername
-        password: *postgresqlThingsPassword
-        database: *postgresqlThingsDatabase
-      service:
-        ports:
-          postgresql: *postgresqlThingsPort
-
-redis-clients:
-  volumePermissions:
-    enabled: true
-  cluster:
-    enabled: false
-  usePassword: false
-
-certs:
-  enabled: true
-  image:
-    {}
-    # pullSecrets: {}
-    # repository: "supermq/certs"
-    # tag: "latest"
-    # pullPolicy: "IfNotPresent"
-  # jaegerTraceRatio: 1.0
-  # sendTelemetry: true
-  httpPort: 9019
-  logLevel: "info"
-  signCAPath: "/etc/ssl/certs/ca.crt"
-  signCAKeyPath: "/etc/ssl/certs/ca.key"
-  sdkHost: "http://supermq-am-certs"
-  sdkCertsUrl: "${SMQ_CERTS_SDK_HOST}:9010"
-  sdkTlsVerification: "false"
-  vault:
-    url: "http://supermq-vault:8200"
-    approleRoleid: supermq
-    approleSecret: supermq
-    namespace: supermq
-    thingsCertsPkiPath: pki_int
-    thingsCertsPkiRoleName: supermq_things_certs
-
-vault:
-  enabled: false
-
-postgresqlcerts:
-  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
-  enabled: true
-  name: postgresql-certs
-  host: postgresql-certs
-  port: &postgresqlCertsPort 5432
-  database: &postgresqlCertsDatabase certs
-  username: &postgresqlCertsUsername supermq
-  password: &postgresqlCertsPassword supermq
-  global:
-    postgresql:
-      auth:
-        postgresPassword: *postgresqlCertsPassword
-        username: *postgresqlCertsUsername
-        password: *postgresqlCertsPassword
-        database: *postgresqlCertsDatabase
-      service:
-        ports:
-          postgresql: *postgresqlCertsPort
-
-invitations:
-  enabled: true
-  image:
-    {}
-    # pullSecrets: {}
-    # repository: "supermq/invitations"
-    # tag: "latest"
-    # pullPolicy: "IfNotPresent"
-  # jaegerTraceRatio: 1.0
-  # sendTelemetry: true
-  # logLevel: "info"
-  httpPort: 9020
-  # nodeSelector: {}
-  # affinity: {}
-  # tolerations: {}
-
-postgresqlinvitations:
-  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
-  enabled: true
-  name: postgresql-invitations
-  host: postgresql-invitations
-  port: &postgresqlInvitationsPort 5432
-  database: &postgresqlInvitationsDatabase invitations
-  username: &postgresqlInvitationsUsername supermq
-  password: &postgresqlInvitationsPassword supermq
-  global:
-    postgresql:
-      auth:
-        postgresPassword: *postgresqlInvitationsPassword
-        username: *postgresqlInvitationsUsername
-        password: *postgresqlInvitationsPassword
-        database: *postgresqlInvitationsDatabase
-      service:
-        ports:
-          postgresql: *postgresqlInvitationsPort
-
-journal:
-  enabled: true
-  image:
-    {}
-    # pullSecrets: {}
-    # repository: "supermq/journal"
-    # tag: "latest"
-    # pullPolicy: "IfNotPresent"
-  # jaegerTraceRatio: 1.0
-  # sendTelemetry: true
-  # logLevel: "info"
-  httpPort: 9021
-  # nodeSelector: {}
-  # affinity: {}
-  # tolerations: {}
-
-postgresqljournal:
-  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
-  enabled: true
-  name: postgresql-journal
-  host: postgresql-journal
-  port: &postgresqlJournalPort 5432
-  database: &postgresqlJournalDatabase journal
-  username: &postgresqlJournalUsername supermq
-  password: &postgresqlJournalPassword supermq
-  global:
-    postgresql:
-      auth:
-        postgresPassword: *postgresqlJournalPassword
-        username: *postgresqlJournalUsername
-        password: *postgresqlJournalPassword
-        database: *postgresqlJournalDatabase
-      service:
-        ports:
-          postgresql: *postgresqlJournalPort
-
 ui:
   enabled: true
   image:
@@ -640,3 +671,6 @@ postgresqlui:
       service:
         ports:
           postgresql: *postgresqlUIPort
+
+vault:
+  enabled: false
