@@ -78,9 +78,9 @@ spec:
             - name: SMQ_GROUPS_GRPC_TIMEOUT
               value: {{ .Values.groups.grpcTimeout | quote }}
             - name: SMQ_GROUPS_GRPC_CLIENT_CERT
-              value: {{ .Values.groupsClient.grpcClientCert | quote }}
+              value: {{ .Values.groups.grpcClientCert | quote }}
             - name: SMQ_GROUPS_GRPC_CLIENT_KEY
-              value: {{ .Values.groupsClient.grpcClientKey | quote }}
+              value: {{ .Values.groups.grpcClientKey | quote }}
             - name: SMQ_GROUPS_GRPC_SERVER_CA_CERTS
               value: {{ .Values.groups.grpcServerCaCerts | quote }}
             - name: SMQ_DOMAINS_GRPC_URL

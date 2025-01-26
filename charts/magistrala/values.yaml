@@ -334,29 +334,36 @@ groups:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # logLevel: "debug"
-  httpPort: "9004"
-  grpcPort: "7004"
-  grpcServerCert: "./ssl/certs/groups-grpc-server.crt"
-  grpcServerKey: "./ssl/certs/groups-grpc-server.key"
-  grpcServerCaCerts: "./ssl/certs/ca.crt"
-  dbHost: "groups-db"
-  dbPort: "5432"
-  dbUser: "supermq"
-  dbPass: "supermq"
-  dbName: "groups"
-  dbSslMode: "disable"
-  dbSslCert: ""
-  dbSslKey: ""
-  dbSslRootCert: ""
-  instanceId: ""
-
-groupsClient:
-  url: "groups:9004"
-  grpcUrl: "groups:7004"
+  # sendTelemetry: true
+  # jaegerTraceRatio: 1.0
+  httpPort: 9004
+  grpcPort: 7004
   grpcTimeout: "300s"
   grpcClientCert: "./ssl/certs/groups-grpc-client.crt"
   grpcClientKey: "./ssl/certs/groups-grpc-client.key"
   grpcClientCaCerts: "./ssl/certs/ca.crt"
+  grpcServerCert: "./ssl/certs/groups-grpc-server.crt"
+  grpcServerKey: "./ssl/certs/groups-grpc-server.key"
+  grpcServerCaCerts: "./ssl/certs/ca.crt"
+
+postgresqlgroups:
+  enabled: true
+  name: postgresql-groups
+  host: postgresql-groups
+  port: &postgresqlGroupsPort 5432
+  database: &postgresqlGroupsDatabase groups
+  username: &postgresqlGroupsUsername supermq
+  password: &postgresqlGroupsPassword supermq
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlGroupsPassword
+        username: *postgresqlGroupsUsername
+        password: *postgresqlGroupsPassword
+        database: *postgresqlGroupsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlGroupsPort
 
 ingress:
   enabled: true
