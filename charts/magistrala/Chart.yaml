@@ -41,8 +41,26 @@ dependencies:
   - name: postgresql
     version: "12.5.6"
     repository: "@bitnami"
-    alias: postgresqlthings
-    condition: postgresqlthings.enabled
+    alias: postgresqlchannels
+    condition: postgresqlchannels.enabled
+
+  - name: postgresql
+    version: "12.5.6"
+    repository: "@bitnami"
+    alias: postgresqlclients
+    condition: postgresqlclients.enabled
+
+  - name: postgresql
+    version: "12.5.6"
+    repository: "@bitnami"
+    alias: postgresqldomains
+    condition: postgresqldomains.enabled
+
+  - name: postgresql
+    version: "12.5.6"
+    repository: "@bitnami"
+    alias: postgresqlgroups
+    condition: postgresqlgroups.enabled
 
   - name: postgresql
     version: "12.5.6"
@@ -77,7 +95,7 @@ dependencies:
   - name: redis
     version: "19.6.2"
     repository: "@bitnami"
-    alias: redis-things
+    alias: redis-clients
 
   - name: vault
     version: "0.28.1"
