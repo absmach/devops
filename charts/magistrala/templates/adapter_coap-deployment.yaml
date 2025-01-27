@@ -36,7 +36,7 @@ spec:
             - name: SMQ_JAEGER_TRACE_RATIO
               value: {{ default .Values.defaults.jaegerTraceRatio .Values.adapter_coap.jaegerTraceRatio | quote  }}
             - name: SMQ_SEND_TELEMETRY
-              value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
+              value: {{ default .Values.defaults.sendTelemetry .Values.adapter_coap.sendTelemetry | quote  }}
             - name: SMQ_MESSAGE_BROKER_URL
               value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
             - name: SMQ_CLIENTS_AUTH_GRPC_URL
