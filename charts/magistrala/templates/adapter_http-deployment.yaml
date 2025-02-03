@@ -44,15 +44,15 @@ spec:
             - name: SMQ_HTTP_ADAPTER_PORT
               value: {{ .Values.adapter_http.httpPort | quote }}
             - name: SMQ_CLIENTS_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort | quote }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
             - name: SMQ_CHANNELS_GRPC_URL
-              value: {{ .Release.Name }}-channels:{{ .Values.channels.grpcPort | quote }}
+              value: {{ .Release.Name }}channels:{{ .Values.channels.grpcPort }}
             - name: SMQ_CHANNELS_GRPC_TIMEOUT
               value: {{ .Values.channels.grpcTimeout | quote }}
             - name : SMQ_AUTH_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort | quote }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: SMQ_AUTH_GRPC_TIMEOUT
               value: {{ .Values.auth.grpcTimeout | quote }}
             - name: SMQ_MESSAGE_BROKER_URL
