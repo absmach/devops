@@ -63,7 +63,7 @@ spec:
             - name: SMQ_GROUPS_GRPC_CLIENT_CA_CERTS
               value: "{{ .Values.groups.grpcClientCaCerts }}"
             - name: SMQ_CHANNELS_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.channels.httpPort }}
+              value: {{ .Release.Name }}-channels:{{ .Values.channels.httpPort }}
             - name: SMQ_CHANNELS_GRPC_URL
               value: {{ .Release.Name }}-channels:{{ .Values.channels.grpcPort }}
             - name: SMQ_CHANNELS_GRPC_TIMEOUT

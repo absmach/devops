@@ -34,6 +34,12 @@ spec:
           env:
             - name: SMQ_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+            - name: SMQ_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.clients.jaegerTraceRatio | quote  }}
+            - name: SMQ_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.clients.sendTelemetry | quote  }}
+            - name: SMQ_CLIENTS_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.clients.logLevel  | quote }}
             - name: SMQ_CLIENTS_AUTH_GRPC_HOST
               value: "0.0.0.0"
             - name: SMQ_CLIENTS_AUTH_GRPC_PORT
@@ -70,6 +76,18 @@ spec:
               value: {{ .Values.clients.cacheKeyduration | quote }}
             - name: SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: SMQ_CHANNELS_URL
+              value: {{ .Release.Name }}-channels:{{ .Values.channels.httpPort }}
+            - name: SMQ_CHANNELS_GRPC_URL
+              value: {{ .Release.Name }}-channels:{{ .Values.channels.grpcPort }}
+            - name: SMQ_CHANNELS_GRPC_TIMEOUT
+              value: {{ .Values.channels.grpcTimeout | quote }}
+            - name: SMQ_GROUPS_URL
+              value: {{ .Release.Name }}-groups:{{ .Values.groups.httpPort }}
+            - name: SMQ_GROUPS_GRPC_URL
+              value: {{ .Release.Name }}-groups:{{ .Values.groups.grpcPort }}
+            - name: SMQ_GROUPS_GRPC_TIMEOUT
+              value: {{ .Values.groups.grpcTimeout | quote }}
             - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
               value: {{ .Values.domains.grpcClientCert | quote }}
             - name: SMQ_DOMAINS_GRPC_CLIENT_KEY
@@ -77,7 +95,13 @@ spec:
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
               value: {{ .Values.domains.grpcTimeout | quote }}
             - name: SMQ_DOMAINS_GRPC_URL
-              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort | quote }}
+              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort }}
+            - name: SMQ_SPICEDB_PRE_SHARED_KEY
+              value: {{.Values.spicedb.grpc.presharedKey | quote }}
+            - name: SMQ_SPICEDB_HOST
+              value: {{ .Release.Name }}-spicedb-envoy
+            - name: SMQ_SPICEDB_PORT
+              value: {{ .Values.spicedb.grpc.port | quote}}
           ports:
             - containerPort: {{ .Values.clients.httpPort }}
               protocol: TCP

@@ -160,6 +160,7 @@ certs:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
+  # logLevel: error
   # sendTelemetry: true
   httpPort: 9019
   logLevel: "info"
@@ -204,6 +205,7 @@ channels:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # sendTelemetry: true
+  # logLevel: error
   # jaegerTraceRatio: 1.0
   httpPort: 9005
   grpcPort: 7005
@@ -240,6 +242,9 @@ clients:
     # repository: "supermq/clients"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
+  # logLevel: error
+  # sendTelemetry: true
+  # jaegerTraceRatio: 1.0
   httpPort: 9006
   authGrpcPort: 7006
   grpcTimeout: "1s"
