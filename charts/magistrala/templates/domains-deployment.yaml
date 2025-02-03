@@ -1,3 +1,16 @@
+---
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-spicedb-schema-zed
+data:
+  schema.zed: |-
+{{ include "spicedb.schema.zed" . | indent 4 }}
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -38,7 +51,7 @@ spec:
             - name: SMQ_SPICEDB_PORT
               value: {{ .Values.spicedb.grpc.port | quote }}
             - name: SMQ_SPICEDB_SCHEMA_FILE
-              value: /schema.zed
+              value: "/schema.zed"
             - name: SMQ_DOMAINS_HTTP_HOST
               value: "0.0.0.0"
             - name: SMQ_DOMAINS_HTTP_PORT
@@ -104,11 +117,22 @@ spec:
           volumeMounts:
             - name: ca-certs
               mountPath: /ssl/certs
+            - name: spicedb-schema-zed
+              mountPath: /schema.zed
+              subPath: schema.zed
           ports:
             - containerPort: {{ .Values.domains.httpPort }}
               protocol: TCP
             - containerPort: {{ .Values.domains.grpcPort }}
               protocol: TCP
+      volumes:
+        - name: spicedb-schema-zed
+          configMap:
+            name: {{ .Release.Name }}-spicedb-schema-zed
+            optional: false
+        - name: ca-certs
+          configMap:
+            name: my-ca-certs
       {{- with .Values.domains.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -121,7 +145,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      volumes:
-        - name: ca-certs
-          configMap:
-            name: my-ca-certs
