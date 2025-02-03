@@ -51,7 +51,7 @@ spec:
             - name: SMQ_SPICEDB_PORT
               value: {{ .Values.spicedb.grpc.port | quote }}
             - name: SMQ_SPICEDB_SCHEMA_FILE
-              value: "/schema.zed"
+              value: /schema.zed
             - name: SMQ_DOMAINS_HTTP_HOST
               value: "0.0.0.0"
             - name: SMQ_DOMAINS_HTTP_PORT

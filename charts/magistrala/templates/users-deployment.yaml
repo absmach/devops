@@ -93,7 +93,7 @@ spec:
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
               value: {{ .Values.domains.grpcTimeout | quote }}
             - name: SMQ_DOMAINS_GRPC_URL
-              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort | quote }}
+              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort }}
             - name: SMQ_USERS_DB_HOST
             {{- if .Values.postgresqlusers.enabled }}
               value: "{{ .Release.Name }}-postgresqlusers"
@@ -110,6 +110,10 @@ spec:
               value: {{ .Values.postgresqlusers.password | quote }}
             - name : SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: SMQ_SPICEDB_HOST
+              value: {{ .Release.Name }}-spicedb-envoy
+            - name: SMQ_SPICEDB_PORT
+              value: {{ .Values.spicedb.grpc.port | quote}}
           ports:
             - containerPort: {{ .Values.users.httpPort }}
               protocol: TCP
