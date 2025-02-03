@@ -1,14 +1,23 @@
-# Copyright (c) Abstract Machines
-# SPDX-License-Identifier: Apache-2.0
-
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: magistrala-auth-data
+  namespace: mg
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: do-block-storage
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-spicedb-schema-zed
 data:
   schema.zed: |-
-{{ include "spicedb.schema.zed" . | indent 4 }}
-
+    {{ include "spicedb.schema.zed" . | indent 4 }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -70,11 +79,11 @@ spec:
             - name: SMQ_AUTH_SECRET_KEY
               value: {{ .Values.auth.secretKey | quote }}
             - name: SMQ_AUTH_DB_HOST
-            {{- if .Values.postgresqlauth.enabled }}
+              {{- if .Values.postgresqlauth.enabled }}
               value: {{ .Release.Name }}-postgresqlauth
-            {{- else }}
+              {{- else }}
               value: {{ .Values.postgresqlauth.host | quote }}
-            {{- end }}
+              {{- end }}
             - name: SMQ_AUTH_DB_PORT
               value: {{ .Values.postgresqlauth.port | quote }}
             - name: SMQ_AUTH_DB_NAME
@@ -86,11 +95,11 @@ spec:
             - name: SMQ_SPICEDB_HOST
               value: {{ .Release.Name }}-spicedb-envoy
             - name: SMQ_SPICEDB_PORT
-              value: {{ .Values.spicedb.grpc.port | quote}}
+              value: {{ .Values.spicedb.grpc.port | quote }}
             - name: SMQ_SPICEDB_SCHEMA_FILE
               value: /schema.zed
             - name: SMQ_SPICEDB_PRE_SHARED_KEY
-              value: {{.Values.spicedb.grpc.presharedKey | quote }}
+              value: {{ .Values.spicedb.grpc.presharedKey | quote }}
           ports:
               - containerPort: {{ .Values.auth.httpPort }}
                 protocol: TCP
@@ -100,12 +109,17 @@ spec:
             - mountPath: /schema.zed
               name: spicedb-schema-zed
               subPath: schema.zed
+            - mountPath: /supermq-data
+              name: auth-data
       volumes:
         - name: spicedb-schema-zed
           configMap:
             defaultMode: 256
             name: {{ .Release.Name }}-spicedb-schema-zed
             optional: false
+        - name: auth-data
+          persistentVolumeClaim:
+            claimName: magistrala-auth-data
       {{- with .Values.auth.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

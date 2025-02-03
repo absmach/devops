@@ -1,6 +1,3 @@
-# Copyright (c) Abstract Machines
-# SPDX-License-Identifier: Apache-2.0
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,11 +32,11 @@ spec:
             - name: SMQ_DOMAINS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.domains.logLevel | quote }}
             - name: SMQ_SPICEDB_PRE_SHARED_KEY
-              value: {{.Values.spicedb.grpc.presharedKey | quote }}
+              value: {{ .Values.spicedb.grpc.presharedKey | quote }}
             - name: SMQ_SPICEDB_HOST
               value: {{ .Release.Name }}-spicedb-envoy
             - name: SMQ_SPICEDB_PORT
-              value: {{ .Values.spicedb.grpc.port | quote}}
+              value: {{ .Values.spicedb.grpc.port | quote }}
             - name: SMQ_SPICEDB_SCHEMA_FILE
               value: /schema.zed
             - name: SMQ_DOMAINS_HTTP_HOST
@@ -50,16 +47,14 @@ spec:
               value: "0.0.0.0"
             - name: SMQ_DOMAINS_GRPC_PORT
               value: {{ .Values.domains.grpcPort | quote }}
-            - name: SMQ_DOMAINS_GRPC_CLIENT_CA_CERTS
-              value: {{ .Values.domains.grpcClientCaCerts | quote }}
             - name: SMQ_DOMAINS_DB_HOST
-            {{- if .Values.postgresqldomains.enabled }}
+              {{- if .Values.postgresqldomains.enabled }}
               value: {{ .Release.Name }}-postgresqldomains
-            {{- else }}
-              value: {{ .Values.postgresqldomains.host | quote}}
-            {{- end }}
+              {{- else }}
+              value: {{ .Values.postgresqldomains.host | quote }}
+              {{- end }}
             - name: SMQ_DOMAINS_DB_PORT
-              value: {{ .Values.postgresqldomains.port | quote}}
+              value: {{ .Values.postgresqldomains.port | quote }}
             - name: SMQ_DOMAINS_DB_USER
               value: {{ .Values.postgresqldomains.username | quote }}
             - name: SMQ_DOMAINS_DB_PASS
@@ -78,8 +73,6 @@ spec:
               value: {{ .Values.auth.grpcClientCert | quote }}
             - name: SMQ_AUTH_GRPC_CLIENT_KEY
               value: {{ .Values.auth.grpcClientKey | quote }}
-            - name: SMQ_AUTH_GRPC_SERVER_CA_CERTS
-              value: {{ .Values.auth.grpcServerCaCerts | quote }}
             - name: SMQ_GROUPS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.groups.grpcPort }}
             - name: SMQ_GROUPS_GRPC_TIMEOUT
@@ -88,8 +81,6 @@ spec:
               value: {{ .Values.groups.grpcClientCert | quote }}
             - name: SMQ_GROUPS_GRPC_CLIENT_KEY
               value: {{ .Values.groups.grpcClientKey | quote }}
-            - name: SMQ_GROUPS_GRPC_SERVER_CA_CERTS
-              value: {{ .Values.groups.grpcServerCaCerts | quote }}
             - name: SMQ_CHANNELS_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.channels.httpPort }}
             - name: SMQ_CHANNELS_GRPC_URL
@@ -100,18 +91,19 @@ spec:
               value: {{ .Values.channels.grpcClientCert | quote }}
             - name: SMQ_CHANNELS_GRPC_CLIENT_KEY
               value: {{ .Values.channels.grpcClientKey | quote }}
-            - name: SMQ_CHANNELS_GRPC_SERVER_CA_CERTS
-              value: {{ .Values.channels.grpcServerCaCerts | quote }}
             - name: SMQ_CLIENTS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
             - name: SMQ_JAEGER_URL
-              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+              value: "http://{{ .Release.Name }}-jaeger-collector:4318/v1/traces"
             - name: SMQ_JAEGER_TRACE_RATIO
               value: {{ default .Values.defaults.jaegerTraceRatio .Values.adapter_coap.jaegerTraceRatio | quote  }}
             - name: SMQ_SEND_TELEMETRY
               value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
+          volumeMounts:
+            - name: ca-certs
+              mountPath: /ssl/certs
           ports:
             - containerPort: {{ .Values.domains.httpPort }}
               protocol: TCP
@@ -129,3 +121,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: ca-certs
+          configMap:
+            name: my-ca-certs

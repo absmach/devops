@@ -60,8 +60,6 @@ spec:
               value: "{{ .Values.groups.grpcServerCert }}"
             - name: SMQ_GROUPS_GRPC_SERVER_KEY
               value: "{{ .Values.groups.grpcServerKey }}"
-            - name: SMQ_GROUPS_GRPC_SERVER_CA_CERTS
-              value: "{{ .Values.groups.grpcServerCaCerts }}"
             - name: SMQ_GROUPS_GRPC_CLIENT_CA_CERTS
               value: "{{ .Values.groups.grpcClientCaCerts }}"
             - name: SMQ_CHANNELS_URL
@@ -74,8 +72,6 @@ spec:
               value: {{ .Values.channels.grpcClientCert | quote }}
             - name: SMQ_CHANNELS_GRPC_CLIENT_KEY
               value: {{ .Values.channels.grpcClientKey | quote }}
-            - name: SMQ_CHANNELS_GRPC_SERVER_CA_CERTS
-              value: {{ .Values.channels.grpcServerCaCerts | quote }}
             - name: SMQ_CLIENTS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
@@ -84,8 +80,6 @@ spec:
               value: "{{ .Values.clients.grpcClientCert }}"
             - name: SMQ_CLIENTS_AUTH_GRPC_CLIENT_KEY
               value: "{{ .Values.clients.grpcClientKey }}"
-            - name: SMQ_CLIENTS_AUTH_GRPC_SERVER_CA_CERTS
-              value: "{{ .Values.clients.grpcServerCaCerts }}"
             - name: SMQ_DOMAINS_GRPC_URL
               value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort | quote }}
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
@@ -110,8 +104,6 @@ spec:
               value: {{ .Values.auth.grpcClientCert | quote }}
             - name: SMQ_AUTH_GRPC_CLIENT_KEY
               value: {{ .Values.auth.grpcClientKey | quote }}
-            - name: SMQ_AUTH_GRPC_SERVER_CA_CERTS
-              value: {{ .Values.auth.grpcServerCaCerts | quote }}
             - name: SMQ_SPICEDB_PRE_SHARED_KEY
               value: {{ .Values.spicedb.grpc.presharedKey | quote }}
             - name: SMQ_SPICEDB_HOST

@@ -116,8 +116,8 @@ auth:
   # logLevel: error
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
-  httpPort: 8189
-  grpcPort: 8181
+  httpPort: 9001
+  grpcPort: 7001
   grpcTimeout: "300s"
   secretKey: "HyE2D4RUt9nnKG6v8zKEqAp6g6ka8hhZsqUpzgKvnwpXrNVQSH"
   adminEmail: "admin@example.com"
@@ -127,7 +127,6 @@ auth:
   invitationDuration: "168h"
   grpcClientCert: "./ssl/certs/auth-grpc-client.crt"
   grpcClientKey: "./ssl/certs/auth-grpc-client.key"
-  grpcServerCaCerts: "./ssl/certs/ca.crt"
   nodeSelector: {}
   affinity: {}
   tolerations: {}
@@ -213,7 +212,6 @@ channels:
   grpcClientKey: "./ssl/certs/channels-grpc-client.key"
   grpcServerCert: "./ssl/certs/channels-grpc-server.crt"
   grpcServerKey: "./ssl/certs/channels-grpc-server.key"
-  grpcServerCaCerts: "./ssl/certs/ca.crt"
   grpcClientCaCerts: "./ssl/certs/ca.crt"
 
 postgresqlchannels:
@@ -247,7 +245,6 @@ clients:
   grpcTimeout: "1s"
   grpcClientCert: "./ssl/certs/clients-grpc-client.crt"
   grpcClientKey: "./ssl/certs/clients-grpc-client.key"
-  grpcServerCaCerts: "./ssl/certs/ca.crt"
   authHttpPort: 9001
   redisESPort: 6379
   redisCachePort: 6379
@@ -344,7 +341,6 @@ groups:
   grpcClientCaCerts: "./ssl/certs/ca.crt"
   grpcServerCert: "./ssl/certs/groups-grpc-server.crt"
   grpcServerKey: "./ssl/certs/groups-grpc-server.key"
-  grpcServerCaCerts: "./ssl/certs/ca.crt"
 
 postgresqlgroups:
   enabled: true
@@ -412,7 +408,7 @@ postgresqlinvitations:
           postgresql: *postgresqlInvitationsPort
 
 jaeger:
-  fullnameOverride: supermq-jaeger
+  fullnameOverride: magistrala-jaeger
   provisionDataStore:
     cassandra: true
   agent:

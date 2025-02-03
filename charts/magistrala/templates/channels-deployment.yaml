@@ -49,8 +49,6 @@ spec:
               value: "{{ .Values.channels.grpcServerCert }}"
             - name: SMQ_CHANNELS_GRPC_SERVER_KEY
               value: "{{ .Values.channels.grpcServerKey }}"
-            - name: SMQ_CHANNELS_GRPC_SERVER_CA_CERTS
-              value: "{{ .Values.channels.grpcServerCaCerts }}"
             - name: SMQ_CHANNELS_GRPC_CLIENT_CA_CERTS
               value: "{{ .Values.channels.grpcClientCaCerts }}"
             - name : SMQ_AUTH_GRPC_URL
@@ -61,8 +59,6 @@ spec:
               value: {{ .Values.auth.grpcClientCert | quote }}
             - name: SMQ_AUTH_GRPC_CLIENT_KEY
               value: {{ .Values.auth.grpcClientKey | quote }}
-            - name: SMQ_AUTH_GRPC_SERVER_CA_CERTS
-              value: {{ .Values.auth.grpcServerCaCerts | quote }}
             - name: SMQ_CLIENTS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
@@ -71,8 +67,6 @@ spec:
               value: "{{ .Values.clients.grpcClientCert }}"
             - name: SMQ_CLIENTS_AUTH_GRPC_CLIENT_KEY
               value: "{{ .Values.clients.grpcClientKey }}"
-            - name: SMQ_CLIENTS_AUTH_GRPC_SERVER_CA_CERTS
-              value: "{{ .Values.clients.grpcServerCaCerts }}"
             - name: SMQ_GROUPS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.groups.grpcPort }}
             - name: SMQ_GROUPS_GRPC_TIMEOUT
@@ -81,8 +75,6 @@ spec:
               value: {{ .Values.groups.grpcClientCert | quote }}
             - name: SMQ_GROUPS_GRPC_CLIENT_KEY
               value: {{ .Values.groups.grpcClientKey | quote }}
-            - name: SMQ_GROUPS_GRPC_SERVER_CA_CERTS
-              value: {{ .Values.groups.grpcServerCaCerts | quote }}
             - name: SMQ_DOMAINS_GRPC_URL
               value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort | quote }}
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
