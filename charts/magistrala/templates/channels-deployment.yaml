@@ -36,21 +36,19 @@ spec:
             - name: SMQ_CHANNELS_GRPC_PORT
               value: "{{ .Values.channels.grpcPort }}"
             - name: SMQ_CHANNELS_DB_HOST
-              value: "{{ .Values.channels.dbHost }}"
+            {{- if .Values.postgresqlchannels.enabled }}
+              value: {{ .Release.Name }}-postgresqlchannels
+            {{- else }}
+              value: {{ .Values.postgresqlchannels.host | quote }}
+            {{- end }}
             - name: SMQ_CHANNELS_DB_PORT
-              value: "{{ .Values.channels.dbPort }}"
-            - name: SMQ_CHANNELS_DB_USER
-              value: "{{ .Values.channels.dbUser }}"
-            - name: SMQ_CHANNELS_DB_PASS
-              value: "{{ .Values.channels.dbPass }}"
+              value: {{ .Values.postgresqlchannels.port | quote }}
             - name: SMQ_CHANNELS_DB_NAME
-              value: "{{ .Values.channels.dbName }}"
-            - name: SMQ_CHANNELS_GRPC_SERVER_CERT
-              value: "{{ .Values.channels.grpcServerCert }}"
-            - name: SMQ_CHANNELS_GRPC_SERVER_KEY
-              value: "{{ .Values.channels.grpcServerKey }}"
-            - name: SMQ_CHANNELS_GRPC_CLIENT_CA_CERTS
-              value: "{{ .Values.channels.grpcClientCaCerts }}"
+              value: {{ .Values.postgresqlchannels.database | quote }}
+            - name: SMQ_CHANNELS_DB_USER
+              value: {{ .Values.postgresqlchannels.username | quote }}
+            - name: SMQ_CHANNELS_DB_PASS
+              value: {{ .Values.postgresqlchannels.password | quote }}
             - name : SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: SMQ_AUTH_GRPC_TIMEOUT
@@ -68,7 +66,7 @@ spec:
             - name: SMQ_CLIENTS_AUTH_GRPC_CLIENT_KEY
               value: "{{ .Values.clients.grpcClientKey }}"
             - name: SMQ_GROUPS_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.groups.grpcPort }}
+              value: {{ .Release.Name }}-groups:{{ .Values.groups.grpcPort }}
             - name: SMQ_GROUPS_GRPC_TIMEOUT
               value: {{ .Values.groups.grpcTimeout | quote }}
             - name: SMQ_GROUPS_GRPC_CLIENT_CERT
@@ -76,7 +74,7 @@ spec:
             - name: SMQ_GROUPS_GRPC_CLIENT_KEY
               value: {{ .Values.groups.grpcClientKey | quote }}
             - name: SMQ_DOMAINS_GRPC_URL
-              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort | quote }}
+              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort }}
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
               value: {{ .Values.domains.grpcTimeout | quote }}
             - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
