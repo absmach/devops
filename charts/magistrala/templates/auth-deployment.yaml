@@ -3,21 +3,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: magistrala-auth-data
-  namespace: mg
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: do-block-storage
-
----
-
-apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-spicedb-schema-zed
@@ -27,10 +12,11 @@ data:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-auth
 spec:
+  serviceName: {{ .Release.Name }}-auth-headless
   replicas: {{ .Values.defaults.replicaCount }}
   selector:
     matchLabels:
@@ -75,8 +61,6 @@ spec:
               value: "0.0.0.0"
             - name: SMQ_AUTH_HTTP_PORT
               value: {{ .Values.auth.httpPort  | quote }}
-            - name: SMQ_AUTH_SECRET
-              value: {{ .Values.auth.secret | quote }}
             - name: SMQ_AUTH_ACCESS_TOKEN_DURATION
               value: {{ .Values.auth.accessTokenDuration | quote }}
             - name: SMQ_AUTH_REFRESH_TOKEN_DURATION
@@ -106,12 +90,12 @@ spec:
             - name: SMQ_SPICEDB_SCHEMA_FILE
               value: /schema.zed
             - name: SMQ_SPICEDB_PRE_SHARED_KEY
-              value: {{.Values.spicedb.grpc.presharedKey | quote }}
+              value: {{ .Values.spicedb.grpc.presharedKey | quote }}
           ports:
-              - containerPort: {{ .Values.auth.httpPort }}
-                protocol: TCP
-              - containerPort: {{ .Values.auth.grpcPort }}
-                protocol: TCP
+            - containerPort: {{ .Values.auth.httpPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.auth.grpcPort }}
+              protocol: TCP
           volumeMounts:
             - name: auth-data
               mountPath: /supermq-data
@@ -119,9 +103,6 @@ spec:
               name: spicedb-schema-zed
               subPath: schema.zed
       volumes:
-        - name: auth-data
-          persistentVolumeClaim:
-            claimName: magistrala-auth-data
         - name: spicedb-schema-zed
           configMap:
             defaultMode: 256
@@ -139,3 +120,14 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
+  volumeClaimTemplates:
+    - metadata:
+        name: auth-data
+      spec:
+        accessModes: 
+          - ReadWriteOnce
+        storageClassName: do-block-storage
+        resources:
+          requests:
+            storage: 1Gi
