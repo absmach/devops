@@ -56,38 +56,20 @@ spec:
               value: {{ .Values.postgresqlgroups.username | quote }}
             - name: SMQ_GROUPS_DB_PASS
               value: {{ .Values.postgresqlgroups.password | quote }}
-            - name: SMQ_GROUPS_GRPC_SERVER_CERT
-              value: "{{ .Values.groups.grpcServerCert }}"
-            - name: SMQ_GROUPS_GRPC_SERVER_KEY
-              value: "{{ .Values.groups.grpcServerKey }}"
-            - name: SMQ_GROUPS_GRPC_CLIENT_CA_CERTS
-              value: "{{ .Values.groups.grpcClientCaCerts }}"
             - name: SMQ_CHANNELS_URL
               value: {{ .Release.Name }}-channels:{{ .Values.channels.httpPort }}
             - name: SMQ_CHANNELS_GRPC_URL
               value: {{ .Release.Name }}-channels:{{ .Values.channels.grpcPort }}
             - name: SMQ_CHANNELS_GRPC_TIMEOUT
               value: {{ .Values.channels.grpcTimeout | quote }}
-            - name: SMQ_CHANNELS_GRPC_CLIENT_CERT
-              value: {{ .Values.channels.grpcClientCert | quote }}
-            - name: SMQ_CHANNELS_GRPC_CLIENT_KEY
-              value: {{ .Values.channels.grpcClientKey | quote }}
             - name: SMQ_CLIENTS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
-            - name: SMQ_CLIENTS_AUTH_GRPC_CLIENT_CERT
-              value: "{{ .Values.clients.grpcClientCert }}"
-            - name: SMQ_CLIENTS_AUTH_GRPC_CLIENT_KEY
-              value: "{{ .Values.clients.grpcClientKey }}"
             - name: SMQ_DOMAINS_GRPC_URL
               value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort | quote }}
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
               value: {{ .Values.domains.grpcTimeout | quote }}
-            - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
-              value: {{ .Values.domains.grpcClientCert | quote }}
-            - name: SMQ_DOMAINS_GRPC_CLIENT_KEY
-              value: {{ .Values.domains.grpcClientKey | quote }}
             - name: SMQ_ES_URL
               value: {{ .Values.defaults.eventStreamURL | quote }}
             - name: SMQ_JAEGER_URL
@@ -100,10 +82,6 @@ spec:
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: SMQ_AUTH_GRPC_TIMEOUT
               value: {{ .Values.auth.grpcTimeout | quote }}
-            - name: SMQ_AUTH_GRPC_CLIENT_CERT
-              value: {{ .Values.auth.grpcClientCert | quote }}
-            - name: SMQ_AUTH_GRPC_CLIENT_KEY
-              value: {{ .Values.auth.grpcClientKey | quote }}
             - name: SMQ_SPICEDB_PRE_SHARED_KEY
               value: {{ .Values.spicedb.grpc.presharedKey | quote }}
             - name: SMQ_SPICEDB_HOST

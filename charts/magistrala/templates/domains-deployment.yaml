@@ -114,6 +114,8 @@ spec:
               value: {{ default .Values.defaults.jaegerTraceRatio .Values.adapter_coap.jaegerTraceRatio | quote  }}
             - name: SMQ_SEND_TELEMETRY
               value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
+            - name: SMQ_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
           volumeMounts:
             - name: ca-certs
               mountPath: /ssl/certs
