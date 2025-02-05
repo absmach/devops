@@ -82,28 +82,16 @@ spec:
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: SMQ_AUTH_GRPC_TIMEOUT
               value: {{ .Values.auth.grpcTimeout | quote }}
-            - name: SMQ_AUTH_GRPC_CLIENT_CERT
-              value: {{ .Values.auth.grpcClientCert | quote }}
-            - name: SMQ_AUTH_GRPC_CLIENT_KEY
-              value: {{ .Values.auth.grpcClientKey | quote }}
             - name: SMQ_GROUPS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.groups.grpcPort }}
             - name: SMQ_GROUPS_GRPC_TIMEOUT
               value: {{ .Values.groups.grpcTimeout | quote }}
-            - name: SMQ_GROUPS_GRPC_CLIENT_CERT
-              value: {{ .Values.groups.grpcClientCert | quote }}
-            - name: SMQ_GROUPS_GRPC_CLIENT_KEY
-              value: {{ .Values.groups.grpcClientKey | quote }}
             - name: SMQ_CHANNELS_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.channels.httpPort }}
             - name: SMQ_CHANNELS_GRPC_URL
               value: {{ .Release.Name }}-channels:{{ .Values.channels.grpcPort }}
             - name: SMQ_CHANNELS_GRPC_TIMEOUT
               value: {{ .Values.channels.grpcTimeout | quote }}
-            - name: SMQ_CHANNELS_GRPC_CLIENT_CERT
-              value: {{ .Values.channels.grpcClientCert | quote }}
-            - name: SMQ_CHANNELS_GRPC_CLIENT_KEY
-              value: {{ .Values.channels.grpcClientKey | quote }}
             - name: SMQ_CLIENTS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
@@ -117,8 +105,6 @@ spec:
             - name: SMQ_ES_URL
               value: {{ .Values.defaults.eventStreamURL | quote }}
           volumeMounts:
-            - name: ca-certs
-              mountPath: /ssl/certs
             - name: spicedb-schema-zed
               mountPath: /schema.zed
               subPath: schema.zed
@@ -132,9 +118,6 @@ spec:
           configMap:
             name: {{ .Release.Name }}-spicedb-schema-zed
             optional: false
-        - name: ca-certs
-          configMap:
-            name: my-ca-certs
       {{- with .Values.domains.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
