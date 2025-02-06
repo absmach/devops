@@ -1,0 +1,102 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-channels
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: channels
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.channels.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: channels
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-channels
+          image: "{{ default (printf "%s/channels" .Values.defaults.image.rootRepository) .Values.channels.image.repository }}:{{ default .Values.defaults.image.tag .Values.channels.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.channels.image.pullPolicy }}
+          env:
+            - name: SMQ_CHANNELS_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.channels.logLevel  | quote }}
+            - name: SMQ_CHANNELS_HTTP_HOST
+              value: "0.0.0.0"
+            - name: SMQ_CHANNELS_HTTP_PORT
+              value: "{{ .Values.channels.httpPort }}"
+            - name: SMQ_CHANNELS_GRPC_HOST
+              value: "0.0.0.0"
+            - name: SMQ_CHANNELS_GRPC_PORT
+              value: "{{ .Values.channels.grpcPort }}"
+            - name: SMQ_CHANNELS_DB_HOST
+            {{- if .Values.postgresqlchannels.enabled }}
+              value: {{ .Release.Name }}-postgresqlchannels
+            {{- else }}
+              value: {{ .Values.postgresqlchannels.host | quote }}
+            {{- end }}
+            - name: SMQ_CHANNELS_DB_PORT
+              value: {{ .Values.postgresqlchannels.port | quote }}
+            - name: SMQ_CHANNELS_DB_NAME
+              value: {{ .Values.postgresqlchannels.database | quote }}
+            - name: SMQ_CHANNELS_DB_USER
+              value: {{ .Values.postgresqlchannels.username | quote }}
+            - name: SMQ_CHANNELS_DB_PASS
+              value: {{ .Values.postgresqlchannels.password | quote }}
+            - name : SMQ_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: SMQ_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
+            - name: SMQ_AUTH_GRPC_CLIENT_CERT
+              value: {{ .Values.auth.grpcClientCert | quote }}
+            - name: SMQ_AUTH_GRPC_CLIENT_KEY
+              value: {{ .Values.auth.grpcClientKey | quote }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.clients.grpcTimeout | quote }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_CLIENT_CERT
+              value: "{{ .Values.clients.grpcClientCert }}"
+            - name: SMQ_CLIENTS_AUTH_GRPC_CLIENT_KEY
+              value: "{{ .Values.clients.grpcClientKey }}"
+            - name: SMQ_GROUPS_GRPC_URL
+              value: {{ .Release.Name }}-groups:{{ .Values.groups.grpcPort }}
+            - name: SMQ_GROUPS_GRPC_TIMEOUT
+              value: {{ .Values.groups.grpcTimeout | quote }}
+            - name: SMQ_GROUPS_GRPC_CLIENT_CERT
+              value: {{ .Values.groups.grpcClientCert | quote }}
+            - name: SMQ_GROUPS_GRPC_CLIENT_KEY
+              value: {{ .Values.groups.grpcClientKey | quote }}
+            - name: SMQ_DOMAINS_GRPC_URL
+              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort }}
+            - name: SMQ_DOMAINS_GRPC_TIMEOUT
+              value: {{ .Values.domains.grpcTimeout | quote }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
+              value: {{ .Values.domains.grpcClientCert | quote }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_KEY
+              value: {{ .Values.domains.grpcClientKey | quote }}
+            - name: SMQ_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
+            - name: SMQ_JAEGER_URL
+              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+            - name: SMQ_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.channels.jaegerTraceRatio | quote  }}
+            - name: SMQ_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.channels.sendTelemetry | quote  }}
+            - name: SMQ_SPICEDB_PRE_SHARED_KEY
+              value: {{.Values.spicedb.grpc.presharedKey | quote }}
+            - name: SMQ_SPICEDB_HOST
+              value: {{ .Release.Name }}-spicedb-envoy
+            - name: SMQ_SPICEDB_PORT
+              value: {{ .Values.spicedb.grpc.port | quote}}
+          ports:
+            - containerPort: {{ .Values.channels.httpPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.channels.grpcPort }}
+              protocol: TCP

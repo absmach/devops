@@ -1,0 +1,16 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.ui.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-ui
+spec:
+  selector:
+    app: {{ .Release.Name }}
+    component: ui
+  ports:
+    - protocol: TCP
+      port: {{ .Values.ui.port }}
+{{- end }}

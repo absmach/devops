@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-spicedb
+spec:
+  selector:
+    app: {{ .Release.Name }}
+    component: spicedb
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.spicedb.grpc.port }}
+      protocol: TCP
+      name: {{ .Release.Name }}-spicedb-grpc-{{ .Values.spicedb.grpc.port }}
+    {{- if .Values.spicedb.dispatch.enabled }}
+    - port: {{ .Values.spicedb.dispatch.port }}
+      protocol: TCP
+      name: {{ .Release.Name }}-spicedb-dispatch-{{ .Values.spicedb.disptach.port }}
+    {{- end }}
+    {{- if .Values.spicedb.http.enabled }}
+    - port: {{ .Values.spicedb.http.port }}
+      protocol: TCP
+      name: {{ .Release.Name }}-spicedb-http-{{ .Values.spicedb.http.port }}
+    {{- end }}
+    {{- if .Values.spicedb.metrics.enabled }}
+    - port: {{ .Values.spicedb.metrics.port }}
+      protocol: TCP
+      name: {{ .Release.Name }}-spicedb-metrics-{{ .Values.spicedb.metrics.port }}
+    {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-spicedb-headless
+spec:
+  selector:
+    app: {{ .Release.Name }}
+    component: spicedb
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: {{ .Values.spicedb.grpc.port }}
+      protocol: TCP
+      name: {{ .Release.Name }}-spicedb-grpc-{{ .Values.spicedb.grpc.port }}
+{{- if .Values.spicedb.dispatch.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-spicedb-dispatch-headless
+spec:
+  selector:
+    app: {{ .Release.Name }}
+    component: spicedb
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: {{ .Values.spicedb.dispatch.port }}
+      protocol: TCP
+      name: {{ .Release.Name }}-spicedb-dispatch-{{ .Values.spicedb.dispatch.port }}
+{{- end }}
+

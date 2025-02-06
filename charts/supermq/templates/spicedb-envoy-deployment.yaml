@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-spicedb-envoy-config
+data:
+  envoy.yaml: |-
+{{ include "spicedb.envoy.config" . | indent 4 }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-spicedb-envoy
+spec:
+  replicas: {{ .Values.defaults.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: spicedb-envoy
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        component: spicedb-envoy
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-spicedb-envoy
+          image: "{{ .Values.envoy.image.repository }}:{{ .Values.envoy.image.tag }}"
+          imagePullPolicy: {{ .Values.envoy.image.imagePullPolicy | quote }}
+          ports:
+            - containerPort: {{ .Values.spicedb.grpc.port }}
+              protocol: TCP
+          volumeMounts:
+            - mountPath: "/etc/envoy/envoy.yaml"
+              name: envoy-config
+              subPath: envoy.yaml
+      volumes:
+        - configMap:
+            defaultMode: 292  ## equal to 0444 r-- r-- r--
+            name: {{ .Release.Name }}-spicedb-envoy-config
+            optional: false
+          name: envoy-config
