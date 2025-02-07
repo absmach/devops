@@ -1,0 +1,77 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ws-adapter
+spec:
+  replicas: {{ .Values.defaults.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: ws-adapter
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.adapter_ws.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: ws-adapter
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.adapter_ws.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-ws-adapter
+          image: "{{ default (printf "%s/ws" .Values.defaults.image.rootRepository) .Values.adapter_ws.image.repository }}:{{ default .Values.defaults.image.tag .Values.adapter_ws.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_ws.image.pullPolicy }}
+          env:
+            - name: SMQ_WS_ADAPTER_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.adapter_ws.logLevel | quote }}
+            - name: SMQ_WS_ADAPTER_HTTP_HOST
+              value: "0.0.0.0"
+            - name: SMQ_WS_ADAPTER_HTTP_PORT
+              value: {{ .Values.adapter_ws.httpPort | quote }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.clients.grpcTimeout | quote }}
+            - name: SMQ_CHANNELS_GRPC_URL
+              value: {{ .Release.Name }}-channels:{{ .Values.channels.grpcPort }}
+            - name: SMQ_CHANNELS_GRPC_TIMEOUT
+              value: {{ .Values.channels.grpcTimeout | quote }}
+            - name: SMQ_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: SMQ_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
+            - name: SMQ_MESSAGE_BROKER_URL
+              value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
+            - name: SMQ_JAEGER_URL
+              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+            - name: SMQ_JAEGER_TRACE_RATIO
+              value: {{ default .Values.defaults.jaegerTraceRatio .Values.adapter_ws.jaegerTraceRatio | quote }}
+            - name: SMQ_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.adapter_ws.sendTelemetry | quote }}
+            - name: SMQ_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
+          ports:
+            - containerPort: {{ .Values.adapter_ws.httpPort | int }}
+              protocol: TCP
+      {{- with .Values.domains.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with .Values.domains.affinity }}
+      affinity:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with .Values.domains.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}

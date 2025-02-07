@@ -98,10 +98,23 @@ adapter_http:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   httpPort: 8008
-  # logLevel: "info"
+  # logLevel: "debug"
   # The logging level for the adapter_http service. Common options are "debug", "info", "warn", "error".
   # Adjust this based on the verbosity of logs you require.
 
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+adapter_ws:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/ws"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: "debug"
+  httpPort: 8186
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
@@ -163,7 +176,7 @@ certs:
   # logLevel: error
   # sendTelemetry: true
   httpPort: 9019
-  logLevel: "info"
+  logLevel: "debug"
   signCAPath: "/etc/ssl/certs/ca.crt"
   signCAKeyPath: "/etc/ssl/certs/ca.key"
   sdkHost: "http://supermq-am-certs"
@@ -254,7 +267,7 @@ clients:
   redisESPort: 6379
   redisCachePort: 6379
   cacheKeyduration: "10m"
-  # logLevel: "info"
+  # logLevel: "debug"
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
@@ -386,7 +399,7 @@ invitations:
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
-  # logLevel: "info"
+  # logLevel: "debug"
   httpPort: 9020
   # nodeSelector: {}
   # affinity: {}
@@ -449,7 +462,7 @@ journal:
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
-  # logLevel: "info"
+  # logLevel: "debug"
   httpPort: 9021
   # nodeSelector: {}
   # affinity: {}
@@ -528,7 +541,7 @@ mqtt:
       # pullPolicy: "IfNotPresent"
     mqttPort: 1883
     wsPort: 8080
-    logLevel: "info"
+    logLevel: "debug"
     persistentVolume:
       size: 5Gi
   redisESPort: 6379
@@ -589,7 +602,7 @@ users:
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
-  # logLevel: "info"
+  # logLevel: "debug"
   httpPort: 9002
   grpcPort: 7001
   admin:
@@ -638,7 +651,7 @@ ui:
     # repository: "supermq/ui"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-    # logLevel: "info"
+    # logLevel: "debug"
   # hostname: ""
   # contentTypes: "application/senml+json"
   port: 9095
