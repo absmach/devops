@@ -2,7 +2,7 @@
 
 Event-driven Infrastructure for Modern Cloud
 
-![Version: 0.14.2](https://img.shields.io/badge/Version-0.14.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.14.0](https://img.shields.io/badge/AppVersion-0.14.0-informational?style=flat-square)
+![Version: 0.16.0](https://img.shields.io/badge/Version-0.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.0](https://img.shields.io/badge/AppVersion-0.16.0-informational?style=flat-square)
 
 **Homepage:** <https://abstractmachines.fr/supermq.html>
 
@@ -21,15 +21,18 @@ Event-driven Infrastructure for Modern Cloud
 
 | Repository | Name | Version |
 |------------|------|---------|
+| @bitnami | postgresqldomains(postgresql) | 12.5.6 |
+| @bitnami | postgresqlusers(postgresql) | 12.5.6 |
 | @bitnami | postgresqlauth(postgresql) | 12.5.6 |
 | @bitnami | postgresqlspicedb(postgresql) | 12.5.6 |
-| @bitnami | postgresqlthings(postgresql) | 12.5.6 |
-| @bitnami | postgresqlusers(postgresql) | 12.5.6 |
+| @bitnami | postgresqlchannels(postgresql) | 12.5.6 |
+| @bitnami | postgresqlclients(postgresql) | 12.5.6 |
+| @bitnami | postgresqlui(postgresql) | 12.5.6 |
+| @bitnami | postgresqlgroups(postgresql) | 12.5.6 |
+| @bitnami | postgresqljournal(postgresql) | 12.5.6 |
 | @bitnami | postgresqlcerts(postgresql) | 12.5.6 |
 | @bitnami | postgresqlinvitations(postgresql) | 12.5.6 |
-| @bitnami | postgresqljournal(postgresql) | 12.5.6 |
-| @bitnami | postgresqlui(postgresql) | 12.5.6 |
-| @bitnami | redis-things(redis) | 19.6.2 |
+| @bitnami | redis-clients(redis) | 19.6.2 |
 | @hashicorp | vault(vault) | 0.28.1 |
 | @jaegertracing | jaeger | 3.1.1 |
 | @nats | nats | 1.2.1 |
@@ -39,25 +42,33 @@ Event-driven Infrastructure for Modern Cloud
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | adapter_coap.image | object | `{}` |  |
+| adapter_coap.jaegerTraceRatio | float | `1` |  |
 | adapter_coap.port | int | `5683` |  |
+| adapter_coap.sendTelemetry | bool | `true` |  |
 | adapter_http.httpPort | int | `8008` |  |
 | adapter_http.image | object | `{}` |  |
 | auth.accessTokenDuration | string | `"1h"` |  |
 | auth.adminEmail | string | `"admin@example.com"` |  |
 | auth.adminPassword | string | `"12345678"` |  |
 | auth.affinity | object | `{}` |  |
-| auth.grpcPort | int | `8181` |  |
-| auth.httpPort | int | `8189` |  |
+| auth.grpcClientCert | string | `"./ssl/certs/auth-grpc-client.crt"` |  |
+| auth.grpcClientKey | string | `"./ssl/certs/auth-grpc-client.key"` |  |
+| auth.grpcPort | int | `7001` |  |
+| auth.grpcTimeout | string | `"300s"` |  |
+| auth.httpPort | int | `9001` |  |
 | auth.image | object | `{}` |  |
 | auth.invitationDuration | string | `"168h"` |  |
 | auth.nodeSelector | object | `{}` |  |
 | auth.refreshTokenDuration | string | `"24h"` |  |
-| auth.secret | string | `"supersecret"` |  |
+| auth.secretKey | string | `"HyE2D4RUt9nnKG6v8zKEqAp6g6ka8hhZsqUpzgKvnwpXrNVQSH"` |  |
 | auth.tolerations | object | `{}` |  |
 | certs.enabled | bool | `true` |  |
 | certs.httpPort | int | `9019` |  |
 | certs.image | object | `{}` |  |
 | certs.logLevel | string | `"info"` |  |
+| certs.sdkCertsUrl | string | `"${SMQ_CERTS_SDK_HOST}:9010"` |  |
+| certs.sdkHost | string | `"http://supermq-am-certs"` |  |
+| certs.sdkTlsVerification | string | `"false"` |  |
 | certs.signCAKeyPath | string | `"/etc/ssl/certs/ca.key"` |  |
 | certs.signCAPath | string | `"/etc/ssl/certs/ca.crt"` |  |
 | certs.vault.approleRoleid | string | `"supermq"` |  |
@@ -66,10 +77,22 @@ Event-driven Infrastructure for Modern Cloud
 | certs.vault.thingsCertsPkiPath | string | `"pki_int"` |  |
 | certs.vault.thingsCertsPkiRoleName | string | `"supermq_things_certs"` |  |
 | certs.vault.url | string | `"http://supermq-vault:8200"` |  |
-| clients.authGrpcPort | int | `7000` |  |
+| channels.grpcClientCaCerts | string | `"./ssl/certs/ca.crt"` |  |
+| channels.grpcClientCert | string | `"./ssl/certs/channels-grpc-client.crt"` |  |
+| channels.grpcClientKey | string | `"./ssl/certs/channels-grpc-client.key"` |  |
+| channels.grpcPort | int | `7005` |  |
+| channels.grpcServerCert | string | `"./ssl/certs/channels-grpc-server.crt"` |  |
+| channels.grpcServerKey | string | `"./ssl/certs/channels-grpc-server.key"` |  |
+| channels.grpcTimeout | string | `"1s"` |  |
+| channels.httpPort | int | `9005` |  |
+| channels.image | object | `{}` |  |
+| clients.authGrpcPort | int | `7006` |  |
 | clients.authHttpPort | int | `9001` |  |
 | clients.cacheKeyduration | string | `"10m"` |  |
-| clients.httpPort | int | `9000` |  |
+| clients.grpcClientCert | string | `"./ssl/certs/clients-grpc-client.crt"` |  |
+| clients.grpcClientKey | string | `"./ssl/certs/clients-grpc-client.key"` |  |
+| clients.grpcTimeout | string | `"1s"` |  |
+| clients.httpPort | int | `9006` |  |
 | clients.image | object | `{}` |  |
 | clients.redisCachePort | int | `6379` |  |
 | clients.redisESPort | int | `6379` |  |
@@ -79,13 +102,30 @@ Event-driven Infrastructure for Modern Cloud
 | defaults.image.tag | string | `"latest"` |  |
 | defaults.jaegerCollectorPort | int | `4318` |  |
 | defaults.jaegerTraceRatio | float | `1` |  |
-| defaults.logLevel | string | `"info"` |  |
+| defaults.logLevel | string | `"debug"` |  |
 | defaults.natsPort | int | `4222` |  |
 | defaults.replicaCount | int | `3` |  |
 | defaults.sendTelemetry | bool | `true` |  |
+| domains.cacheKeyduration | string | `"10m"` |  |
+| domains.grpcClientCaCerts | string | `"./ssl/certs/ca.crt"` |  |
+| domains.grpcClientCert | string | `"./ssl/certs/domains-grpc-client.crt"` |  |
+| domains.grpcPort | int | `7003` |  |
+| domains.grpcTimeout | string | `"300s"` |  |
+| domains.httpPort | int | `9003` |  |
+| domains.image | object | `{}` |  |
+| domains.redisTCPPort | int | `6379` |  |
 | envoy.image.pullPolicy | string | `"IfNotPresent"` |  |
 | envoy.image.repository | string | `"envoyproxy/envoy"` |  |
 | envoy.image.tag | string | `"v1.31-latest"` |  |
+| groups.grpcClientCaCerts | string | `"./ssl/certs/ca.crt"` |  |
+| groups.grpcClientCert | string | `"./ssl/certs/groups-grpc-client.crt"` |  |
+| groups.grpcClientKey | string | `"./ssl/certs/groups-grpc-client.key"` |  |
+| groups.grpcPort | int | `7004` |  |
+| groups.grpcServerCert | string | `"./ssl/certs/groups-grpc-server.crt"` |  |
+| groups.grpcServerKey | string | `"./ssl/certs/groups-grpc-server.key"` |  |
+| groups.grpcTimeout | string | `"300s"` |  |
+| groups.httpPort | int | `9004` |  |
+| groups.image | object | `{}` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `true` |  |
 | ingress.labels | object | `{}` |  |
@@ -108,9 +148,11 @@ Event-driven Infrastructure for Modern Cloud
 | journal.enabled | bool | `true` |  |
 | journal.httpPort | int | `9021` |  |
 | journal.image | object | `{}` |  |
+| mqtt.adapter.forwarderTimeout | string | `"30s"` |  |
 | mqtt.adapter.image.pullSecrets | object | `{}` |  |
 | mqtt.adapter.logLevel | string | `"debug"` |  |
 | mqtt.adapter.mqttPort | int | `1884` |  |
+| mqtt.adapter.qos | string | `"2"` |  |
 | mqtt.adapter.wsPort | int | `8081` |  |
 | mqtt.broker.image.repository | string | `"supermq/vernemq"` |  |
 | mqtt.broker.logLevel | string | `"info"` |  |
@@ -159,6 +201,18 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqlcerts.password | string | `"supermq"` |  |
 | postgresqlcerts.port | int | `5432` |  |
 | postgresqlcerts.username | string | `"supermq"` |  |
+| postgresqlchannels.database | string | `"channels"` |  |
+| postgresqlchannels.enabled | bool | `true` |  |
+| postgresqlchannels.global.postgresql.auth.database | string | `"channels"` |  |
+| postgresqlchannels.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlchannels.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlchannels.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlchannels.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlchannels.host | string | `"channels-db"` |  |
+| postgresqlchannels.name | string | `"postgresql-channels"` |  |
+| postgresqlchannels.password | string | `"supermq"` |  |
+| postgresqlchannels.port | int | `5432` |  |
+| postgresqlchannels.username | string | `"supermq"` |  |
 | postgresqlclients.database | string | `"clients"` |  |
 | postgresqlclients.enabled | bool | `true` |  |
 | postgresqlclients.global.postgresql.auth.database | string | `"clients"` |  |
@@ -171,6 +225,30 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqlclients.password | string | `"supermq"` |  |
 | postgresqlclients.port | int | `5432` |  |
 | postgresqlclients.username | string | `"supermq"` |  |
+| postgresqldomains.database | string | `"domains"` |  |
+| postgresqldomains.enabled | bool | `true` |  |
+| postgresqldomains.global.postgresql.auth.database | string | `"domains"` |  |
+| postgresqldomains.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqldomains.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqldomains.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqldomains.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqldomains.host | string | `"postgresql-domains"` |  |
+| postgresqldomains.name | string | `"postgresql-domains"` |  |
+| postgresqldomains.password | string | `"supermq"` |  |
+| postgresqldomains.port | int | `5432` |  |
+| postgresqldomains.username | string | `"supermq"` |  |
+| postgresqlgroups.database | string | `"groups"` |  |
+| postgresqlgroups.enabled | bool | `true` |  |
+| postgresqlgroups.global.postgresql.auth.database | string | `"groups"` |  |
+| postgresqlgroups.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlgroups.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlgroups.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlgroups.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlgroups.host | string | `"postgresql-groups"` |  |
+| postgresqlgroups.name | string | `"postgresql-groups"` |  |
+| postgresqlgroups.password | string | `"supermq"` |  |
+| postgresqlgroups.port | int | `5432` |  |
+| postgresqlgroups.username | string | `"supermq"` |  |
 | postgresqlinvitations.database | string | `"invitations"` |  |
 | postgresqlinvitations.enabled | bool | `true` |  |
 | postgresqlinvitations.global.postgresql.auth.database | string | `"invitations"` |  |
@@ -239,7 +317,7 @@ Event-driven Infrastructure for Modern Cloud
 | spicedb.dispatch.enabled | bool | `false` |  |
 | spicedb.dispatch.port | int | `50053` |  |
 | spicedb.grpc.port | int | `50051` |  |
-| spicedb.grpc.presharedKey | string | `"helloworld"` |  |
+| spicedb.grpc.presharedKey | string | `"12345678"` |  |
 | spicedb.http.enabled | bool | `false` |  |
 | spicedb.http.port | int | `8443` |  |
 | spicedb.image.pullSecrets | object | `{}` |  |
