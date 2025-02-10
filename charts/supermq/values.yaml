@@ -568,31 +568,41 @@ grafana:
       url: ""
 
 fluentBit:
-  enabled: true
   image:
     repository: fluent/fluent-bit
     tag: "1.9"
     pullPolicy: IfNotPresent
-  # Fluent Bit configuration (a simple example). Adjust paths and options as needed.
-  config: |
+  # You can override the Fluent Bit configuration by updating this value.
+  config: |-
     [SERVICE]
         Flush        1
         Daemon       Off
         Log_Level    info
-        Parsers_File parsers.conf
+
     [INPUT]
         Name         tail
         Path         /var/log/containers/*.log
         Parser       docker
         Tag          kube.*
+
     [FILTER]
         Name         kubernetes
         Match        kube.*
+
     [OUTPUT]
         Name         loki
         Match        *
-        Url          http://{{ .Release.Name }}-loki:3100/loki/api/v1/push
+        Host         {{ .Release.Name }}-loki
+        Port         3100
+        Path         /loki/api/v1/push
         BatchWait    1
+
+    [PARSER]
+        Name         docker
+        Format       json
+        Time_Key     time
+        Time_Format  %Y-%m-%dT%H:%M:%S.%L
+        Time_Keep    On
 
 nats:
   config:

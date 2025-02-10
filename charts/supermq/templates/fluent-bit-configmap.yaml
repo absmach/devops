@@ -9,4 +9,27 @@ metadata:
     app: fluent-bit
 data:
   fluent-bit.conf: |-
-{{ .Values.fluentBit.config | indent 4 }}
+    [SERVICE]
+        Flush        1
+        Daemon       Off
+        Log_Level    info
+        Parsers_File parsers_multiline.conf
+
+    [INPUT]
+        Name             tail
+        Path             /var/log/containers/*.log
+        Read_from_head   true
+        Multiline.parser multiline-regex-test
+        Tag              kube.*
+
+    [FILTER]
+        Name         kubernetes
+        Match        kube.*
+
+    [OUTPUT]
+        Name         loki
+        Match        *
+        Host         {{ .Release.Name }}-loki
+        Port         3100
+        Path         /loki/api/v1/push
+        BatchWait    1

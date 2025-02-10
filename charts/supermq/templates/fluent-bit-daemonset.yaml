@@ -18,25 +18,37 @@ spec:
     spec:
       serviceAccountName: fluent-bit
       containers:
-      - name: fluent-bit
-        image: "{{ .Values.fluentBit.image.repository }}:{{ .Values.fluentBit.image.tag }}"
-        imagePullPolicy: {{ .Values.fluentBit.image.pullPolicy }}
-        # Optional: expose a metrics port if needed.
-        ports:
-          - containerPort: 2020
-            name: metrics
-        volumeMounts:
-          - name: config-volume
-            mountPath: /fluent-bit/etc
-          - name: varlog
-            mountPath: /var/log
-          - name: varlibdockercontainers
-            mountPath: /var/lib/docker/containers
-            readOnly: true
+        - name: fluent-bit
+          image: "{{ .Values.fluentBit.image.repository }}:{{ .Values.fluentBit.image.tag }}"
+          imagePullPolicy: {{ .Values.fluentBit.image.pullPolicy }}
+          ports:
+            - containerPort: 2020
+              name: metrics
+          volumeMounts:
+            - name: config-volume
+              mountPath: /fluent-bit/etc/fluent-bit.conf
+              subPath: fluent-bit.conf
+            - name: parsers-volume
+              mountPath: /fluent-bit/etc/parsers_multiline.conf
+              subPath: parsers_multiline.conf
+            - name: varlog
+              mountPath: /var/log
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
       volumes:
         - name: config-volume
           configMap:
             name: {{ .Release.Name }}-fluent-bit-config
+            items:
+              - key: fluent-bit.conf
+                path: fluent-bit.conf
+        - name: parsers-volume
+          configMap:
+            name: {{ .Release.Name }}-fluent-bit-parsers
+            items:
+              - key: parsers_multiline.conf
+                path: parsers_multiline.conf
         - name: varlog
           hostPath:
             path: /var/log
