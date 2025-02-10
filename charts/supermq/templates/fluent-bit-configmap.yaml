@@ -1,0 +1,12 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-fluent-bit-config
+  labels:
+    app: fluent-bit
+data:
+  fluent-bit.conf: |-
+{{ .Values.fluentBit.config | indent 4 }}

@@ -1,0 +1,23 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-grafana-datasources
+  labels:
+    app: grafana
+data:
+  datasources.yaml: |-
+    apiVersion: 1
+    datasources:
+      - name: {{ .Values.grafana.datasources.prometheus.name | default "Prometheus" }}
+        type: {{ .Values.grafana.datasources.prometheus.type | default "prometheus" }}
+        access: {{ .Values.grafana.datasources.prometheus.access | default "proxy" }}
+        url: "{{ .Values.grafana.datasources.prometheus.url | default (printf "http://%s-prometheus:9090" .Release.Name) }}"
+        isDefault: true
+      - name: {{ .Values.grafana.datasources.loki.name | default "Loki" }}
+        type: {{ .Values.grafana.datasources.loki.type | default "loki" }}
+        access: {{ .Values.grafana.datasources.loki.access | default "proxy" }}
+        url: "{{ .Values.grafana.datasources.loki.url | default (printf "http://%s-loki:3100" .Release.Name) }}"
+        isDefault: false

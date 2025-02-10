@@ -1,0 +1,60 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-loki-wal
+  labels:
+    app: loki
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: do-block-storage
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-loki
+  labels:
+    app: loki
+spec:
+  replicas: {{ .Values.loki.replicaCount }}
+  selector:
+    matchLabels:
+      app: loki
+  template:
+    metadata:
+      labels:
+        app: loki
+    spec:
+      securityContext:
+        fsGroup: 10001
+      containers:
+      - name: loki
+        image: "{{ .Values.loki.image.repository }}:{{ .Values.loki.image.tag }}"
+        imagePullPolicy: {{ .Values.loki.image.pullPolicy }}
+        workingDir: /tmp
+        args:
+          - "-config.file=/etc/loki/loki.yaml"
+        ports:
+          - containerPort: {{ .Values.loki.service.port }}
+        securityContext:
+          runAsUser: 10001
+        volumeMounts:
+          - name: loki-config
+            mountPath: /etc/loki
+          - name: loki-wal
+            mountPath: /wal
+      volumes:
+        - name: loki-config
+          configMap:
+            name: {{ .Release.Name }}-loki-config
+        - name: loki-wal
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-loki-wal

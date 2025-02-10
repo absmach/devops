@@ -488,6 +488,112 @@ postgresqljournal:
         ports:
           postgresql: *postgresqlJournalPort
 
+loki:
+  enabled: true
+  image:
+    repository: grafana/loki
+    tag: "2.8.2"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 3100
+  config: |
+    auth_enabled: false
+    server:
+      http_listen_port: 3100
+    ingester:
+      lifecycler:
+        ring:
+          kvstore:
+            store: inmemory
+          replication_factor: 1
+    storage_config:
+      boltdb:
+        directory: /loki/index
+    schema_config:
+      configs:
+      - from: 2020-10-15
+        store: boltdb
+        object_store: filesystem
+        schema: v11
+        index:
+          prefix: index_
+          period: 24h
+    limits_config:
+      volume_enabled: true
+
+prometheus:
+  enabled: true
+  image:
+    repository: prom/prometheus
+    tag: "v2.40.1"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 9090
+  config: |
+    global:
+      scrape_interval: 15s
+    scrape_configs:
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+
+grafana:
+  enabled: true
+  image:
+    repository: grafana/grafana
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 3000
+  adminUser: admin
+  adminPassword: admin
+  # Datasource definitions. If no URL is provided here, the template will use the
+  # service names (with release name prefix) for Prometheus and Loki.
+  datasources:
+    prometheus:
+      name: Prometheus
+      type: prometheus
+      access: proxy
+      url: ""
+    loki:
+      name: Loki
+      type: loki
+      access: proxy
+      url: ""
+
+fluentBit:
+  enabled: true
+  image:
+    repository: fluent/fluent-bit
+    tag: "1.9"
+    pullPolicy: IfNotPresent
+  # Fluent Bit configuration (a simple example). Adjust paths and options as needed.
+  config: |
+    [SERVICE]
+        Flush        1
+        Daemon       Off
+        Log_Level    info
+        Parsers_File parsers.conf
+    [INPUT]
+        Name         tail
+        Path         /var/log/containers/*.log
+        Parser       docker
+        Tag          kube.*
+    [FILTER]
+        Name         kubernetes
+        Match        kube.*
+    [OUTPUT]
+        Name         loki
+        Match        *
+        Url          http://{{ .Release.Name }}-loki:3100/loki/api/v1/push
+        BatchWait    1
+
 nats:
   config:
     cluster:
