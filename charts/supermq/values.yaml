@@ -489,6 +489,18 @@ postgresqljournal:
           postgresql: *postgresqlJournalPort
 
 loki:
+  # - The Loki Helm chart requires `loki.storage.bucketNames` to be explicitly defined,
+  #   even when using `filesystem` storage. Use the structure below to avoid nil reference errors:
+  #
+  #   loki:
+  #     storage:
+  #       bucketNames:
+  #         chunks: some-value
+  #         ruler: some-value
+  #         admin: some-value
+  #     loki:
+  #       # other parameters here
+
   storage:
     bucketNames:
       chunks: loki-migration
@@ -557,30 +569,30 @@ loki:
     singleBinary:
       replicas: 1
 
-    backend:
-      replicas: 0
-    read:
-      replicas: 0
-    write:
-      replicas: 0
-    ingester:
-      replicas: 0
-    querier:
-      replicas: 0
-    queryFrontend:
-      replicas: 0
-    queryScheduler:
-      replicas: 0
-    distributor:
-      replicas: 0
-    compactor:
-      replicas: 0
-    indexGateway:
-      replicas: 0
-    bloomCompactor:
-      replicas: 0
-    bloomGateway:
-      replicas: 0
+  backend:
+    replicas: 0
+  read:
+    replicas: 0
+  write:
+    replicas: 0
+  ingester:
+    replicas: 0
+  querier:
+    replicas: 0
+  queryFrontend:
+    replicas: 0
+  queryScheduler:
+    replicas: 0
+  distributor:
+    replicas: 0
+  compactor:
+    replicas: 0
+  indexGateway:
+    replicas: 0
+  bloomCompactor:
+    replicas: 0
+  bloomGateway:
+    replicas: 0
 
 grafana:
   enabled: true
