@@ -5,7 +5,7 @@
 # apply across other services where the same named configuration parameters are used.
 
 defaults:
-  logLevel: "debug"
+  logLevel: "error"
   image:
     pullPolicy: "IfNotPresent"
     rootRepository: "supermq"
@@ -98,7 +98,7 @@ adapter_http:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   httpPort: 8008
-  # logLevel: "debug"
+  # logLevel: "error"
   # The logging level for the adapter_http service. Common options are "debug", "info", "warn", "error".
   # Adjust this based on the verbosity of logs you require.
 
@@ -113,7 +113,7 @@ adapter_ws:
     # repository: "supermq/ws"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-  # logLevel: "debug"
+  # logLevel: "error"
   httpPort: 8186
   # nodeSelector: {}
   # affinity: {}
@@ -176,7 +176,7 @@ certs:
   # logLevel: error
   # sendTelemetry: true
   httpPort: 9019
-  logLevel: "debug"
+  logLevel: "error"
   signCAPath: "/etc/ssl/certs/ca.crt"
   signCAKeyPath: "/etc/ssl/certs/ca.key"
   sdkHost: "http://supermq-am-certs"
@@ -267,7 +267,7 @@ clients:
   redisESPort: 6379
   redisCachePort: 6379
   cacheKeyduration: "10m"
-  # logLevel: "debug"
+  # logLevel: "error"
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
@@ -348,7 +348,7 @@ groups:
     # rootRepository: "supermq/groups"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-  # logLevel: "debug"
+  # logLevel: "error"
   # sendTelemetry: true
   # jaegerTraceRatio: 1.0
   httpPort: 9004
@@ -399,7 +399,7 @@ invitations:
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
-  # logLevel: "debug"
+  # logLevel: "error"
   httpPort: 9020
   # nodeSelector: {}
   # affinity: {}
@@ -462,7 +462,7 @@ journal:
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
-  # logLevel: "debug"
+  # logLevel: "error"
   httpPort: 9021
   # nodeSelector: {}
   # affinity: {}
@@ -643,7 +643,7 @@ mqtt:
       # pullPolicy: "IfNotPresent"
     mqttPort: 1884
     wsPort: 8081
-    logLevel: "debug"
+    logLevel: "error"
     forwarderTimeout: "30s"
     qos: "2"
   broker:
@@ -653,7 +653,7 @@ mqtt:
       # pullPolicy: "IfNotPresent"
     mqttPort: 1883
     wsPort: 8080
-    logLevel: "debug"
+    logLevel: "error"
     persistentVolume:
       size: 5Gi
   redisESPort: 6379
@@ -714,7 +714,7 @@ users:
     # pullPolicy: "IfNotPresent"
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
-  # logLevel: "debug"
+  # logLevel: "error"
   httpPort: 9002
   grpcPort: 7001
   admin:
@@ -763,7 +763,7 @@ ui:
     # repository: "supermq/ui"
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
-    # logLevel: "debug"
+    # logLevel: "error"
   # hostname: ""
   # contentTypes: "application/senml+json"
   port: 9095
