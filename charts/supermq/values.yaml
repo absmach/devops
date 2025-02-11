@@ -489,50 +489,98 @@ postgresqljournal:
           postgresql: *postgresqlJournalPort
 
 loki:
-  enabled: true
-  config: |-
-    auth_enabled: false
-    server:
-      http_listen_port: 3100
-    ingester:
-      lifecycler:
-        address: 127.0.0.1
-        ring:
-          kvstore:
-            store: inmemory
-          replication_factor: 1
-  commonConfig:
-    replication_factor: 1
-  storage_config:
-    boltdb_shipper:
-      active_index_directory: /data/loki/index
-      shared_store: filesystem
-      cache_location: /data/loki/cache
-    filesystem:
-      directory: /data/loki/chunks
+  storage:
+    bucketNames:
+      chunks: loki-migration
+      ruler: loki-migration
+      admin: loki-migration
 
-  schemaConfig:
-    configs:
-      - from: 2020-10-24
-        store: boltdb-shipper
-        object_store: filesystem
-        schema: v11
-        index:
-          prefix: index_
-          period: 24h
-
-  rulerConfig:
-    storage:
-      type: local
-      local:
-        directory: /data/loki/rules
-
-  persistence:
+  loki:
     enabled: true
-    storageClassName: "do-block-storage"
-    accessModes:
-      - ReadWriteOnce
-    size: 5Gi
+    config: |-
+      auth_enabled: false
+      server:
+        http_listen_port: 3100
+      ingester:
+        lifecycler:
+          address: 127.0.0.1
+          ring:
+            kvstore:
+              store: inmemory
+            replication_factor: 1
+
+    commonConfig:
+      replication_factor: 1
+
+    storage:
+      type: "filesystem"
+      filesystem:
+        chunks_directory: "/data/loki/chunks"
+        rules_directory: "/data/loki/rules"
+        admin_api_directory: /var/loki/admin
+
+    storage_config:
+      boltdb_shipper:
+        active_index_directory: /data/loki/index
+        shared_store: filesystem
+        cache_location: /data/loki/cache
+      filesystem:
+        directory: /data/loki/chunks
+
+    schemaConfig:
+      configs:
+        - from: "2024-04-01"
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v13
+          index:
+            prefix: loki_index_
+            period: 24h
+
+    rulerConfig:
+      storage:
+        type: local
+        local:
+          directory: /data/loki/rules
+
+    persistence:
+      enabled: true
+      storageClassName: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
+      size: 5Gi
+
+    minio:
+      enabled: false
+
+    deploymentMode: SingleBinary
+    singleBinary:
+      replicas: 1
+
+    backend:
+      replicas: 0
+    read:
+      replicas: 0
+    write:
+      replicas: 0
+    ingester:
+      replicas: 0
+    querier:
+      replicas: 0
+    queryFrontend:
+      replicas: 0
+    queryScheduler:
+      replicas: 0
+    distributor:
+      replicas: 0
+    compactor:
+      replicas: 0
+    indexGateway:
+      replicas: 0
+    bloomCompactor:
+      replicas: 0
+    bloomGateway:
+      replicas: 0
 
 grafana:
   enabled: true
