@@ -500,12 +500,19 @@ loki:
   #         admin: some-value
   #     loki:
   #       # other parameters here
-
+  enabled: true
   storage:
     bucketNames:
       chunks: loki-migration
       ruler: loki-migration
       admin: loki-migration
+
+  gateway:
+    enabled: true
+    replicas: 1
+    service:
+      port: 80
+      type: ClusterIP
 
   loki:
     enabled: true
@@ -612,7 +619,7 @@ grafana:
         - name: Loki
           type: loki
           access: proxy
-          url: http://loki:3100
+          url: http://supermq-loki-gateway:80
           isDefault: false
 
 prometheus:
@@ -644,11 +651,15 @@ fluent-bit:
           Match        kube.*
     outputs: |
       [OUTPUT]
-          Name         loki
-          Match        *
-          Host         loki
-          Port         3100
-          BatchWait    1
+          Name        loki
+          Match       *
+          Host        supermq-loki-gateway
+          Port        80
+          Uri         /loki/api/v1/push
+          Labels      job=fluent-bit
+          Label_Keys  kubernetes['namespace_name']
+          Line_Format json
+          Auto_Kubernetes_Labels on
   resources: {}
 
 nats:
