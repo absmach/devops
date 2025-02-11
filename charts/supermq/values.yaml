@@ -132,7 +132,7 @@ auth:
   httpPort: 9001
   grpcPort: 7001
   grpcTimeout: "300s"
-  secretKey: "HyE2D4RUt9nnKG6v8zKEqAp6g6ka8hhZsqUpzgKvnwpXrNVQSH"
+  secretKey: "supersecret"
   adminEmail: "admin@example.com"
   adminPassword: "12345678"
   accessTokenDuration: "1h"
@@ -723,7 +723,7 @@ users:
     username: "admin"
     firstname: "super"
     lastname: "admin"
-  secretKey: "HyE2D4RUt9nnKG6v8zKEqAp6g6ka8hhZsqUpzgKvnwpXrNVQSH"
+  secretKey: "supersecret"
   accessTokenDuration: "15m"
   refreshTokenDuration: "24h"
   passwordRegex: "^.{8,}$"
