@@ -44,5 +44,17 @@ dependencies:
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.28.1
-digest: sha256:4486666650fcf3f0279212981a427869ac1d3cf3861bd90edbd37a2d7153a148
-generated: "2025-01-27T16:20:52.384706554+03:00"
+- name: loki
+  repository: https://grafana.github.io/helm-charts
+  version: 6.25.1
+- name: grafana
+  repository: https://grafana.github.io/helm-charts
+  version: 8.9.0
+- name: prometheus
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 27.3.0
+- name: fluent-bit
+  repository: https://fluent.github.io/helm-charts
+  version: 0.48.5
+digest: sha256:921648370c75d6be442d9dd9a7e3e8739ba0e3845336bee2bfd1e176e0a74641
+generated: "2025-02-11T12:17:12.654837789+03:00"

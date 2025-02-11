@@ -490,115 +490,106 @@ postgresqljournal:
 
 loki:
   enabled: true
-  image:
-    repository: grafana/loki
-    tag: "2.8.2"
-    pullPolicy: IfNotPresent
-  replicaCount: 1
-  service:
-    type: ClusterIP
-    port: 3100
-  config: |
+  config: |-
     auth_enabled: false
     server:
       http_listen_port: 3100
     ingester:
       lifecycler:
+        address: 127.0.0.1
         ring:
           kvstore:
             store: inmemory
           replication_factor: 1
-    storage_config:
-      boltdb:
-        directory: /loki/index
-    schema_config:
-      configs:
-      - from: 2020-10-15
-        store: boltdb
+  commonConfig:
+    replication_factor: 1
+  storage_config:
+    boltdb_shipper:
+      active_index_directory: /data/loki/index
+      shared_store: filesystem
+      cache_location: /data/loki/cache
+    filesystem:
+      directory: /data/loki/chunks
+
+  schemaConfig:
+    configs:
+      - from: 2020-10-24
+        store: boltdb-shipper
         object_store: filesystem
         schema: v11
         index:
           prefix: index_
           period: 24h
-    limits_config:
-      volume_enabled: true
 
-prometheus:
-  enabled: true
-  image:
-    repository: prom/prometheus
-    tag: "v2.40.1"
-    pullPolicy: IfNotPresent
-  replicaCount: 1
-  service:
-    type: ClusterIP
-    port: 9090
-  config: |
-    global:
-      scrape_interval: 15s
-    scrape_configs:
-      - job_name: 'prometheus'
-        static_configs:
-          - targets: ['localhost:9090']
+  rulerConfig:
+    storage:
+      type: local
+      local:
+        directory: /data/loki/rules
+
+  persistence:
+    enabled: true
+    storageClassName: "do-block-storage"
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
 
 grafana:
   enabled: true
-  image:
-    repository: grafana/grafana
-    tag: "latest"
-    pullPolicy: IfNotPresent
-  replicaCount: 1
+  adminUser: "admin"
+  adminPassword: "12345678"
   service:
-    type: ClusterIP
-    port: 3000
-  adminUser: admin
-  adminPassword: admin
-  # Datasource definitions. If no URL is provided here, the template will use the
-  # service names (with release name prefix) for Prometheus and Loki.
+    type: LoadBalancer
   datasources:
-    prometheus:
-      name: Prometheus
-      type: prometheus
-      access: proxy
-      url: ""
-    loki:
-      name: Loki
-      type: loki
-      access: proxy
-      url: ""
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://prometheus-server:80
+          isDefault: true
+        - name: Loki
+          type: loki
+          access: proxy
+          url: http://loki:3100
+          isDefault: false
 
-fluentBit:
-  image:
-    repository: fluent/fluent-bit
-    tag: "1.9"
-    pullPolicy: IfNotPresent
-  config: |-
-    [SERVICE]
-        Flush        1
-        Daemon       Off
-        Log_Level    info
-        Parsers_File parsers_multiline.conf
+prometheus:
+  enabled: true
+  alertmanager:
+    enabled: false
+  pushgateway:
+    enabled: false
+  server:
+    persistentVolume:
+      enabled: false
+    service:
+      type: ClusterIP
 
-    [INPUT]
-        Name             tail
-        Path             /var/log/containers/*.log
-        Read_from_head   true
-        Multiline.parser multiline-regex-test
-        Tag              kube.*
-
-    [FILTER]
-        Name         kubernetes
-        Match        kube.*
-
-    [OUTPUT]
-        Name  loki
-        Match *
-        Host  {{ .Release.Name }}-loki
-        Port  3100
-        URI   /loki/api/v1/push
-        # optional settings if desired for labels, line_format, etc.
-        # auto_kubernetes_labels  on
-        # line_format            json
+fluent-bit:
+  enabled: true
+  serviceAccount:
+    create: true
+  config:
+    inputs: |
+      [INPUT]
+          Name             tail
+          Path             /var/log/containers/*.log
+          Read_from_head   true
+          Tag              kube.*
+    filters: |
+      [FILTER]
+          Name         kubernetes
+          Match        kube.*
+    outputs: |
+      [OUTPUT]
+          Name         loki
+          Match        *
+          Host         loki
+          Port         3100
+          BatchWait    1
+  resources: {}
 
 nats:
   config:
