@@ -572,7 +572,6 @@ fluentBit:
     repository: fluent/fluent-bit
     tag: "1.9"
     pullPolicy: IfNotPresent
-  # Main Fluent Bit configuration; note the Parsers_File reference.
   config: |-
     [SERVICE]
         Flush        1
@@ -584,7 +583,6 @@ fluentBit:
         Name             tail
         Path             /var/log/containers/*.log
         Read_from_head   true
-        # Use the multiline parser defined in the parsers file:
         Multiline.parser multiline-regex-test
         Tag              kube.*
 
@@ -593,12 +591,14 @@ fluentBit:
         Match        kube.*
 
     [OUTPUT]
-        Name         loki
-        Match        *
-        Host         {{ .Release.Name }}-loki
-        Port         3100
-        Path         /loki/api/v1/push
-        BatchWait    1
+        Name  loki
+        Match *
+        Host  {{ .Release.Name }}-loki
+        Port  3100
+        URI   /loki/api/v1/push
+        # optional settings if desired for labels, line_format, etc.
+        # auto_kubernetes_labels  on
+        # line_format            json
 
 nats:
   config:
