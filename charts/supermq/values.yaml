@@ -356,17 +356,19 @@ fluent-bit:
       [FILTER]
           Name         kubernetes
           Match        kube.*
+          k8s-logging.exclude true
+          Buffer_Size 256k
     outputs: |
       [OUTPUT]
           Name        loki
           Match       *
-          Host        supermq-loki-gateway
-          Port        80
+          Host        supermq-loki
+          Port        3100
           Uri         /loki/api/v1/push
           Labels      job=fluent-bit
           Label_Keys  $kubernetes['namespace_name'], $kubernetes['pod_name']
           Line_Format json
-          Auto_Kubernetes_Labels on
+          Auto_Kubernetes_Labels off
   resources: {}
 
 groups:
@@ -425,7 +427,7 @@ grafana:
         - name: Loki
           type: loki
           access: proxy
-          url: http://supermq-loki-gateway:80
+          url: http://supermq-loki:3100
           isDefault: false
 
 ingress:
@@ -576,6 +578,9 @@ loki:
             kvstore:
               store: inmemory
             replication_factor: 1
+      limits_config:
+        ingestion_rate_mb: 16
+        ingestion_burst_size_mb: 32
 
     commonConfig:
       replication_factor: 1
@@ -711,15 +716,120 @@ nginxInternal:
 
 prometheus:
   enabled: true
-  alertmanager:
-    enabled: false
   pushgateway:
     enabled: false
+
+  rbac:
+    create: true
+
+  serviceAccounts:
+    server:
+      create: true
+      name: ""
+      annotations: {}
+
+  configmapReload:
+    prometheus:
+      enabled: true
+      name: configmap-reload
+      image:
+        repository: quay.io/prometheus-operator/prometheus-config-reloader
+        tag: v0.79.2
+        pullPolicy: IfNotPresent
+      containerPort: 8080
+      containerPortName: metrics
+      resources: {}
+
   server:
-    persistentVolume:
-      enabled: false
+    name: server
+    image:
+      repository: quay.io/prometheus/prometheus
+      tag: ""
+      pullPolicy: IfNotPresent
+    extraFlags:
+      - --web.enable-lifecycle
+    resources: {}
+    securityContext:
+      runAsUser: 65534
+      runAsNonRoot: true
+      runAsGroup: 65534
+      fsGroup: 65534
+
     service:
+      enabled: true
       type: ClusterIP
+      clusterIP: ""
+      port: 9200
+      servicePort: 9200
+      targetPort: 9200
+      portName: metrics
+      annotations:
+        prometheus.io/scrape: "true"
+
+    persistentVolume:
+      enabled: true
+      accessModes:
+        - ReadWriteOnce
+      size: 8Gi
+      mountPath: /data
+
+  nodeExporter:
+    enabled: true
+    image:
+      repository: quay.io/prometheus/node-exporter
+      tag: v1.8.2
+      pullPolicy: IfNotPresent
+
+    containerPort: 9200
+    hostPort: 9200
+    service:
+      enabled: true
+      type: ClusterIP
+      clusterIP: ""
+      port: 9200
+      servicePort: 9200
+      targetPort: 9200
+      annotations:
+        prometheus.io/scrape: "true"
+
+    extraArgs:
+      - --web.listen-address=0.0.0.0:9200
+
+    livenessProbe:
+      httpGet:
+        path: /metrics
+        port: 9200
+        scheme: HTTP
+      initialDelaySeconds: 5
+      periodSeconds: 10
+
+    readinessProbe:
+      httpGet:
+        path: /metrics
+        port: 9200
+        scheme: HTTP
+      initialDelaySeconds: 5
+      periodSeconds: 10
+
+    tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+
+    nodeSelector:
+      kubernetes.io/os: linux
+
+    hostNetwork: true
+    hostPID: true
+
+  alertmanager:
+    enabled: false
+
+  kubeStateMetrics:
+    enabled: true
+
+  prometheusPushgateway:
+    enabled: false
 
 spicedb:
   # replicaCount: 1
