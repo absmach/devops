@@ -559,7 +559,7 @@ loki:
       admin: loki-migration
 
   gateway:
-    enabled: true
+    enabled: false
     replicas: 1
     service:
       port: 80
