@@ -362,8 +362,8 @@ fluent-bit:
       [OUTPUT]
           Name        loki
           Match       *
-          Host        supermq-loki
-          Port        3100
+          Host        supermq-loki-gateway
+          Port        80
           Uri         /loki/api/v1/push
           Labels      job=fluent-bit
           Label_Keys  $kubernetes['namespace_name'], $kubernetes['pod_name']
