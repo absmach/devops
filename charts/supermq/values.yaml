@@ -341,6 +341,34 @@ envoy:
     repository: "envoyproxy/envoy"
     tag: "v1.31-latest"
 
+fluent-bit:
+  enabled: true
+  serviceAccount:
+    create: true
+  config:
+    inputs: |
+      [INPUT]
+          Name             tail
+          Path             /var/log/containers/*.log
+          Read_from_head   true
+          Tag              kube.*
+    filters: |
+      [FILTER]
+          Name         kubernetes
+          Match        kube.*
+    outputs: |
+      [OUTPUT]
+          Name        loki
+          Match       *
+          Host        supermq-loki-gateway
+          Port        80
+          Uri         /loki/api/v1/push
+          Labels      job=fluent-bit
+          Label_Keys  $kubernetes['namespace_name'], $kubernetes['pod_name']
+          Line_Format json
+          Auto_Kubernetes_Labels on
+  resources: {}
+
 groups:
   image:
     {}
@@ -378,6 +406,27 @@ postgresqlgroups:
       service:
         ports:
           postgresql: *postgresqlGroupsPort
+
+grafana:
+  enabled: true
+  adminUser: "admin"
+  adminPassword: "12345678"
+  service:
+    type: LoadBalancer
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://prometheus-server:80
+          isDefault: true
+        - name: Loki
+          type: loki
+          access: proxy
+          url: http://supermq-loki-gateway:80
+          isDefault: false
 
 ingress:
   enabled: true
@@ -601,66 +650,35 @@ loki:
   bloomGateway:
     replicas: 0
 
-grafana:
+mqtt:
   enabled: true
-  adminUser: "admin"
-  adminPassword: "12345678"
-  service:
-    type: LoadBalancer
-  datasources:
-    datasources.yaml:
-      apiVersion: 1
-      datasources:
-        - name: Prometheus
-          type: prometheus
-          access: proxy
-          url: http://prometheus-server:80
-          isDefault: true
-        - name: Loki
-          type: loki
-          access: proxy
-          url: http://supermq-loki-gateway:80
-          isDefault: false
-
-prometheus:
-  enabled: true
-  alertmanager:
-    enabled: false
-  pushgateway:
-    enabled: false
-  server:
+  securityContext:
+    runAsUser: 10000
+    runAsGroup: 10000
+    fsGroup: 10000
+  adapter:
+    image:
+      pullSecrets: {}
+      # repository: "supermq/mqtt"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
+    mqttPort: 1884
+    wsPort: 8081
+    logLevel: "error"
+    forwarderTimeout: "30s"
+    qos: "2"
+  broker:
+    image:
+      repository: "supermq/vernemq"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
+    mqttPort: 1883
+    wsPort: 8080
+    logLevel: "error"
     persistentVolume:
-      enabled: false
-    service:
-      type: ClusterIP
-
-fluent-bit:
-  enabled: true
-  serviceAccount:
-    create: true
-  config:
-    inputs: |
-      [INPUT]
-          Name             tail
-          Path             /var/log/containers/*.log
-          Read_from_head   true
-          Tag              kube.*
-    filters: |
-      [FILTER]
-          Name         kubernetes
-          Match        kube.*
-    outputs: |
-      [OUTPUT]
-          Name        loki
-          Match       *
-          Host        supermq-loki-gateway
-          Port        80
-          Uri         /loki/api/v1/push
-          Labels      job=fluent-bit
-          Label_Keys  kubernetes['namespace_name']
-          Line_Format json
-          Auto_Kubernetes_Labels on
-  resources: {}
+      size: 5Gi
+  redisESPort: 6379
+  redisCachePort: 6379
 
 nats:
   config:
@@ -691,35 +709,17 @@ nginxInternal:
     # tls: "supermq-server"
     # intermediateCrt: "ca"
 
-mqtt:
+prometheus:
   enabled: true
-  securityContext:
-    runAsUser: 10000
-    runAsGroup: 10000
-    fsGroup: 10000
-  adapter:
-    image:
-      pullSecrets: {}
-      # repository: "supermq/mqtt"
-      # tag: "latest"
-      # pullPolicy: "IfNotPresent"
-    mqttPort: 1884
-    wsPort: 8081
-    logLevel: "error"
-    forwarderTimeout: "30s"
-    qos: "2"
-  broker:
-    image:
-      repository: "supermq/vernemq"
-      # tag: "latest"
-      # pullPolicy: "IfNotPresent"
-    mqttPort: 1883
-    wsPort: 8080
-    logLevel: "error"
+  alertmanager:
+    enabled: false
+  pushgateway:
+    enabled: false
+  server:
     persistentVolume:
-      size: 5Gi
-  redisESPort: 6379
-  redisCachePort: 6379
+      enabled: false
+    service:
+      type: ClusterIP
 
 spicedb:
   # replicaCount: 1
