@@ -154,7 +154,7 @@ static_resources:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
   clusters:
-      - name: {{ .Release.Name }}_mqtt_cluster
+    - name: {{ .Release.Name }}_mqtt_cluster
       connect_timeout: 0.25s
       type: STRICT_DNS
       lb_policy: ROUND_ROBIN
@@ -163,11 +163,11 @@ static_resources:
         cluster_name: {{ .Release.Name }}_mqtt_cluster
         endpoints:
           - lb_endpoints:
-            - endpoint:
-                address:
-                  socket_address:
-                    address: {{ .Release.Name }}-mqtt
-                    port_value: 1884
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: {{ .Release.Name }}-mqtt
+                      port_value: 1884
 
     - name: {{ .Release.Name }}_auth_cluster
       connect_timeout: 0.25s
@@ -178,11 +178,11 @@ static_resources:
         cluster_name: {{ .Release.Name }}_auth_cluster
         endpoints:
           - lb_endpoints:
-            - endpoint:
-                address:
-                  socket_address:
-                    address: {{ .Release.Name }}-auth-headless
-                    port_value: {{ .Values.auth.grpcPort }}
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: {{ .Release.Name }}-auth-headless
+                      port_value: {{ .Values.auth.grpcPort }}
 
     - name: {{ .Release.Name }}_clients_cluster
       connect_timeout: 0.25s
@@ -193,12 +193,12 @@ static_resources:
         cluster_name: {{ .Release.Name }}_clients_cluster
         endpoints:
           - lb_endpoints:
-            - endpoint:
-                address:
-                  socket_address:
-                    address: {{ .Release.Name }}-clients-headless
-                    port_value: {{ .Values.clients.authGrpcPort }}
-  
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: {{ .Release.Name }}-clients-headless
+                      port_value: {{ .Values.clients.authGrpcPort }}
+
     - name: {{ .Release.Name }}_domains_cluster
       connect_timeout: 0.25s
       type: STRICT_DNS
@@ -208,11 +208,11 @@ static_resources:
         cluster_name: {{ .Release.Name }}_domains_cluster
         endpoints:
           - lb_endpoints:
-            - endpoint:
-                address:
-                  socket_address:
-                    address: {{ .Release.Name }}-domains
-                    port_value: {{ .Values.domains.grpcPort }}
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: {{ .Release.Name }}-domains
+                      port_value: {{ .Values.domains.grpcPort }}
 
     - name: {{ .Release.Name }}_groups_cluster
       connect_timeout: 0.25s
@@ -223,11 +223,11 @@ static_resources:
         cluster_name: {{ .Release.Name }}_groups_cluster
         endpoints:
           - lb_endpoints:
-            - endpoint:
-                address:
-                  socket_address:
-                    address: {{ .Release.Name }}-groups
-                    port_value: {{ .Values.groups.grpcPort }}
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: {{ .Release.Name }}-groups
+                      port_value: {{ .Values.groups.grpcPort }}
 
     - name: {{ .Release.Name }}_channels_cluster
       connect_timeout: 0.25s
@@ -238,11 +238,11 @@ static_resources:
         cluster_name: {{ .Release.Name }}_channels_cluster
         endpoints:
           - lb_endpoints:
-            - endpoint:
-                address:
-                  socket_address:
-                    address: {{ .Release.Name }}-channels
-                    port_value: {{ .Values.channels.grpcPort }}
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: {{ .Release.Name }}-channels
+                      port_value: {{ .Values.channels.grpcPort }}
 
 admin:
   access_log_path: "/dev/null"
