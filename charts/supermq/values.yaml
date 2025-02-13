@@ -345,30 +345,26 @@ fluent-bit:
   enabled: true
   serviceAccount:
     create: true
-  config:
-    inputs: |
-      [INPUT]
-          Name             tail
-          Path             /var/log/containers/*.log
-          Read_from_head   true
-          Tag              kube.*
-    filters: |
-      [FILTER]
-          Name         kubernetes
-          Match        kube.*
-          k8s-logging.exclude true
-          Buffer_Size 256k
-    outputs: |
-      [OUTPUT]
-          Name        loki
-          Match       *
-          Host        supermq-loki-gateway
-          Port        80
-          Uri         /loki/api/v1/push
-          Labels      job=fluent-bit
-          Label_Keys  $kubernetes['namespace_name'], $kubernetes['pod_name']
-          Line_Format json
-          Auto_Kubernetes_Labels off
+
+  configMap:
+    create: true
+    name: fluent-bit-config
+
+  extraVolumes:
+    - name: fluent-bit-config
+      configMap:
+        name: fluent-bit-config
+
+  extraVolumeMounts:
+    - name: fluent-bit-config
+      mountPath: /fluent-bit/etc/fluent-bit.conf
+      subPath: fluent-bit.conf
+
+  command:
+    - /fluent-bit/bin/fluent-bit
+    - -c
+    - /fluent-bit/etc/fluent-bit.conf
+
   resources: {}
 
 groups:
