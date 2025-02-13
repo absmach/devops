@@ -59,7 +59,7 @@ spec:
             - name: SMQ_CHANNELS_URL
               value: {{ .Release.Name }}-channels:{{ .Values.channels.httpPort }}
             - name: SMQ_CHANNELS_GRPC_URL
-              value: {{ .Release.Name }}-channels:{{ .Values.channels.grpcPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.channels.grpcPort }}
             - name: SMQ_CHANNELS_GRPC_TIMEOUT
               value: {{ .Values.channels.grpcTimeout | quote }}
             - name: SMQ_CLIENTS_AUTH_GRPC_URL
@@ -67,7 +67,7 @@ spec:
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
             - name: SMQ_DOMAINS_GRPC_URL
-              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort | quote }}
+              value: http://{{ .Release.Name }}-envoy:{{ .Values.domains.grpcPort | quote }}
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
               value: {{ .Values.domains.grpcTimeout | quote }}
             - name: SMQ_ES_URL

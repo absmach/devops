@@ -66,7 +66,7 @@ spec:
             - name: SMQ_CLIENTS_AUTH_GRPC_CLIENT_KEY
               value: "{{ .Values.clients.grpcClientKey }}"
             - name: SMQ_GROUPS_GRPC_URL
-              value: {{ .Release.Name }}-groups:{{ .Values.groups.grpcPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.groups.grpcPort }}
             - name: SMQ_GROUPS_GRPC_TIMEOUT
               value: {{ .Values.groups.grpcTimeout | quote }}
             - name: SMQ_GROUPS_GRPC_CLIENT_CERT
@@ -74,7 +74,7 @@ spec:
             - name: SMQ_GROUPS_GRPC_CLIENT_KEY
               value: {{ .Values.groups.grpcClientKey | quote }}
             - name: SMQ_DOMAINS_GRPC_URL
-              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort }}
+              value: http://{{ .Release.Name }}-envoy:{{ .Values.domains.grpcPort }}
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
               value: {{ .Values.domains.grpcTimeout | quote }}
             - name: SMQ_DOMAINS_GRPC_CLIENT_CERT

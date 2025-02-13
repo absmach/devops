@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}-envoy
-          image: "{{.Values.envoy.image.repository }}:{{ .Values.envoy.image.tag }}"
+          image: "{{ .Values.envoy.image.repository }}:{{ .Values.envoy.image.tag }}"
           imagePullPolicy: {{ .Values.envoy.image.pullPolicy | quote }}
           args:
             - -c /etc/envoy/envoy.yaml
@@ -39,6 +39,12 @@ spec:
             - containerPort: {{ .Values.auth.grpcPort }}
               protocol: TCP
             - containerPort: {{ .Values.clients.authGrpcPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.domains.grpcPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.groups.grpcPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.channels.grpcPort }}
               protocol: TCP
             - containerPort: 8001
               protocol: TCP
@@ -71,6 +77,15 @@ spec:
     - port: {{ .Values.clients.authGrpcPort }}
       protocol: TCP
       name: clients-grpc
+    - port: {{ .Values.domains.grpcPort }}
+      protocol: TCP
+      name: domains-grpc
+    - port: {{ .Values.groups.grpcPort }}
+      protocol: TCP
+      name: groups-grpc
+    - port: {{ .Values.channels.grpcPort }}
+      protocol: TCP
+      name: channels-grpc
     - port: 8001
       protocol: TCP
       name: admin

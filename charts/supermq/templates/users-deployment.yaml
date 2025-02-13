@@ -93,7 +93,7 @@ spec:
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
               value: {{ .Values.domains.grpcTimeout | quote }}
             - name: SMQ_DOMAINS_GRPC_URL
-              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort }}
+              value: http://{{ .Release.Name }}-envoy:{{ .Values.domains.grpcPort }}
             - name: SMQ_USERS_DB_HOST
             {{- if .Values.postgresqlusers.enabled }}
               value: "{{ .Release.Name }}-postgresqlusers"

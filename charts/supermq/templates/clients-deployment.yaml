@@ -79,13 +79,13 @@ spec:
             - name: SMQ_CHANNELS_URL
               value: {{ .Release.Name }}-channels:{{ .Values.channels.httpPort }}
             - name: SMQ_CHANNELS_GRPC_URL
-              value: {{ .Release.Name }}-channels:{{ .Values.channels.grpcPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.channels.grpcPort }}
             - name: SMQ_CHANNELS_GRPC_TIMEOUT
               value: {{ .Values.channels.grpcTimeout | quote }}
             - name: SMQ_GROUPS_URL
               value: {{ .Release.Name }}-groups:{{ .Values.groups.httpPort }}
             - name: SMQ_GROUPS_GRPC_URL
-              value: {{ .Release.Name }}-groups:{{ .Values.groups.grpcPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.groups.grpcPort }}
             - name: SMQ_GROUPS_GRPC_TIMEOUT
               value: {{ .Values.groups.grpcTimeout | quote }}
             - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
@@ -95,7 +95,7 @@ spec:
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
               value: {{ .Values.domains.grpcTimeout | quote }}
             - name: SMQ_DOMAINS_GRPC_URL
-              value: http://{{ .Release.Name }}-domains:{{ .Values.domains.grpcPort }}
+              value: http://{{ .Release.Name }}-envoy:{{ .Values.domains.grpcPort }}
             - name: SMQ_SPICEDB_PRE_SHARED_KEY
               value: {{.Values.spicedb.grpc.presharedKey | quote }}
             - name: SMQ_SPICEDB_HOST

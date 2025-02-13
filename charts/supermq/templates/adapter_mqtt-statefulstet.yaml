@@ -191,7 +191,7 @@ spec:
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
             - name: SMQ_CHANNELS_GRPC_URL
-              value: {{ .Release.Name }}-channels:{{ .Values.channels.grpcPort | quote }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.channels.grpcPort | quote }}
             - name: SMQ_CHANNELS_GRPC_TIMEOUT
               value: {{ .Values.channels.grpcTimeout | quote }}
             - name: SMQ_MESSAGE_BROKER_URL
