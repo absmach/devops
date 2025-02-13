@@ -130,7 +130,6 @@ auth:
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   httpPort: 9001
-  grpcPort: 7001
   grpcTimeout: "300s"
   secretKey: "supersecret"
   adminEmail: "admin@example.com"
