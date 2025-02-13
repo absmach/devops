@@ -49,6 +49,8 @@ spec:
               value: {{ .Values.postgresqlchannels.username | quote }}
             - name: SMQ_CHANNELS_DB_PASS
               value: {{ .Values.postgresqlchannels.password | quote }}
+            - name: SMQ_SPICEDB_SCHEMA_FILE
+              value: /schema.zed
             - name : SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: SMQ_AUTH_GRPC_TIMEOUT
@@ -100,3 +102,12 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.channels.grpcPort }}
               protocol: TCP
+          volumeMounts:
+            - name: spicedb-schema
+              mountPath: /schema.zed
+              subPath: schema.zed
+      volumes:
+        - name: spicedb-schema
+          configMap:
+            name: {{ .Release.Name }}-spicedb-schema-zed
+

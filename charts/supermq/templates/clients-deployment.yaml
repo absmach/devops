@@ -109,6 +109,15 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.clients.authHttpPort }}
               protocol: TCP
+          volumeMounts:
+            - name: spicedb-schema
+              mountPath: /schema.zed
+              subPath: schema.zed
+      volumes:
+        - name: spicedb-schema
+          configMap:
+            name: {{ .Release.Name }}-spicedb-schema-zed
+
       {{- with .Values.clients.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
