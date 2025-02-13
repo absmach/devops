@@ -69,7 +69,6 @@ static_resources:
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
-    # Domains gRPC Service
     - address:
         socket_address:
           address: 0.0.0.0
@@ -98,7 +97,6 @@ static_resources:
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
-    # Groups gRPC Service
     - address:
         socket_address:
           address: 0.0.0.0
@@ -127,7 +125,6 @@ static_resources:
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
-    # Channels gRPC Service
     - address:
         socket_address:
           address: 0.0.0.0
@@ -157,6 +154,51 @@ static_resources:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
   clusters:
+      - name: {{ .Release.Name }}_mqtt_cluster
+      connect_timeout: 0.25s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      http2_protocol_options: {}
+      load_assignment:
+        cluster_name: {{ .Release.Name }}_mqtt_cluster
+        endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: {{ .Release.Name }}-mqtt
+                    port_value: 1884
+
+    - name: {{ .Release.Name }}_auth_cluster
+      connect_timeout: 0.25s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      http2_protocol_options: {}
+      load_assignment:
+        cluster_name: {{ .Release.Name }}_auth_cluster
+        endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: {{ .Release.Name }}-auth-headless
+                    port_value: {{ .Values.auth.grpcPort }}
+
+    - name: {{ .Release.Name }}_clients_cluster
+      connect_timeout: 0.25s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      http2_protocol_options: {}
+      load_assignment:
+        cluster_name: {{ .Release.Name }}_clients_cluster
+        endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: {{ .Release.Name }}-clients-headless
+                    port_value: {{ .Values.clients.authGrpcPort }}
+  
     - name: {{ .Release.Name }}_domains_cluster
       connect_timeout: 0.25s
       type: STRICT_DNS

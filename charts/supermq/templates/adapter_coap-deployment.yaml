@@ -57,6 +57,8 @@ spec:
               value: "0.0.0.0"
             - name: SMQ_COAP_ADAPTER_PORT
               value: {{ .Values.adapter_coap.port | quote }}
+            - name: SMQ_ES_URL
+              value: {{ .Values.defaults.eventStreamURL | quote }}
           ports:
             - containerPort: {{ .Values.adapter_coap.port }}
               protocol: UDP
