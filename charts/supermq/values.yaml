@@ -362,7 +362,7 @@ fluent-bit:
       [OUTPUT]
           Name        loki
           Match       *
-          Host        loki.default.svc.cluster.local 
+          Host        supermq-loki
           Port        3100
           Uri         /loki/api/v1/push
           Labels      job=fluent-bit
