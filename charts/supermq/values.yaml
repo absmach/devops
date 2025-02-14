@@ -362,8 +362,8 @@ fluent-bit:
       [OUTPUT]
           Name        loki
           Match       *
-          Host        supermq-loki-gateway
-          Port        80
+          Host        loki.default.svc.cluster.local 
+          Port        3100
           Uri         /loki/api/v1/push
           Labels      job=fluent-bit
           Label_Keys  $kubernetes['namespace_name'], $kubernetes['pod_name']
@@ -427,7 +427,7 @@ grafana:
         - name: Loki
           type: loki
           access: proxy
-          url: http://supermq-loki:3100
+          url: http://loki-0:3100
           isDefault: false
 
 ingress:
@@ -540,120 +540,54 @@ postgresqljournal:
           postgresql: *postgresqlJournalPort
 
 loki:
-  # - The Loki Helm chart requires `loki.storage.bucketNames` to be explicitly defined,
-  #   even when using `filesystem` storage. Use the structure below to avoid nil reference errors:
-  #
-  #   loki:
-  #     storage:
-  #       bucketNames:
-  #         chunks: some-value
-  #         ruler: some-value
-  #         admin: some-value
-  #     loki:
-  #       # other parameters here
-  enabled: true
   storage:
-    bucketNames:
-      chunks: loki-migration
-      ruler: loki-migration
-      admin: loki-migration
+    type: filesystem
+    filesystem:
+      chunks_directory: /var/loki/chunks
+      rules_directory: /var/loki/rules
 
-  gateway:
-    enabled: false
-    replicas: 1
-    service:
-      port: 80
-      type: ClusterIP
+  auth_enabled: false
 
-  loki:
+  commonConfig:
+    path_prefix: /var/loki
+    replication_factor: 1
+
+  # (Optional) You can inline more advanced config in `loki.config` if you want:
+  # config: |
+  #   auth_enabled: false
+  #   server:
+  #     http_listen_port: 3100
+  #   schema_config:
+  #     configs:
+  #       - from: 2022-01-11
+  #         store: boltdb-shipper
+  #         object_store: filesystem
+  #         schema: v12
+  #         index:
+  #           prefix: loki_index_
+  #           period: 24h
+  #   ...
+
+singleBinary:
+  replicas: 1
+  targetModule: "all"
+  persistence:
     enabled: true
-    config: |-
-      auth_enabled: false
-      server:
-        http_listen_port: 3100
-      ingester:
-        lifecycler:
-          address: 127.0.0.1
-          ring:
-            kvstore:
-              store: inmemory
-            replication_factor: 1
-      limits_config:
-        ingestion_rate_mb: 16
-        ingestion_burst_size_mb: 32
+    size: 10Gi
+    storageClass: "do-block-storage"
+    enableStatefulSetAutoDeletePVC: true
 
-    commonConfig:
-      replication_factor: 1
+read:
+  replicas: 0
 
-    storage:
-      type: "filesystem"
-      filesystem:
-        chunks_directory: "/data/loki/chunks"
-        rules_directory: "/data/loki/rules"
-        admin_api_directory: /var/loki/admin
+write:
+  replicas: 0
 
-    storage_config:
-      boltdb_shipper:
-        active_index_directory: /data/loki/index
-        shared_store: filesystem
-        cache_location: /data/loki/cache
-      filesystem:
-        directory: /data/loki/chunks
+backend:
+  replicas: 0
 
-    schemaConfig:
-      configs:
-        - from: "2024-04-01"
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v13
-          index:
-            prefix: loki_index_
-            period: 24h
-
-    rulerConfig:
-      storage:
-        type: local
-        local:
-          directory: /data/loki/rules
-
-    persistence:
-      enabled: true
-      storageClassName: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
-      size: 5Gi
-
-    minio:
-      enabled: false
-
-    deploymentMode: SingleBinary
-    singleBinary:
-      replicas: 1
-
-  backend:
-    replicas: 0
-  read:
-    replicas: 0
-  write:
-    replicas: 0
-  ingester:
-    replicas: 0
-  querier:
-    replicas: 0
-  queryFrontend:
-    replicas: 0
-  queryScheduler:
-    replicas: 0
-  distributor:
-    replicas: 0
-  compactor:
-    replicas: 0
-  indexGateway:
-    replicas: 0
-  bloomCompactor:
-    replicas: 0
-  bloomGateway:
-    replicas: 0
+gateway:
+  enabled: false
 
 mqtt:
   enabled: true
