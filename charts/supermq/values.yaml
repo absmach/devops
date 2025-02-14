@@ -552,22 +552,6 @@ loki:
     path_prefix: /var/loki
     replication_factor: 1
 
-  # (Optional) You can inline more advanced config in `loki.config` if you want:
-  # config: |
-  #   auth_enabled: false
-  #   server:
-  #     http_listen_port: 3100
-  #   schema_config:
-  #     configs:
-  #       - from: 2022-01-11
-  #         store: boltdb-shipper
-  #         object_store: filesystem
-  #         schema: v12
-  #         index:
-  #           prefix: loki_index_
-  #           period: 24h
-  #   ...
-
 singleBinary:
   replicas: 1
   targetModule: "all"
