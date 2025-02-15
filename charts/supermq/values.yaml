@@ -631,7 +631,7 @@ prometheus:
       tag: ""
       pullPolicy: IfNotPresent
     extraFlags:
-      - --web.enable-lifecycle
+      - web.enable-lifecycle
     resources: {}
     securityContext:
       runAsUser: 65534
