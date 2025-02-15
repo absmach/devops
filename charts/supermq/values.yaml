@@ -362,7 +362,7 @@ fluent-bit:
       [OUTPUT]
           Name        loki
           Match       *
-          Host        supermq-loki
+          Host        supermq-loki.loki
           Port        3100
           Uri         /loki/api/v1/push
           Labels      job=fluent-bit
@@ -427,7 +427,7 @@ grafana:
         - name: Loki
           type: loki
           access: proxy
-          url: http://loki-0:3100
+          url: http://supermq-loki.loki:3100
           isDefault: false
 
 ingress:
@@ -538,40 +538,6 @@ postgresqljournal:
       service:
         ports:
           postgresql: *postgresqlJournalPort
-
-loki:
-  storage:
-    type: filesystem
-    filesystem:
-      chunks_directory: /var/loki/chunks
-      rules_directory: /var/loki/rules
-
-  auth_enabled: false
-
-  commonConfig:
-    path_prefix: /var/loki
-    replication_factor: 1
-
-singleBinary:
-  replicas: 1
-  targetModule: "all"
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: "do-block-storage"
-    enableStatefulSetAutoDeletePVC: true
-
-read:
-  replicas: 0
-
-write:
-  replicas: 0
-
-backend:
-  replicas: 0
-
-gateway:
-  enabled: false
 
 mqtt:
   enabled: true
