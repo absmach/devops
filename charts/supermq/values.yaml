@@ -422,7 +422,7 @@ grafana:
         - name: Prometheus
           type: prometheus
           access: proxy
-          url: http://prometheus-server:80
+          url: http://supermq-prometheus-server:9200
           isDefault: true
         - name: Loki
           type: loki
@@ -610,6 +610,7 @@ prometheus:
     server:
       create: true
       name: ""
+      automountServiceAccountToken: false
       annotations: {}
 
   configmapReload:
@@ -656,6 +657,30 @@ prometheus:
         - ReadWriteOnce
       size: 8Gi
       mountPath: /data
+      storageClass: "do-block-storage"
+
+    livenessProbe:
+      httpGet:
+        path: /-/healthy
+        port: 9090
+        scheme: HTTP
+      initialDelaySeconds: 30
+      timeoutSeconds: 5
+    readinessProbe:
+      httpGet:
+        path: /-/ready
+        port: 9090
+        scheme: HTTP
+      initialDelaySeconds: 5
+      timeoutSeconds: 5
+
+    ingress:
+      enabled: true
+      ingressClassName: "nginx"
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+      hosts:
+        - prometheus.example.com
 
   nodeExporter:
     enabled: true
@@ -664,25 +689,25 @@ prometheus:
       tag: v1.8.2
       pullPolicy: IfNotPresent
 
-    containerPort: 9200
-    hostPort: 9200
+    containerPort: 9100
+    hostPort: 9100
     service:
       enabled: true
       type: ClusterIP
       clusterIP: ""
-      port: 9200
-      servicePort: 9200
-      targetPort: 9200
+      port: 9100
+      servicePort: 9100
+      targetPort: 9100
       annotations:
         prometheus.io/scrape: "true"
 
     extraArgs:
-      - --web.listen-address=0.0.0.0:9200
+      - --web.listen-address=0.0.0.0:9100
 
     livenessProbe:
       httpGet:
         path: /metrics
-        port: 9200
+        port: 9100
         scheme: HTTP
       initialDelaySeconds: 5
       periodSeconds: 10
@@ -690,7 +715,7 @@ prometheus:
     readinessProbe:
       httpGet:
         path: /metrics
-        port: 9200
+        port: 9100
         scheme: HTTP
       initialDelaySeconds: 5
       periodSeconds: 10
@@ -707,7 +732,9 @@ prometheus:
     hostPID: true
 
   alertmanager:
-    enabled: false
+    enabled: true
+    persistence:
+      size: 2Gi
 
   kubeStateMetrics:
     enabled: true
