@@ -356,7 +356,7 @@ fluent-bit:
       [FILTER]
           Name         kubernetes
           Match        kube.*
-          k8s-logging.exclude on
+          k8s-logging.exclude off
           Buffer_Size 256k
     outputs: |
       [OUTPUT]
