@@ -600,6 +600,7 @@ nginxInternal:
 
 prometheus:
   enabled: true
+
   pushgateway:
     enabled: false
 
@@ -610,7 +611,7 @@ prometheus:
     server:
       create: true
       name: ""
-      automountServiceAccountToken: false
+      automountServiceAccountToken: true
       annotations: {}
 
   configmapReload:
@@ -629,11 +630,15 @@ prometheus:
     name: server
     image:
       repository: quay.io/prometheus/prometheus
+      # Specify a tag if you want a fixed version (e.g. "v2.42.0"). Using blank defaults to chart’s appVersion.
       tag: ""
       pullPolicy: IfNotPresent
     extraFlags:
       - web.enable-lifecycle
+
     resources: {}
+
+    # SecurityContext: run as non-root
     securityContext:
       runAsUser: 65534
       runAsNonRoot: true
@@ -646,7 +651,8 @@ prometheus:
       clusterIP: ""
       port: 9200
       servicePort: 9200
-      targetPort: 9200
+      targetPort: 9090
+
       portName: metrics
       annotations:
         prometheus.io/scrape: "true"
@@ -666,6 +672,7 @@ prometheus:
         scheme: HTTP
       initialDelaySeconds: 30
       timeoutSeconds: 5
+
     readinessProbe:
       httpGet:
         path: /-/ready
@@ -688,7 +695,6 @@ prometheus:
       repository: quay.io/prometheus/node-exporter
       tag: v1.8.2
       pullPolicy: IfNotPresent
-
     containerPort: 9100
     hostPort: 9100
     service:
@@ -700,10 +706,8 @@ prometheus:
       targetPort: 9100
       annotations:
         prometheus.io/scrape: "true"
-
     extraArgs:
       - --web.listen-address=0.0.0.0:9100
-
     livenessProbe:
       httpGet:
         path: /metrics
@@ -711,7 +715,6 @@ prometheus:
         scheme: HTTP
       initialDelaySeconds: 5
       periodSeconds: 10
-
     readinessProbe:
       httpGet:
         path: /metrics
@@ -719,15 +722,12 @@ prometheus:
         scheme: HTTP
       initialDelaySeconds: 5
       periodSeconds: 10
-
     tolerations:
       - key: "node-role.kubernetes.io/master"
         operator: "Exists"
         effect: "NoSchedule"
-
     nodeSelector:
       kubernetes.io/os: linux
-
     hostNetwork: true
     hostPID: true
 
