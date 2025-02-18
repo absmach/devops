@@ -181,13 +181,6 @@ spec:
                 name: {{ .Release.Name }}-clients
                 port:
                   number: {{ .Values.clients.httpPort }}
-          - path: /(invitations.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ .Release.Name }}-invitations
-                port:
-                  number: {{ .Values.invitations.httpPort }}
           - path: /(journal.*)
             pathType: ImplementationSpecific
             backend:

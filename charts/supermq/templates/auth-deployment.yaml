@@ -65,8 +65,6 @@ spec:
               value: {{ .Values.auth.accessTokenDuration | quote }}
             - name: SMQ_AUTH_REFRESH_TOKEN_DURATION
               value: {{ .Values.auth.refreshTokenDuration | quote }}
-            - name: SMQ_AUTH_INVITATION_DURATION
-              value: {{ .Values.auth.invitationDuration | quote }}
             - name: SMQ_AUTH_SECRET_KEY
               value: {{ .Values.auth.secretKey | quote }}
             - name: SMQ_AUTH_DB_HOST

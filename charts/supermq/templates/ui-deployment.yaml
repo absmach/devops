@@ -45,8 +45,6 @@ spec:
               value: {{ default  (printf "http://%s-clients:%s" .Release.Name (.Values.clients.httpPort | toString )) .Values.ui.clientsUrl }}
             - name: SMQ_USERS_URL
               value: {{ default  (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString ))  .Values.ui.usersUrl }}
-            - name: SMQ_INVITATIONS_URL
-              value: {{ default  (printf "http://%s-invitations:%s" .Release.Name (.Values.invitations.httpPort | toString ))  .Values.ui.invitationsUrl }}
             - name: SMQ_DOMAINS_URL
               value: {{ default  (printf "http://%s-auth:%s" .Release.Name (.Values.auth.httpPort | toString )) .Values.ui.authUrl }}
             - name: SMQ_JOURNAL_URL

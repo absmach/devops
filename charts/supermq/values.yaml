@@ -137,7 +137,6 @@ auth:
   adminPassword: "12345678"
   accessTokenDuration: "1h"
   refreshTokenDuration: "24h"
-  invitationDuration: "168h"
   grpcClientCert: "./ssl/certs/auth-grpc-client.crt"
   grpcClientKey: "./ssl/certs/auth-grpc-client.key"
   nodeSelector: {}
@@ -439,42 +438,6 @@ ingress:
   # tls:
   #   hostname: ""
   #   secret: "supermq-server"
-
-invitations:
-  enabled: true
-  image:
-    {}
-    # pullSecrets: {}
-    # repository: "supermq/invitations"
-    # tag: "latest"
-    # pullPolicy: "IfNotPresent"
-  # jaegerTraceRatio: 1.0
-  # sendTelemetry: true
-  # logLevel: "error"
-  httpPort: 9020
-  # nodeSelector: {}
-  # affinity: {}
-  # tolerations: {}
-
-postgresqlinvitations:
-  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
-  enabled: true
-  name: postgresql-invitations
-  host: postgresql-invitations
-  port: &postgresqlInvitationsPort 5432
-  database: &postgresqlInvitationsDatabase invitations
-  username: &postgresqlInvitationsUsername supermq
-  password: &postgresqlInvitationsPassword supermq
-  global:
-    postgresql:
-      auth:
-        postgresPassword: *postgresqlInvitationsPassword
-        username: *postgresqlInvitationsUsername
-        password: *postgresqlInvitationsPassword
-        database: *postgresqlInvitationsDatabase
-      service:
-        ports:
-          postgresql: *postgresqlInvitationsPort
 
 jaeger:
   fullnameOverride: supermq-jaeger
@@ -855,7 +818,6 @@ ui:
   # usersUrl: "http://supermq-users:9002"
   # authUrl: "http://supermq-auth:8189"
   # clientsUrl: "http://supermq-clients:9000"
-  # invitationsUrl: "http:///supermq-auth:9020"
   # journalUrl: "http:///supermq-auth:9021"
   # domainsUrl: "http://supermq-auth:8189"
   googleClientID: ""
