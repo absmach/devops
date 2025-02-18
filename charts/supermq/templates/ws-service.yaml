@@ -4,11 +4,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-ws-adapter
+  name: {{ .Release.Name }}-adapter-ws
 spec:
   selector:
     app: {{ .Release.Name }}
-    component: ws-adapter
+    component: adapter-ws
   ports:
     - port: {{ .Values.adapter_ws.httpPort }}
       protocol: TCP
