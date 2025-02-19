@@ -84,7 +84,7 @@ spec:
             - name: SMQ_DOMAINS_GRPC_CLIENT_KEY
               value: {{ .Values.domains.grpcClientKey | quote }}
             - name: SMQ_ES_URL
-              value: {{ .Values.defaults.eventStreamURL | quote }}
+              value: "{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}"
             - name: SMQ_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
             - name: SMQ_JAEGER_TRACE_RATIO

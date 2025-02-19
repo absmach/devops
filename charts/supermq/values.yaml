@@ -10,14 +10,11 @@ defaults:
     pullPolicy: "IfNotPresent"
     rootRepository: "supermq"
     tag: "latest"
-    # pullSecrets: {}
-  # Replicas of MQTT adapter, NATS, Things, Envoy and Auth
   replicaCount: 3
-  natsPort: 4222
+  natsPort: 4222 # Keep only the port value
   jaegerCollectorPort: 4318
   jaegerTraceRatio: 1.0
   sendTelemetry: true
-  eventStreamURL: "supermq-nats:4222"
 
 adapter_coap:
   image:

@@ -58,7 +58,7 @@ spec:
             - name: SMQ_MESSAGE_BROKER_URL
               value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
             - name: SMQ_ES_URL
-              value: {{ .Values.defaults.eventStreamURL | quote }}
+              value: "{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}"
           ports:
             - containerPort: {{ .Values.adapter_http.httpPort }}
               protocol: TCP

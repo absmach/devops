@@ -38,7 +38,7 @@ spec:
             - name: SMQ_SEND_TELEMETRY
               value: {{ default .Values.defaults.sendTelemetry .Values.journal.sendTelemetry | quote  }}
             - name: SMQ_ES_URL
-              value: {{ .Values.defaults.eventStreamURL | quote }}
+              value: "{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}"
             - name: SMQ_JOURNAL_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.journal.logLevel  | quote }}
             - name: SMQ_JOURNAL_HTTP_HOST

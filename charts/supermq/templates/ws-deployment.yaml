@@ -59,7 +59,7 @@ spec:
             - name: SMQ_SEND_TELEMETRY
               value: {{ default .Values.defaults.sendTelemetry .Values.adapter_ws.sendTelemetry | quote }}
             - name: SMQ_ES_URL
-              value: {{ .Values.defaults.eventStreamURL | quote }}
+              value: "{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}"
           ports:
             - containerPort: {{ .Values.adapter_ws.httpPort | int }}
               protocol: TCP

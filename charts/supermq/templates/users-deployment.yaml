@@ -53,7 +53,7 @@ spec:
             - name: SMQ_SEND_TELEMETRY
               value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
             - name: SMQ_ES_URL
-              value: {{ .Values.defaults.eventStreamURL | quote }}
+              value: "{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}"
             - name: SMQ_USERS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.users.logLevel  | quote }}
             - name: SMQ_USERS_HTTP_HOST

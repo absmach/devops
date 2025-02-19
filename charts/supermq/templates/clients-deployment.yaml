@@ -67,7 +67,7 @@ spec:
             - name: SMQ_CLIENTS_DB_NAME
               value: {{ .Values.postgresqlclients.database | quote }}
             - name: SMQ_ES_URL
-              value: {{ .Values.defaults.eventStreamURL | quote }}
+              value: "{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}"
             - name: SMQ_CLIENTS_HTTP_HOST
               value: "0.0.0.0"
             - name: SMQ_CLIENTS_HTTP_PORT

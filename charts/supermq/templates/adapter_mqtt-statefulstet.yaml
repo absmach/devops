@@ -211,7 +211,7 @@ spec:
             - name: SMQ_MQTT_ADAPTER_WS_TARGET_PORT
               value: {{ .Values.mqtt.broker.wsPort | quote }}
             - name: SMQ_ES_URL
-              value: {{ .Values.defaults.eventStreamURL | quote }}
+              value: "{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}"
             - name: SMQ_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK
               value: http://localhost:8888/health
           livenessProbe:
