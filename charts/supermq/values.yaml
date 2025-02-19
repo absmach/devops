@@ -456,6 +456,20 @@ jaeger:
       accessModes:
         - ReadWriteOnce
       size: 10Gi
+    resources:
+      requests:
+        memory: "4Gi"
+        cpu: "2"
+      limits:
+        memory: "8Gi"
+        cpu: "4"
+    extraEnv:
+      - name: MAX_HEAP_SIZE
+        value: "4G"
+      - name: HEAP_NEWSIZE
+        value: "800M"
+      - name: JVM_OPTS
+        value: "-XX:+UseG1GC -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:InitiatingHeapOccupancyPercent=70"
   collector:
     service:
       otlp:

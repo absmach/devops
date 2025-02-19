@@ -4,10 +4,7 @@ dependencies:
   version: 1.2.1
 - name: jaeger
   repository: https://jaegertracing.github.io/helm-charts
-  version: 3.1.1
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami
-  version: 12.5.6
+  version: 3.4.0
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 12.5.6
@@ -53,5 +50,5 @@ dependencies:
 - name: fluent-bit
   repository: https://fluent.github.io/helm-charts
   version: 0.48.5
-digest: sha256:139785f47f262da833f6a174486ff188b9d6c8816c9c873f3ae0fadf319b0426
-generated: "2025-02-15T13:00:54.154848725+03:00"
+digest: sha256:4a68d2f63dcda502e72d036840699995c9697ac96a661b73aa6dd56ddaa84210
+generated: "2025-02-19T16:16:19.604558063+03:00"
