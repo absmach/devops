@@ -38,9 +38,9 @@ spec:
               value: "0.0.0.0"
             - name: SMQ_WS_ADAPTER_HTTP_PORT
               value: {{ .Values.adapter_ws.httpPort | quote }}
-            - name: SMQ_CLIENTS_AUTH_GRPC_URL
+            - name: SMQ_CLIENTS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
-            - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
+            - name: SMQ_CLIENTS_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
             - name: SMQ_CHANNELS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.channels.grpcPort }}

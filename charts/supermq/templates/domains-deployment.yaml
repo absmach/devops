@@ -83,9 +83,9 @@ spec:
               value: {{ .Release.Name }}-envoy:{{ .Values.channels.grpcPort }}
             - name: SMQ_CHANNELS_GRPC_TIMEOUT
               value: {{ .Values.channels.grpcTimeout | quote }}
-            - name: SMQ_CLIENTS_AUTH_GRPC_URL
+            - name: SMQ_CLIENTS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
-            - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
+            - name: SMQ_CLIENTS_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
             - name: SMQ_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:4318/v1/traces"
