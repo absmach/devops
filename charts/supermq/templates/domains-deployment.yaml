@@ -2,15 +2,6 @@
 # Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Release.Name }}-spicedb-schema-zed
-data:
-  schema.zed: |-
-{{ include "spicedb.schema.zed" . | indent 4 }}
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
