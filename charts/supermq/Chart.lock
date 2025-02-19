@@ -4,7 +4,7 @@ dependencies:
   version: 1.2.1
 - name: jaeger
   repository: https://jaegertracing.github.io/helm-charts
-  version: 3.1.1
+  version: 3.4.0
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 12.5.6
@@ -41,5 +41,14 @@ dependencies:
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.28.1
-digest: sha256:9b98511c690b0f1f61f58130390537b9b02727bd1f190d6e334ef9c60d0bc82c
-generated: "2024-08-01T23:25:55.078828535+05:30"
+- name: grafana
+  repository: https://grafana.github.io/helm-charts
+  version: 8.9.0
+- name: prometheus
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 27.3.0
+- name: fluent-bit
+  repository: https://fluent.github.io/helm-charts
+  version: 0.48.5
+digest: sha256:4a68d2f63dcda502e72d036840699995c9697ac96a661b73aa6dd56ddaa84210
+generated: "2025-02-19T16:16:19.604558063+03:00"

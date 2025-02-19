@@ -1,0 +1,140 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-nginx
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header Strict-Transport-Security "max-age=63072000; includeSubdomains";
+      add_header X-Frame-Options DENY;
+      add_header X-Content-Type-Options nosniff;
+      add_header Access-Control-Allow-Origin '*';
+      add_header Access-Control-Allow-Methods '*';
+      add_header Access-Control-Allow-Headers '*';
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          # Health and metrics endpoints
+          - path: /health
+            pathType: Exact
+            backend:
+              service:
+                name: {{ .Release.Name }}-clients
+                port:
+                  number: {{ .Values.clients.httpPort }}
+          - path: /metrics
+            pathType: Exact
+            backend:
+              service:
+                name: {{ .Release.Name }}-clients
+                port:
+                  number: {{ .Values.clients.httpPort }}
+
+          # Domains service
+          - path: /domains
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-domains
+                port:
+                  number: {{ .Values.domains.httpPort }}
+
+          # Users service
+          - path: /users
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+          - path: /password
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+          - path: /authorize
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+          - path: /oauth/callback
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+
+          # Groups service
+          - path: /groups
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-groups
+                port:
+                  number: {{ .Values.groups.httpPort }}
+
+          # Clients service
+          - path: /clients
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-clients
+                port:
+                  number: {{ .Values.clients.httpPort }}
+
+          # Channels service
+          - path: /channels
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-channels
+                port:
+                  number: {{ .Values.channels.httpPort }}
+
+          # HTTP adapter
+          - path: /http
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-http-adapter
+                port:
+                  number: {{ .Values.adapter_http.httpPort }}
+
+          # MQTT adapter (WebSocket)
+          - path: /mqtt
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-mqtt
+                port:
+                  number: {{ default .Values.mqtt.adapter.wsPort }}
+
+          # WS adapter
+          - path: /ws
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-ws-adapter
+                port:
+                  number: {{ .Values.adapter_ws.httpPort }}
+
+{{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.tls.hostname }}
+      secretName: {{ .Values.ingress.tls.secret }}
+{{- end }}
+{{- end }}

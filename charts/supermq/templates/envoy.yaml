@@ -4,7 +4,7 @@
 apiVersion: v1
 data:
   envoy.yaml: |-
-{{ include "magistrala.envoy.config" . | indent 4 }}
+{{ include "supermq.envoy.config" . | indent 4 }}
 
 kind: ConfigMap
 metadata:
@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}-envoy
-          image: "{{.Values.envoy.image.repository }}:{{ .Values.envoy.image.tag }}"
+          image: "{{ .Values.envoy.image.repository }}:{{ .Values.envoy.image.tag }}"
           imagePullPolicy: {{ .Values.envoy.image.pullPolicy | quote }}
           args:
             - -c /etc/envoy/envoy.yaml
@@ -38,7 +38,13 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.auth.grpcPort }}
               protocol: TCP
-            - containerPort: {{ .Values.things.authGrpcPort }}
+            - containerPort: {{ .Values.clients.authGrpcPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.domains.grpcPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.groups.grpcPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.channels.grpcPort }}
               protocol: TCP
             - containerPort: 8001
               protocol: TCP
@@ -68,9 +74,18 @@ spec:
     - port: {{ .Values.auth.grpcPort }}
       protocol: TCP
       name: auth-grpc
-    - port: {{ .Values.things.authGrpcPort }}
+    - port: {{ .Values.clients.authGrpcPort }}
       protocol: TCP
-      name: things-grpc
+      name: clients-grpc
+    - port: {{ .Values.domains.grpcPort }}
+      protocol: TCP
+      name: domains-grpc
+    - port: {{ .Values.groups.grpcPort }}
+      protocol: TCP
+      name: groups-grpc
+    - port: {{ .Values.channels.grpcPort }}
+      protocol: TCP
+      name: channels-grpc
     - port: 8001
       protocol: TCP
       name: admin
