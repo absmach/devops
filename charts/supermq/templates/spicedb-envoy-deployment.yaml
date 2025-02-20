@@ -12,7 +12,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-spicedb-envoy
 spec:
-  replicas: {{ .Values.defaults.replicaCount }}
+  replicas: {{ default .Values.defaults.replicaCount .Values.envoy.replicaCount | int64 }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}

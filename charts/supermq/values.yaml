@@ -111,6 +111,7 @@ adapter_ws:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # logLevel: "error"
+  # replicaCount: 3
   httpPort: 8186
   # nodeSelector: {}
   # affinity: {}
@@ -126,6 +127,7 @@ auth:
   # logLevel: error
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
+  # replicaCount: 3
   httpPort: 9001
   grpcPort: 7001
   grpcTimeout: "300s"
@@ -296,6 +298,7 @@ clients:
   # logLevel: error
   # sendTelemetry: true
   # jaegerTraceRatio: 1.0
+  # replicaCount: 3
   httpPort: 9006
   authGrpcPort: 7006
   grpcTimeout: "1s"
@@ -359,6 +362,8 @@ domains:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # sendTelemetry: true
+  # replicaCount: 3
+  # logLevel: error
   httpPort: 9003
   grpcPort: 7003
   redisTCPPort: 6379
@@ -406,6 +411,7 @@ envoy:
     pullPolicy: "IfNotPresent"
     repository: "envoyproxy/envoy"
     tag: "v1.31-latest"
+  # replicaCount: 3
 
 fluent-bit:
   enabled: true
@@ -447,6 +453,7 @@ groups:
   # logLevel: "error"
   # sendTelemetry: true
   # jaegerTraceRatio: 1.0
+  # replicaCount: 3
   httpPort: 9004
   grpcPort: 7004
   grpcTimeout: "300s"
@@ -643,6 +650,7 @@ postgresqljournal:
         - ReadWriteOnce
 
 mqtt:
+  # replicaCount: 3
   enabled: true
   securityContext:
     runAsUser: 10000

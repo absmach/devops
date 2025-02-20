@@ -39,7 +39,7 @@ kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-mqtt
 spec:
-  replicas: {{ .Values.defaults.replicaCount }}
+  replicas: {{ default .Values.defaults.replicaCount .Values.mqtt.replicaCount | int64 }}
   serviceName: {{ .Release.Name }}-mqtt
   selector:
     matchLabels:

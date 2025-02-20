@@ -17,7 +17,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-auth
 spec:
-  replicas: {{ .Values.defaults.replicaCount }}
+  replicas: {{ default .Values.defaults.replicaCount .Values.auth.replicaCount | int64 }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}

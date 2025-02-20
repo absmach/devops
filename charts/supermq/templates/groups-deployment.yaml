@@ -6,7 +6,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-groups
 spec:
-  replicas: {{ .Values.defaults.replicaCount }}
+  replicas: {{ default .Values.defaults.replicaCount .Values.groups.replicaCount | int64 }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
