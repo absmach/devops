@@ -159,6 +159,20 @@ postgresqlauth:
       service:
         ports:
           postgresql: *postgresqlAuthPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
 
 certs:
   enabled: true
@@ -205,6 +219,20 @@ postgresqlcerts:
       service:
         ports:
           postgresql: *postgresqlCertsPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
 
 channels:
   image:
@@ -243,6 +271,20 @@ postgresqlchannels:
       service:
         ports:
           postgresql: *postgresqlChannelsPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
 
 clients:
   image:
@@ -287,6 +329,20 @@ postgresqlclients:
       service:
         ports:
           postgresql: *postgresqlThingsPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
 
 redis-clients:
   volumePermissions:
@@ -330,6 +386,20 @@ postgresqldomains:
       service:
         ports:
           postgresql: *postgresqlDomainsPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
 
 envoy:
   image:
@@ -404,6 +474,20 @@ postgresqlgroups:
       service:
         ports:
           postgresql: *postgresqlGroupsPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
 
 grafana:
   enabled: true
@@ -498,6 +582,20 @@ postgresqljournal:
       service:
         ports:
           postgresql: *postgresqlJournalPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
 
 mqtt:
   enabled: true
@@ -747,6 +845,20 @@ postgresqlspicedb:
       service:
         ports:
           postgresql: *postgresqlSpicedbPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
 
 users:
   image:
@@ -796,6 +908,20 @@ postgresqlusers:
       service:
         ports:
           postgresql: *postgresqlUsersPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
 
 ui:
   enabled: true
@@ -845,6 +971,20 @@ postgresqlui:
       service:
         ports:
           postgresql: *postgresqlUIPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClass: "do-block-storage"
+      accessModes:
+        - ReadWriteOnce
 
 vault:
   enabled: false
