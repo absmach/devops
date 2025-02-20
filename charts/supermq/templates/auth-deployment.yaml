@@ -105,8 +105,6 @@ spec:
             defaultMode: 256
             name: {{ .Release.Name }}-spicedb-schema-zed
             optional: false
-        - name: auth-data
-          emptyDir: {}
       {{- with .Values.auth.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

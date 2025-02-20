@@ -531,13 +531,43 @@ jaeger:
   storage:
     type: cassandra
   cassandra:
+    jvm:
+      maxHeapSize: "2Gi"
+      newHeapSize: "512M"
+      extraOpts: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=80.0"
     persistence:
       enabled: true
-      storageClass: "do-block-storage"
       accessModes:
         - ReadWriteOnce
-      size: 10Gi
+      size: 5Gi
+    resources:
+      requests:
+        cpu: "1000m"
+        memory: "1Gi"
+      limits:
+        cpu: "1500m"
+        memory: "1.5Gi"
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 180
+      periodSeconds: 30
+      timeoutSeconds: 15
+      failureThreshold: 5
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 180
+      periodSeconds: 30
+      timeoutSeconds: 15
+      failureThreshold: 5
   collector:
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: 200m
+        memory: 300Mi
+      limits:
+        cpu: 400m
+        memory: 500Mi
     service:
       otlp:
         grpc:
@@ -546,6 +576,21 @@ jaeger:
         http:
           name: otlp-http
           port: 4318
+  query:
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: 200m
+        memory: 300Mi
+      limits:
+        cpu: 400m
+        memory: 500Mi
+    service:
+      type: ClusterIP
+      port: 80
+      admin:
+        name: admin
+        targetPort: admin
 
 journal:
   enabled: true
@@ -721,7 +766,6 @@ prometheus:
         - ReadWriteOnce
       size: 8Gi
       mountPath: /data
-      storageClass: "do-block-storage"
 
     livenessProbe:
       httpGet:
