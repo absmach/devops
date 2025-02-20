@@ -193,8 +193,6 @@ cassandra:
       thrift: 9160
   persistence:
     enabled: true
-    accessModes:
-      - ReadWriteOnce
     size: 8Gi
 
 certs:
@@ -253,9 +251,6 @@ postgresqlcerts:
     persistence:
       enabled: true
       size: 2Gi
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
 
 channels:
   image:
@@ -305,9 +300,6 @@ postgresqlchannels:
     persistence:
       enabled: true
       size: 2Gi
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
 
 clients:
   image:
@@ -364,9 +356,6 @@ postgresqlclients:
     persistence:
       enabled: true
       size: 2Gi
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
 
 redis-clients:
   volumePermissions:
@@ -423,9 +412,6 @@ postgresqldomains:
     persistence:
       enabled: true
       size: 2Gi
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
 
 envoy:
   image:
@@ -513,9 +499,6 @@ postgresqlgroups:
     persistence:
       enabled: true
       size: 2Gi
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
 
 grafana:
   enabled: true
@@ -641,9 +624,6 @@ postgresqljournal:
     persistence:
       enabled: true
       size: 2Gi
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
 
 mqtt:
   # replicaCount: 3
@@ -766,8 +746,6 @@ prometheus:
 
     persistentVolume:
       enabled: true
-      accessModes:
-        - ReadWriteOnce
       size: 8Gi
       mountPath: /data
 
@@ -904,9 +882,6 @@ postgresqlspicedb:
     persistence:
       enabled: true
       size: 2Gi
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
 
 users:
   image:
@@ -967,9 +942,6 @@ postgresqlusers:
     persistence:
       enabled: true
       size: 2Gi
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
 
 ui:
   enabled: true
@@ -1030,9 +1002,6 @@ postgresqlui:
     persistence:
       enabled: true
       size: 2Gi
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
 
 vault:
   enabled: false
