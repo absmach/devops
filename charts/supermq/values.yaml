@@ -176,6 +176,27 @@ postgresqlauth:
       accessModes:
         - ReadWriteOnce
 
+cassandra:
+  enabled: true
+  replicaCount: 3
+  image:
+    registry: docker.io
+    repository: bitnami/cassandra
+    tag: "5.0.3-debian-12-r0"
+    pullPolicy: IfNotPresent
+  # resourcePreset automatically sets resource requests and limits. Available options: "none", "nano", "micro", "small", "medium", "large", "xlarge", "2xlarge"
+  resourcesPreset: "small"
+  service:
+    type: ClusterIP
+    ports:
+      cql: 9042
+      thrift: 9160
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+
 certs:
   enabled: true
   image:
@@ -528,44 +549,19 @@ ingress:
   #   secret: "supermq-server"
 
 jaeger:
-  fullnameOverride: supermq-jaeger
   provisionDataStore:
-    cassandra: true
+    cassandra: false
   agent:
     enabled: false
   allInOne:
     enabled: false
   storage:
     type: cassandra
-  cassandra:
-    jvm:
-      maxHeapSize: "2Gi"
-      newHeapSize: "512M"
-      extraOpts: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=80.0"
-    persistence:
-      enabled: true
-      accessModes:
-        - ReadWriteOnce
-      size: 5Gi
-    resources:
-      requests:
-        cpu: "1000m"
-        memory: "1Gi"
-      limits:
-        cpu: "1500m"
-        memory: "1.5Gi"
-    livenessProbe:
-      enabled: true
-      initialDelaySeconds: 180
-      periodSeconds: 30
-      timeoutSeconds: 15
-      failureThreshold: 5
-    readinessProbe:
-      enabled: true
-      initialDelaySeconds: 180
-      periodSeconds: 30
-      timeoutSeconds: 15
-      failureThreshold: 5
+    options:
+      cassandra:
+        servers: cassandra.default.svc.cluster.local
+        port: 9042
+        keyspace: jaeger_v1_test
   collector:
     replicaCount: 1
     resources:

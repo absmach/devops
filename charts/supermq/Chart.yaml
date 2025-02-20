@@ -114,3 +114,9 @@ dependencies:
     repository: "https://fluent.github.io/helm-charts"
     alias: fluent-bit
     condition: fluent-bit.enabled
+
+  - name: cassandra
+    version: "12.1.3"
+    repository: "https://charts.bitnami.com/bitnami"
+    alias: cassandra
+    condition: cassandra.enabled

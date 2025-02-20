@@ -35,9 +35,6 @@ dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 12.5.6
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami
-  version: 12.5.6
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 19.6.2
@@ -53,5 +50,8 @@ dependencies:
 - name: fluent-bit
   repository: https://fluent.github.io/helm-charts
   version: 0.48.5
-digest: sha256:139785f47f262da833f6a174486ff188b9d6c8816c9c873f3ae0fadf319b0426
-generated: "2025-02-15T13:00:54.154848725+03:00"
+- name: cassandra
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.1.3
+digest: sha256:9bcc318fd2fd0a67b333d841606149e306aa288c8f25174539cfa1c97d86621e
+generated: "2025-02-20T22:29:51.474878419+03:00"
