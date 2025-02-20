@@ -4,13 +4,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-ws-adapter
+  name: {{ .Release.Name }}-adapter-ws
 spec:
   replicas: {{ .Values.defaults.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
-      component: ws-adapter
+      component: adapter-ws
   template:
     metadata:
       annotations:
@@ -19,7 +19,7 @@ spec:
         prometheus.io/scrape: "true"
       labels:
         app: {{ .Release.Name }}
-        component: ws-adapter
+        component: adapter-ws
     spec:
       {{- with (default .Values.defaults.image.pullSecrets .Values.adapter_ws.image.pullSecrets) }}
       imagePullSecrets:
@@ -28,7 +28,7 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       containers:
-        - name: {{ .Release.Name }}-ws-adapter
+        - name: {{ .Release.Name }}-adapter-ws
           image: "{{ default (printf "%s/ws" .Values.defaults.image.rootRepository) .Values.adapter_ws.image.repository }}:{{ default .Values.defaults.image.tag .Values.adapter_ws.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_ws.image.pullPolicy }}
           env:
