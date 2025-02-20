@@ -11,7 +11,7 @@ defaults:
     rootRepository: "supermq"
     tag: "latest"
   replicaCount: 3
-  natsPort: 4222 # Keep only the port value
+  natsPort: 4222
   jaegerCollectorPort: 4318
   jaegerTraceRatio: 1.0
   sendTelemetry: true
