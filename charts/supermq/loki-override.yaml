@@ -45,6 +45,14 @@ singleBinary:
     storageClass: "do-block-storage"
     enableStatefulSetAutoDeletePVC: true
 
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "400m"
+      memory: "512Mi"
+
 # Disable other deployment modes
 gateway:
   enabled: false
