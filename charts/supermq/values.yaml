@@ -172,9 +172,6 @@ postgresqlauth:
     persistence:
       enabled: true
       size: 2Gi
-      storageClass: "do-block-storage"
-      accessModes:
-        - ReadWriteOnce
 
 cassandra:
   enabled: true
@@ -185,7 +182,7 @@ cassandra:
     tag: "5.0.3-debian-12-r0"
     pullPolicy: IfNotPresent
   # resourcePreset automatically sets resource requests and limits. Available options: "none", "nano", "micro", "small", "medium", "large", "xlarge", "2xlarge"
-  resourcesPreset: "small"
+  resourcesPreset: "nano"
   service:
     type: ClusterIP
     ports:
