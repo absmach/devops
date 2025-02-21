@@ -21,6 +21,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-users
 spec:
+  replicas: {{ default .Values.defaults.replicaCount .Values.users.replicaCount | int64 }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}

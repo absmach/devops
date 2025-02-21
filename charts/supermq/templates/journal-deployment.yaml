@@ -6,6 +6,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-journal
 spec:
+  replicas: {{ default .Values.defaults.replicaCount .Values.journal.replicaCount | int64 }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}

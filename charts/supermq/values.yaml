@@ -17,6 +17,7 @@ defaults:
   sendTelemetry: true
 
 adapter_coap:
+  # Image configuration for the CoAP adapter.
   image:
     {}
     # pullSecrets: {}
@@ -37,34 +38,37 @@ adapter_coap:
     # The image pull policy. This defines when Kubernetes should pull the Docker image.
     # Options are "Always", "IfNotPresent", or "Never". "IfNotPresent" is generally used to avoid unnecessary pulls.
 
-  port: 5683
   # The primary port used by the CoAP adapter for communication.
   # Default: 5683 (standard CoAP UDP port).
+  port: 5683
 
-  jaegerTraceRatio: 1.0
+  # Number of replicas for high availability and scalability.
+  # Increasing this allows the service to handle more requests in parallel.
+  replicaCount: 1
+
   # Defines the fraction of requests to trace using Jaeger. Distributed tracing monitors requests across services.
   # Value range:
   # - 1.0: Trace all requests (100% sampling)
   # - 0.5: Trace 50% of requests
   # - 0.0: Disable tracing (0% sampling)
   # Adjust this based on your observability needs and performance considerations.
+  jaegerTraceRatio: 1.0
 
-  sendTelemetry: true
   # Enables or disables telemetry data reporting. Telemetry collects metrics and events for monitoring.
   # If true, the service will send telemetry data to the configured telemetry backend.
   # Set to false if telemetry reporting is not required or should be disabled for privacy concerns.
+  sendTelemetry: true
 
   # logLevel: "info"
   # The logging level for the adapter_coap service. Common options are "debug", "info", "warn", "error".
   # Adjust this based on the verbosity of logs you require.
 
-  # nodeSelector: {}
   # Node selector for pod assignment. This can be used to restrict the pod to run on specific nodes.
   # Example:
   # nodeSelector:
   #   disktype: ssd
+  # nodeSelector: {}
 
-  # affinity: {}
   # Pod affinity and anti-affinity settings. Use this to specify rules about how pods should be placed relative to other pods.
   # Example:
   # affinity:
@@ -77,8 +81,8 @@ adapter_coap:
   #               values:
   #                 - my-app
   #         topologyKey: "kubernetes.io/hostname"
+  # affinity: {}
 
-  # tolerations: {}
   # Tolerations for pod scheduling. Use this to allow pods to be scheduled on nodes with specific taints.
   # Example:
   # tolerations:
@@ -86,6 +90,7 @@ adapter_coap:
   #     operator: "Equal"
   #     value: "value1"
   #     effect: "NoSchedule"
+  # tolerations: {}
 
 adapter_http:
   image:
@@ -111,7 +116,7 @@ adapter_ws:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # logLevel: "error"
-  # replicaCount: 3
+  replicaCount: 3
   httpPort: 8186
   # nodeSelector: {}
   # affinity: {}
@@ -177,7 +182,7 @@ cassandra:
   enabled: true
   replicaCount: 3
   dbUser:
-    user: user
+    user: cassandra
     password: "password"
   image:
     registry: docker.io
@@ -196,6 +201,7 @@ cassandra:
 
 certs:
   enabled: true
+  replicaCount: 1
   image:
     {}
     # pullSecrets: {}
@@ -262,6 +268,7 @@ channels:
   # logLevel: error
   # jaegerTraceRatio: 1.0
   httpPort: 9005
+  replicaCount: 3
   grpcPort: 7005
   grpcTimeout: "1s"
   grpcClientCert: "./ssl/certs/channels-grpc-client.crt"
@@ -312,6 +319,7 @@ clients:
   # jaegerTraceRatio: 1.0
   # replicaCount: 3
   httpPort: 9006
+  replicaCount: 3
   authGrpcPort: 7006
   grpcTimeout: "1s"
   grpcClientCert: "./ssl/certs/clients-grpc-client.crt"
@@ -374,6 +382,7 @@ domains:
   # replicaCount: 3
   # logLevel: error
   httpPort: 9003
+  replicaCount: 3
   grpcPort: 7003
   redisTCPPort: 6379
   cacheKeyduration: "10m"
@@ -461,6 +470,7 @@ groups:
   # jaegerTraceRatio: 1.0
   # replicaCount: 3
   httpPort: 9004
+  replicaCount: 3
   grpcPort: 7004
   grpcTimeout: "300s"
   grpcClientCert: "./ssl/certs/groups-grpc-client.crt"
@@ -543,7 +553,7 @@ jaeger:
       host: supermq-cassandra.smq.svc.cluster.local
       port: 9042
       keyspace: jaeger_v1_test
-      user: "user"
+      user: "cassandra"
       password: "password"
   collector:
     replicaCount: 1
@@ -589,6 +599,7 @@ journal:
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   # logLevel: "error"
+  replicaCount: 1
   httpPort: 9021
   # nodeSelector: {}
   # affinity: {}
@@ -893,6 +904,7 @@ users:
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   # logLevel: "error"
+  replicaCount: 1
   httpPort: 9002
   admin:
     email: "admin@example.com"
@@ -954,6 +966,7 @@ ui:
     # logLevel: "error"
   # hostname: ""
   # contentTypes: "application/senml+json"
+  replicaCount: 1
   port: 9095
   pathPrefix: "/ui"
   # hostUrl: "https://domain-name"

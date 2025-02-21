@@ -7,6 +7,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-ui
 spec:
+  replicas: {{ default .Values.defaults.replicaCount .Values.ui.replicaCount | int64 }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}

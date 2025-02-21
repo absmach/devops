@@ -7,6 +7,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-certs
 spec:
+  replicas: {{ default .Values.defaults.replicaCount .Values.certs.replicaCount | int64 }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}

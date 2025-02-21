@@ -6,6 +6,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-channels
 spec:
+  replicas: {{ default .Values.defaults.replicaCount .Values.channels.replicaCount | int64 }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}

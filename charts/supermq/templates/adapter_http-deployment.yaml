@@ -6,6 +6,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-adapter-http
 spec:
+  replicas: {{ default .Values.defaults.replicaCount .Values.adapter_http.replicaCount | int64 }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
