@@ -182,7 +182,7 @@ cassandra:
     tag: "5.0.3-debian-12-r0"
     pullPolicy: IfNotPresent
   # resourcePreset automatically sets resource requests and limits. Available options: "none", "nano", "micro", "small", "medium", "large", "xlarge", "2xlarge"
-  resourcesPreset: "nano"
+  resourcesPreset: "small"
   service:
     type: ClusterIP
     ports:
@@ -536,12 +536,14 @@ jaeger:
   allInOne:
     enabled: false
   storage:
-    type: cassandra
-    options:
-      cassandra:
-        servers: cassandra.default.svc.cluster.local
-        port: 9042
-        keyspace: jaeger_v1_test
+    cassandra:
+      host: supermq-cassandra.smq.svc.cluster.local
+      port: 9042
+      keyspace: jaeger_v1_test
+      existingSecret: "supermq-jaeger-cassandra"
+      secretKeys:
+        password: "password"
+      username: "cassandra"
   collector:
     replicaCount: 1
     resources:
