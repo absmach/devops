@@ -176,12 +176,14 @@ postgresqlauth:
 cassandra:
   enabled: true
   replicaCount: 3
+  dbUser:
+    user: user
+    password: "password"
   image:
     registry: docker.io
     repository: bitnami/cassandra
     tag: "5.0.3-debian-12-r0"
     pullPolicy: IfNotPresent
-  # resourcePreset automatically sets resource requests and limits. Available options: "none", "nano", "micro", "small", "medium", "large", "xlarge", "2xlarge"
   resourcesPreset: "small"
   service:
     type: ClusterIP
@@ -536,14 +538,13 @@ jaeger:
   allInOne:
     enabled: false
   storage:
+    type: cassandra
     cassandra:
       host: supermq-cassandra.smq.svc.cluster.local
       port: 9042
       keyspace: jaeger_v1_test
-      existingSecret: "supermq-jaeger-cassandra"
-      secretKeys:
-        password: "password"
-      username: "cassandra"
+      user: "user"
+      password: "password"
   collector:
     replicaCount: 1
     resources:
