@@ -135,6 +135,10 @@ auth:
   # replicaCount: 3
   httpPort: 9001
   grpcPort: 7001
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   grpcTimeout: "300s"
   secretKey: "supersecret"
   adminEmail: "admin@example.com"
