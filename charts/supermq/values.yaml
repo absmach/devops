@@ -217,6 +217,10 @@ certs:
   # sendTelemetry: true
   httpPort: 9019
   logLevel: "error"
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   signCAPath: "/etc/ssl/certs/ca.crt"
   signCAKeyPath: "/etc/ssl/certs/ca.key"
   sdkHost: "http://supermq-am-certs"
@@ -621,6 +625,10 @@ journal:
   # logLevel: "error"
   replicaCount: 1
   httpPort: 9021
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
