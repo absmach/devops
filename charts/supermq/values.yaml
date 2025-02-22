@@ -275,6 +275,10 @@ channels:
   replicaCount: 3
   grpcPort: 7005
   grpcTimeout: "1s"
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   grpcClientCert: "./ssl/certs/channels-grpc-client.crt"
   grpcClientKey: "./ssl/certs/channels-grpc-client.key"
   grpcServerCert: "./ssl/certs/channels-grpc-server.crt"
@@ -325,6 +329,10 @@ clients:
   httpPort: 9006
   replicaCount: 3
   authGrpcPort: 7006
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   grpcTimeout: "1s"
   grpcClientCert: "./ssl/certs/clients-grpc-client.crt"
   grpcClientKey: "./ssl/certs/clients-grpc-client.key"
@@ -389,6 +397,10 @@ domains:
   replicaCount: 3
   grpcPort: 7003
   redisTCPPort: 6379
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   cacheKeyduration: "10m"
   grpcTimeout: "300s"
   grpcClientCert: "./ssl/certs/domains-grpc-client.crt"

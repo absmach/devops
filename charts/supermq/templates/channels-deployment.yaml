@@ -36,6 +36,14 @@ spec:
               value: "0.0.0.0"
             - name: SMQ_CHANNELS_GRPC_PORT
               value: "{{ .Values.channels.grpcPort }}"
+            - name: SMQ_CHANNELS_DB_SSL_MODE
+              value: {{ .Values.channels.sslMode | quote }}
+            - name: SMQ_CHANNELS_DB_SSL_CERT
+              value: {{ .Values.channels.sslCert | quote }}
+            - name: SMQ_CHANNELS_DB_SSL_KEY
+              value: {{ .Values.channels.sslKey | quote }}
+            - name: SMQ_CHANNELS_DB_SSL_ROOT_CERT
+              value: {{ .Values.channels.sslRootCert | quote }}
             - name: SMQ_CHANNELS_DB_HOST
             {{- if .Values.postgresqlchannels.enabled }}
               value: {{ .Release.Name }}-postgresqlchannels

@@ -87,6 +87,14 @@ spec:
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
+            - name: SMQ_DOMAINS_DB_SSL_MODE
+              value: {{ .Values.domains.sslMode | quote }}
+            - name: SMQ_DOMAINS_DB_SSL_CERT
+              value: {{ .Values.domains.sslCert | quote }}
+            - name: SMQ_DOMAINS_DB_SSL_KEY
+              value: {{ .Values.domains.sslKey | quote }}
+            - name: SMQ_DOMAINS_DB_SSL_ROOT_CERT
+              value: {{ .Values.domains.sslRootCert | quote }}
             - name: SMQ_JAEGER_URL
               value: "http://{{ .Release.Name }}-jaeger-collector:4318/v1/traces"
             - name: SMQ_JAEGER_TRACE_RATIO

@@ -52,6 +52,14 @@ spec:
               value: redis://{{ .Release.Name }}-redis-clients-master:{{ .Values.clients.redisCachePort }}/0
             - name: SMQ_SPICEDB_SCHEMA_FILE
               value: /schema.zed
+            - name: SMQ_CLIENTS_DB_SSL_MODE
+              value: {{ .Values.clients.sslMode | quote }}
+            - name: SMQ_CLIENTS_DB_SSL_CERT
+              value: {{ .Values.clients.sslCert | quote }}
+            - name: SMQ_CLIENTS_DB_SSL_KEY
+              value: {{ .Values.clients.sslKey | quote }}
+            - name: SMQ_DOMAINS_DB_SSMQ_CLIENTS_DB_SSL_ROOT_CERTSL_ROOT_CERT
+              value: {{ .Values.clients.sslRootCert | quote }}
             - name: SMQ_CLIENTS_DB_HOST
             {{- if .Values.postgresqlclients.enabled }}
               value: {{ .Release.Name }}-postgresqlclients
