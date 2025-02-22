@@ -68,6 +68,26 @@ spec:
             - containerPort: {{ .Values.adapter_coap.port }}
               name: "tcp-{{ .Values.adapter_coap.port }}"
               protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.adapter_coap.port }}
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.adapter_coap.port }}
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
           stdin: true
           tty: true
       {{- with .Values.adapter_coap.nodeSelector }}
