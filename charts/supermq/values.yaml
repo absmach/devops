@@ -489,6 +489,10 @@ groups:
   replicaCount: 3
   grpcPort: 7004
   grpcTimeout: "300s"
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   grpcClientCert: "./ssl/certs/groups-grpc-client.crt"
   grpcClientKey: "./ssl/certs/groups-grpc-client.key"
   grpcClientCaCerts: "./ssl/certs/ca.crt"
