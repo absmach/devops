@@ -6,6 +6,19 @@ SPDX-License-Identifier: Apache-2.0
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+
+{{- define "cassandra.host" -}}
+{{- if .Values.provisionDataStore.cassandra -}}
+{{- if .Values.storage.cassandra.nameOverride }}
+{{- printf "%s" .Values.storage.cassandra.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name "cassandra" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- else }}
+{{- tpl .Values.storage.cassandra.host . }}
+{{- end -}}
+{{- end -}}
+
 {{- define "supermq.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}

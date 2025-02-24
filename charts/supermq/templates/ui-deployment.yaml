@@ -52,6 +52,8 @@ spec:
               value: {{ default  (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
             - name: SMQ_UI_CONTENT_TYPE
               value: {{ .Values.ui.contentType | quote  }}
+            - name: MG_UI_DOCKER_ACCEPT_EULA
+              value: "yes"
             - name: SMQ_UI_DB_HOST
             {{- if .Values.postgresqlui.enabled }}
               value: {{ .Release.Name }}-postgresqlui

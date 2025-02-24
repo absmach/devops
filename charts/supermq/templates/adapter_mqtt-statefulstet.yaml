@@ -195,11 +195,11 @@ spec:
             - name: SMQ_CHANNELS_GRPC_TIMEOUT
               value: {{ .Values.channels.grpcTimeout | quote }}
             - name: SMQ_MESSAGE_BROKER_URL
-              value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
+              value: {{ .Values.nats.enabled | ternary (printf "nats://%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
             - name: SMQ_JAEGER_URL
-              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+              value: {{ .Values.jaeger.enabled | ternary (printf "http://%s-jaeger-collector:%d/v1/traces" .Release.Name (.Values.jaeger.collector.service.otlp.http.port | int )) .Values.jaeger.externalUrl }}
             - name: SMQ_JAEGER_TRACE_RATIO
-              value: {{ default .Values.defaults.jaegerTraceRatio .Values.adapter_coap.jaegerTraceRatio | quote  }}
+              value: {{ default .Values.jaeger.traceRatio .Values.mqtt.adapter.jaegerTraceRatio | quote  }}
             - name: SMQ_MQTT_ADAPTER_MQTT_TARGET_HOST
               value: localhost
             - name: SMQ_SEND_TELEMETRY
@@ -211,7 +211,7 @@ spec:
             - name: SMQ_MQTT_ADAPTER_WS_TARGET_PORT
               value: {{ .Values.mqtt.broker.wsPort | quote }}
             - name: SMQ_ES_URL
-              value: "{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}"
+              value: {{ .Values.nats.enabled | ternary (printf "%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
             - name: SMQ_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK
               value: http://localhost:8888/health
           livenessProbe:

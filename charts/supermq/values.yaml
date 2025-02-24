@@ -11,9 +11,6 @@ defaults:
     rootRepository: "supermq"
     tag: "latest"
   replicaCount: 3
-  natsPort: 4222
-  jaegerCollectorPort: 4318
-  jaegerTraceRatio: 1.0
   sendTelemetry: true
 
 adapter_coap:
@@ -133,7 +130,7 @@ auth:
   # logLevel: error
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
-  replicaCount: 3
+  replicaCount: 1
   httpPort: 9001
   grpcPort: 7001
   grpcTimeout: "300s"
@@ -157,6 +154,7 @@ postgresqlauth:
   database: &postgresqlAuthDatabase auth
   username: &postgresqlAuthUsername supermq
   password: &postgresqlAuthPassword supermq
+  ## values of bitnami/postgres
   global:
     postgresql:
       auth:
@@ -181,7 +179,7 @@ postgresqlauth:
 
 cassandra:
   enabled: true
-  replicaCount: 3
+  replicaCount: 1
   dbUser:
     user: cassandra
     password: "cassandra"
@@ -190,7 +188,7 @@ cassandra:
     repository: bitnami/cassandra
     tag: "5.0.3-debian-12-r0"
     pullPolicy: IfNotPresent
-  resourcesPreset: "small"
+  resourcesPreset: "large"
   service:
     type: ClusterIP
     ports:
@@ -236,6 +234,7 @@ postgresqlcerts:
   database: &postgresqlCertsDatabase certs
   username: &postgresqlCertsUsername supermq
   password: &postgresqlCertsPassword supermq
+  ## values of bitnami/postgres
   global:
     postgresql:
       auth:
@@ -268,8 +267,8 @@ channels:
   # sendTelemetry: true
   # logLevel: error
   # jaegerTraceRatio: 1.0
+  replicaCount: 1
   httpPort: 9005
-  replicaCount: 3
   grpcPort: 7005
   grpcTimeout: "1s"
   grpcClientCert: "./ssl/certs/channels-grpc-client.crt"
@@ -286,6 +285,7 @@ postgresqlchannels:
   database: &postgresqlChannelsDatabase channels
   username: &postgresqlChannelsUsername supermq
   password: &postgresqlChannelsPassword supermq
+  ## values of bitnami/postgres
   global:
     postgresql:
       auth:
@@ -318,17 +318,13 @@ clients:
   # logLevel: error
   # sendTelemetry: true
   # jaegerTraceRatio: 1.0
-  replicaCount: 3
+  replicaCount: 1
   httpPort: 9006
-  replicaCount: 3
   authGrpcPort: 7006
   grpcTimeout: "1s"
   grpcClientCert: "./ssl/certs/clients-grpc-client.crt"
   grpcClientKey: "./ssl/certs/clients-grpc-client.key"
   authHttpPort: 9001
-  redisESPort: 6379
-  redisCachePort: 6379
-  cacheKeyduration: "10m"
   # logLevel: "error"
   # nodeSelector: {}
   # affinity: {}
@@ -343,6 +339,7 @@ postgresqlclients:
   database: &postgresqlThingsDatabase clients
   username: &postgresqlThingsUsername supermq
   password: &postgresqlThingsPassword supermq
+  ## values of bitnami/postgres
   global:
     postgresql:
       auth:
@@ -365,12 +362,26 @@ postgresqlclients:
       enabled: true
       size: 2Gi
 
-redis-clients:
+redisclients:
+  enabled: true
+  ## To use an external Jaeger instance, set 'enabled' parameter to false and specify the redis URL below using the 'externalUrl' parameter.
+  externalUrl: ""
+  cacheKeyduration: "10m"
+  ## values of bitnami/redis
+  auth:
+      enabled: false
+  master:
+    containerPorts:
+      redis: 6379
+    persistence:
+      size: 1Gi
+    service:
+      ports:
+        redis: 6379
+  replica:
+    replicaCount: 0
   volumePermissions:
     enabled: true
-  cluster:
-    enabled: false
-  usePassword: false
 
 domains:
   image:
@@ -380,13 +391,10 @@ domains:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # sendTelemetry: true
-  # replicaCount: 3
+  replicaCount: 1
   # logLevel: error
   httpPort: 9003
-  replicaCount: 3
   grpcPort: 7003
-  redisTCPPort: 6379
-  cacheKeyduration: "10m"
   grpcTimeout: "300s"
   grpcClientCert: "./ssl/certs/domains-grpc-client.crt"
   grpcClientCaCerts: "./ssl/certs/ca.crt"
@@ -400,6 +408,7 @@ postgresqldomains:
   database: &postgresqlDomainsDatabase domains
   username: &postgresqlDomainsUsername supermq
   password: &postgresqlDomainsPassword supermq
+  ## values of bitnami/postgres
   global:
     postgresql:
       auth:
@@ -422,12 +431,34 @@ postgresqldomains:
       enabled: true
       size: 2Gi
 
+redisdomains:
+  enabled: true
+  ## To use an external Jaeger instance, set 'enabled' parameter to false and specify the redis URL below using the 'externalUrl' parameter.
+  externalUrl: ""
+  cacheKeyDuration: "10m"
+  ## values of bitnami/redis
+  auth:
+    enabled: false
+  master:
+    containerPorts:
+      redis: 6379
+    persistence:
+      size: 1Gi
+    service:
+      ports:
+        redis: 6379
+  replica:
+    replicaCount: 0
+  volumePermissions:
+    enabled: true
+
+
 envoy:
   image:
     pullPolicy: "IfNotPresent"
     repository: "envoyproxy/envoy"
     tag: "v1.31-latest"
-    replicaCount: 3
+  replicaCount: 1
 
 fluent-bit:
   enabled: true
@@ -469,9 +500,8 @@ groups:
   # logLevel: "error"
   # sendTelemetry: true
   # jaegerTraceRatio: 1.0
-  replicaCount: 3
+  replicaCount: 1
   httpPort: 9004
-  replicaCount: 3
   grpcPort: 7004
   grpcTimeout: "300s"
   grpcClientCert: "./ssl/certs/groups-grpc-client.crt"
@@ -488,6 +518,7 @@ postgresqlgroups:
   database: &postgresqlGroupsDatabase groups
   username: &postgresqlGroupsUsername supermq
   password: &postgresqlGroupsPassword supermq
+  ## values of bitnami/postgres
   global:
     postgresql:
       auth:
@@ -514,8 +545,10 @@ grafana:
   enabled: true
   adminUser: "admin"
   adminPassword: "12345678"
-  service:
-    type: LoadBalancer
+  grafana.ini:
+    server:
+      root_url: http://localhost/grafana
+
   datasources:
     datasources.yaml:
       apiVersion: 1
@@ -533,15 +566,34 @@ grafana:
 
 ingress:
   enabled: true
-  annotations: {}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
   labels: {}
   # Uncomment this block for TLS support in public ingress
-  # hostname: ""
+  hostname: "localhost"
   # tls:
   #   hostname: ""
   #   secret: "supermq-server"
 
+nginxInternal:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "nginx"
+    tag: "1.19.1-alpine"
+  mtls:
+    # By default mTLS is disabled. If you use mTLS, comment this block.
+    tls: ""
+    intermediateCrt: ""
+    # Uncomment this block for TLS and mTLS support.
+    # Use sh script from /secrets/secrets.sh to create config maps with your certs
+    # tls: "supermq-server"
+    # intermediateCrt: "ca"
+
 jaeger:
+  enabled: true
+  ## To use an external Jaeger instance, set 'enabled' parameter to false and specify the Jaeger URL below using the 'externalUrl' parameter.
+  externalUrl: ""
+  traceRatio: 1.0
   provisionDataStore:
     cassandra: false
   agent:
@@ -551,11 +603,18 @@ jaeger:
   storage:
     type: cassandra
     cassandra:
-      host: supermq-cassandra.smq.svc.cluster.local
-      port: 9042
-      keyspace: jaeger_v1_test
+      host: "{{ .Release.Name }}-cassandra"
+      keyspace: supermq_jaeger
       user: "cassandra"
       password: "cassandra"
+      schema:
+        create: true
+        keyspace: supermq_jaeger
+        datacenter: dc1
+        trace_ttl: 48h
+        dependencies_ttl: 48d
+        compaction_window: 2h
+        replication_factor: 1
   collector:
     replicaCount: 1
     resources:
@@ -615,6 +674,7 @@ postgresqljournal:
   database: &postgresqlJournalDatabase journal
   username: &postgresqlJournalUsername supermq
   password: &postgresqlJournalPassword supermq
+  ## values of bitnami/postgres
   global:
     postgresql:
       auth:
@@ -638,7 +698,7 @@ postgresqljournal:
       size: 2Gi
 
 mqtt:
-  replicaCount: 3
+  replicaCount: 1
   enabled: true
   securityContext:
     runAsUser: 10000
@@ -669,6 +729,9 @@ mqtt:
   redisCachePort: 6379
 
 nats:
+  enabled: true
+  ## To use an external NATS instance, set 'enabled' parameter to false and specify the NATS URL below using the 'externalAddress' parameter.
+  externalAddress: ""
   config:
     cluster:
       enabled: false
@@ -682,20 +745,6 @@ nats:
       memoryStore:
         enabled: true
         maxSize: 2Gi
-
-nginxInternal:
-  image:
-    pullPolicy: "IfNotPresent"
-    repository: "nginx"
-    tag: "1.19.1-alpine"
-  mtls:
-    # By default mTLS is disabled. If you use mTLS, comment this block.
-    tls: ""
-    intermediateCrt: ""
-    # Uncomment this block for TLS and mTLS support.
-    # Use sh script from /secrets/secrets.sh to create config maps with your certs
-    # tls: "supermq-server"
-    # intermediateCrt: "ca"
 
 prometheus:
   enabled: true
@@ -778,7 +827,7 @@ prometheus:
       timeoutSeconds: 5
 
     ingress:
-      enabled: true
+      enabled: false
       ingressClassName: "nginx"
       annotations:
         kubernetes.io/ingress.class: "nginx"
@@ -873,6 +922,7 @@ postgresqlspicedb:
   database: &postgresqlSpicedbDatabase spicedb
   username: &postgresqlSpicedbUsername supermq
   password: &postgresqlSpicedbPassword supermq
+  ## values of bitnami/postgres
   global:
     postgresql:
       auth:
@@ -934,6 +984,7 @@ postgresqlusers:
   database: &postgresqlUsersDatabase users
   username: &postgresqlUsersUsername supermq
   password: &postgresqlUsersPassword supermq
+  ## values of bitnami/postgres
   global:
     postgresql:
       auth:
@@ -959,11 +1010,10 @@ postgresqlusers:
 ui:
   enabled: true
   image:
-    {}
+    repository: "ghcr.io/absmach/magistrala/ui-smq"
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
     # pullSecrets: {}
-    # repository: "supermq/ui"
-    # tag: "latest"
-    # pullPolicy: "IfNotPresent"
     # logLevel: "error"
   # hostname: ""
   # contentTypes: "application/senml+json"
@@ -995,6 +1045,7 @@ postgresqlui:
   database: &postgresqlUIDatabase ui
   username: &postgresqlUIUsername supermq
   password: &postgresqlUIPassword supermq
+  ## values of bitnami/postgres
   global:
     postgresql:
       auth:

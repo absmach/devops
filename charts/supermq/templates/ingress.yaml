@@ -1,28 +1,32 @@
 # Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
-
 {{- if .Values.ingress.enabled }}
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-nginx
+  name: {{ .Release.Name }}-nginx-ingress-ui-health-metrics
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      add_header Strict-Transport-Security "max-age=63072000; includeSubdomains";
-      add_header X-Frame-Options DENY;
-      add_header X-Content-Type-Options nosniff;
-      add_header Access-Control-Allow-Origin '*';
-      add_header Access-Control-Allow-Methods '*';
-      add_header Access-Control-Allow-Headers '*';
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+  labels:
+{{- if .Values.ingress.labels }}
+{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- end }}
 spec:
   ingressClassName: nginx
   rules:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-          # Health and metrics endpoints
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-ui
+                port:
+                  number: {{ .Values.ui.port }}
           - path: /health
             pathType: Exact
             backend:
@@ -30,111 +34,213 @@ spec:
                 name: {{ .Release.Name }}-clients
                 port:
                   number: {{ .Values.clients.httpPort }}
-          - path: /metrics
-            pathType: Exact
-            backend:
-              service:
-                name: {{ .Release.Name }}-clients
-                port:
-                  number: {{ .Values.clients.httpPort }}
-
-          # Domains service
-          - path: /domains
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-domains
-                port:
-                  number: {{ .Values.domains.httpPort }}
-
-          # Users service
-          - path: /users
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port:
-                  number: {{ .Values.users.httpPort }}
-          - path: /password
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port:
-                  number: {{ .Values.users.httpPort }}
-          - path: /authorize
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port:
-                  number: {{ .Values.users.httpPort }}
-          - path: /oauth/callback
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-users
-                port:
-                  number: {{ .Values.users.httpPort }}
-
-          # Groups service
-          - path: /groups
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-groups
-                port:
-                  number: {{ .Values.groups.httpPort }}
-
-          # Clients service
-          - path: /clients
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-clients
-                port:
-                  number: {{ .Values.clients.httpPort }}
-
-          # Channels service
-          - path: /channels
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-channels
-                port:
-                  number: {{ .Values.channels.httpPort }}
-
-          # HTTP adapter
-          - path: /http
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-http-adapter
-                port:
-                  number: {{ .Values.adapter_http.httpPort }}
-
-          # MQTT adapter (WebSocket)
-          - path: /mqtt
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-mqtt
-                port:
-                  number: {{ default .Values.mqtt.adapter.wsPort }}
-
-          # WS adapter
-          - path: /ws
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-ws-adapter
-                port:
-                  number: {{ .Values.adapter_ws.httpPort }}
-
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
         - {{ .Values.ingress.tls.hostname }}
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-nginx-ingress-domains-users
+  annotations:
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+  labels:
+{{- if .Values.ingress.labels }}
+{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+        # Domains Service
+        - path: /domains
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ .Release.Name }}-domains
+              port:
+                number: {{ .Values.domains.httpPort }}
+        - path: /invitations
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ .Release.Name }}-domains
+              port:
+                number: {{ .Values.domains.httpPort }}
+
+        # Users service
+        - path: /users
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ .Release.Name }}-users
+              port:
+                number: {{ .Values.users.httpPort }}
+        - path: /password
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ .Release.Name }}-users
+              port:
+                number: {{ .Values.users.httpPort }}
+        - path: /authorize
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ .Release.Name }}-users
+              port:
+                number: {{ .Values.users.httpPort }}
+        - path: /oauth/callback
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ .Release.Name }}-users
+              port:
+                number: {{ .Values.users.httpPort }}
+{{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.tls.hostname }}
+      secretName: {{ .Values.ingress.tls.secret }}
+{{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-nginx-ingress-groups-channels-clients
+  annotations:
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+    nginx.ingress.kubernetes.io/rewrite-target: /$1/$2
+  labels:
+{{- if .Values.ingress.labels }}
+{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+        # Groups service
+        - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(groups)"
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: {{ .Release.Name }}-groups
+              port:
+                number: {{ .Values.groups.httpPort }}
+
+        # Clients service
+        - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(clients)"
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: {{ .Release.Name }}-clients
+              port:
+                number: {{ .Values.clients.httpPort }}
+
+        # Channels service
+        - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(channels)"
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: {{ .Release.Name }}-channels
+              port:
+                number: {{ .Values.channels.httpPort }}
+{{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.tls.hostname }}
+      secretName: {{ .Values.ingress.tls.secret }}
+{{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-nginx-messaging
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+{{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
+    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
+    nginx.ingress.kubernetes.io/auth-tls-secret: {{ .Release.Namespace }}/ca
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "optional"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "2"
+{{- end }}
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+{{- if .Values.ingress.labels }}
+  labels:
+{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "{{ .Values.ingress.hostname }}"
+      http:
+        paths:
+          {{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
+          - path: /(http/?.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-nginx-internal
+                port:
+                  number: 80
+          - path: /(mqtt)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-nginx-internal
+                port:
+                  number: 80
+          {{- else }}
+          - path: /(http/?.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-adapter-http
+                port:
+                  number: {{ .Values.adapter_http.httpPort }}
+          - path: /(mqtt)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-mqtt
+                port:
+                  number: {{ default .Values.mqtt.adapter.wsPort }}
+          {{- end }}
+{{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.tls.hostname }}
+      secretName: {{ .Values.ingress.tls.secret }}
+{{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tcp-services
+  namespace: default
+data:
+  1883: "{{ .Release.Namespace }}/{{ .Release.Name }}-envoy:1883"
+  8883: "{{ .Release.Namespace }}/{{ .Release.Name }}-nginx-internal:8883"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: udp-services
+  namespace: default
+data:
+  5683: "{{ .Release.Namespace }}/{{ .Release.Name }}-adapter-coap:5683"
+
 {{- end }}

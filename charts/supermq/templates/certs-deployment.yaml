@@ -34,9 +34,9 @@ spec:
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.certs.image.pullPolicy }}
           env:
             - name: SMQ_JAEGER_URL
-              value: "http://{{ .Values.jaeger.fullnameOverride }}-collector:{{ .Values.jaeger.collector.service.otlp.http.port }}/v1/traces"
+              value: {{ .Values.jaeger.enabled | ternary (printf "http://%s-jaeger-collector:%d/v1/traces" .Release.Name (.Values.jaeger.collector.service.otlp.http.port | int )) .Values.jaeger.externalUrl }}
             - name: SMQ_JAEGER_TRACE_RATIO
-              value: {{ default .Values.defaults.jaegerTraceRatio .Values.certs.jaegerTraceRatio | quote }}
+              value: {{ default .Values.jaeger.traceRatio .Values.certs.jaegerTraceRatio | quote }}
             - name: SMQ_SEND_TELEMETRY
               value: {{ default .Values.defaults.sendTelemetry .Values.certs.sendTelemetry | quote }}
             - name: SMQ_CERTS_LOG_LEVEL
