@@ -47,10 +47,10 @@ spec:
             - name: MG_BACKEND_HTTP_SERVER_KEY
               value: {{ .Values.ui_backend.serverKey | quote }}
             - name: MG_BACKEND_DB_HOST
-            {{- if .Values.postgresqlui.enabled }}
-              value: {{ .Release.Name }}-postgresqlui
+            {{- if .Values.postgresqlbackend.enabled }}
+              value: {{ .Release.Name }}-postgresqlbackend
             {{- else }}
-              value: {{ .Values.postgresqlui.host }}
+              value: {{ .Values.postgresqlbackend.host }}
             {{- end }}
             - name: MG_BACKEND_DB_PORT
               value: {{ .Values.postgresqlbackend.port | quote }}
