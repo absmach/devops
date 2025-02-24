@@ -141,6 +141,7 @@ auth:
   refreshTokenDuration: "24h"
   grpcClientCert: "./ssl/certs/auth-grpc-client.crt"
   grpcClientKey: "./ssl/certs/auth-grpc-client.key"
+  grpcClientCACerts: "./ssl/certs/ca.crt"
   nodeSelector: {}
   affinity: {}
   tolerations: {}
@@ -1008,34 +1009,66 @@ postgresqlusers:
 
 ui:
   enabled: true
+  type: "smq"
+  name: "Magistrala UI"
+  basePath: /
+  publicBasePat: /
   image:
     repository: "ghcr.io/absmach/magistrala/ui-smq"
     tag: "latest"
     pullPolicy: "IfNotPresent"
-    pullSecrets:
-      - ghcr-secret
+    pullSecrets: {}
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   # logLevel: "error"
+  backendUrl: "http://supermq-backend:9097"
+  billingUrl: "http://supermq-billing:9022"
+  certsUrl: "http://supermq-certs:9019"
+  channelsUrl: "http://supermq-channels:9005"
+  clientsUrl: "http://supermq-clients:9006"
+  domainsUrl: "http://supermq-domains:9003"
+  groupsUrl: "http://supermq-groups:9004"
+  httpAdpaterUrl: "http://supermq-adapter-http:8008"
+  journalUrl: "http://supermq-journal:9021"
+  usersUrl: "http://supermq-users:9002"
+  readerUrl: "http://supermq-timescale-reader:9011"
+  reUrl: "http://supermq-re:9008"
   replicaCount: 1
-  port: 9095
+  stripePK: "pk_test_51Nx4FgA1iGzEdinBptY1FUfIzttWcQAh3Njc9N5sH5JIPzOyvedliBBGgDykWFrjAHlGnvE7b1imuzFDEP4ijwMe003gkwSPkl"
+  stripeSK: ""
+  httpPort: 3000
   pathPrefix: "/ui"
   googleClientID: ""
   googleClientSecret: ""
   googleRedirectHostname: "https://stage-domain-name"
   googleRedirectPath: "/oauth/callback/google"
   googleState: "somerandomstring"
-  contentType: "application/senml+json"
-  hashKey: "5jx4x2Qg9OUmzpP5dbveWQ"
-  blockKey: "UtgZjr92jwRY6SPUndHXiyl9QY8qTUyZ"
+  nextauthSecret: "4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="
+  runtimeEnv: "production"
+  timescaleReader:
+    httpPort: 9011
+  profilePicturesUrl:
+    httpPort: 9097
 
-postgresqlui:
+ui_backend:
+  loglevel: error
+  httpPort: 9097
+  serverCert: ""
+  serverKey: ""
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
+  verificationTLS: "false"
+  contentType: "application/senml+json"
+
+postgresqlbackend:
   ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
   enabled: true
   name: postgresql-ui
   host: postgresql-ui
   port: &postgresqlUIPort 5432
-  database: &postgresqlUIDatabase ui
+  database: &postgresqlUIDatabase supermq
   username: &postgresqlUIUsername supermq
   password: &postgresqlUIPassword supermq
   ## values of bitnami/postgres

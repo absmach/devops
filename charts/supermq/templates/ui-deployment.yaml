@@ -15,73 +15,137 @@ spec:
       component: ui
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.ui.httpPort }}"
+        prometheus.io/scrape: "true"
       labels:
         app: {{ .Release.Name }}
         component: ui
     spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.ui.image.pullSecrets) }}
       imagePullSecrets:
-        - name: ghcr-secret
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       containers:
-        - name: ui
+        - name: {{ .Release.Name }}-ui
           image: "{{ default (printf "%s/ui" .Values.defaults.image.rootRepository) .Values.ui.image.repository }}:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
           env:
-            - name: SMQ_UI_LOG_LEVEL
+            - name: MG_UI_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.ui.logLevel | quote }}
-            - name: SMQ_UI_PORT
-              value: {{ .Values.ui.port | quote }}
-            {{- $hostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.hostname }}
-            {{- if $hostname }}
-            - name: SMQ_UI_HOST_URL
-              value: {{ $hostname | quote }}
-            {{- end }}
-            - name: SMQ_UI_PATH_PREFIX
-              value: {{ .Values.ui.pathPrefix | quote }}
-            - name: SMQ_HTTP_ADAPTER_URL
-              value: {{ default (printf "http://%s-adapter-http:%s " .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
-            - name: SMQ_THINGS_URL
-              value: {{ default  (printf "http://%s-clients:%s" .Release.Name (.Values.clients.httpPort | toString )) .Values.ui.clientsUrl }}
-            - name: SMQ_USERS_URL
-              value: {{ default  (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString ))  .Values.ui.usersUrl }}
-            - name: SMQ_DOMAINS_URL
-              value: {{ default  (printf "http://%s-auth:%s" .Release.Name (.Values.auth.httpPort | toString )) .Values.ui.authUrl }}
-            - name: SMQ_JOURNAL_URL
-              value: {{ default  (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
-            - name: SMQ_UI_CONTENT_TYPE
-              value: {{ .Values.ui.contentType | quote }}
-            - name: MG_UI_DOCKER_ACCEPT_EULA
-              value: "yes"
-            - name: SMQ_UI_DB_HOST
+            - name: MG_BACKEND_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.ui_backend.logLevel | quote }}
+            - name: MG_BACKEND_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_BACKEND_HTTP_PORT
+              value: {{ .Values.ui_backend.httpPort | quote }}
+            - name: MG_BACKEND_HTTP_SERVER_CERT
+              value: {{ .Values.ui_backend.serverCert | quote }}
+            - name: MG_BACKEND_HTTP_SERVER_KEY
+              value: {{ .Values.ui_backend.serverKey | quote }}
+            - name: MG_BACKEND_DB_HOST
             {{- if .Values.postgresqlui.enabled }}
               value: {{ .Release.Name }}-postgresqlui
             {{- else }}
               value: {{ .Values.postgresqlui.host }}
             {{- end }}
-            - name: SMQ_UI_DB_PORT
-              value: {{ .Values.postgresqlui.port | quote }}
-            - name: SMQ_UI_DB_USER
-              value: {{ .Values.postgresqlui.username | quote }}
-            - name: SMQ_UI_DB_PASS
-              value: {{ .Values.postgresqlui.password | quote }}
-            - name: SMQ_UI_DB_NAME
-              value: {{ .Values.postgresqlui.database | quote }}
-            - name: SMQ_GOOGLE_CLIENT_ID
+            - name: MG_BACKEND_DB_PORT
+              value: {{ .Values.postgresqlbackend.port | quote }}
+            - name: MG_BACKEND_DB_USER
+              value: {{ .Values.postgresqlbackend.username | quote }}
+            - name: MG_BACKEND_DB_PASS
+              value: {{ .Values.postgresqlbackend.password | quote }}
+            - name: MG_BACKEND_DB_NAME
+              value: {{ .Values.postgresqlbackend.database | quote }}
+            - name: MG_BACKEND_DB_SSL_MODE
+              value: {{ .Values.ui_backend.sslMode | quote }}
+            - name: MG_BACKEND_DB_SSL_CERT
+              value: {{ .Values.ui_backend.sslCert | quote }}
+            - name: MG_BACKEND_DB_SSL_KEY
+              value: {{ .Values.ui_backend.sslKey | quote }}
+            - name: MG_BACKEND_DB_SSL_ROOT_CERT
+              value: {{ .Values.ui_backend.sslRootCert | quote }}
+            - name: MG_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: MG_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
+            - name: MG_AUTH_GRPC_CLIENT_CERT
+              value: {{ .Values.auth.grpcClientCert | quote }}
+            - name: MG_AUTH_GRPC_CLIENT_KEY
+              value: {{ .Values.auth.grpcClientKey | quote }}
+            - name: MG_AUTH_GRPC_CLIENT_CA_CERTS
+              value: {{ .Values.auth.grpcClientCACerts | quote }}
+            - name: MG_UI_VERIFICATION_TLS
+              value: {{ .Values.ui_backend.verificationTLS | quote }}
+            - name: MG_UI_CONTENT_TYPE
+              value: {{ .Values.ui_backend.contentType | quote }}
+            - name: MG_PROFILE_PICTURE_URL
+              value: {{ default (printf "http://%s-profile-pictures:%s" .Release.Name (.Values.profile_pictures.httpPort | toString )) .Values.ui.profilePicturesUrl }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.ui.profilePictures.httpPort }}
+            - name: MG_UI_DOCKER_ACCEPT_EULA
+              value: "yes"
+            - name: MG_DOMAINS_URL
+              value: {{ default  (printf "http://%s-auth:%s" .Release.Name (.Values.domains.httpPort | toString )) .Values.ui.domainsUrl }}
+            - name: MG_USERS_URL
+              value: {{ default  (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString ))  .Values.ui.usersUrl }}
+            - name: SMQ_CLIENTS_URL
+              value: {{ default  (printf "http://%s-clients:%s" .Release.Name (.Values.clients.httpPort | toString )) .Values.ui.clientsUrl }}
+            - name: MG_CHANNELS_URL
+              value: {{ default  (printf "http://%s-channels:%s" .Release.Name (.Values.channels.httpPort | toString )) .Values.ui.channelsUrl }}
+            - name: MG_GROUPS_URL
+              value: {{ default  (printf "http://%s-groups:%s" .Release.Name (.Values.groups.httpPort | toString )) .Values.ui.groupsUrl }}
+            - name: MG_CERTS_URL
+              value: {{ default  (printf "http://%s-certs:%s" .Release.Name (.Values.certs.httpPort | toString )) .Values.ui.certsUrl }}
+            - name: MG_HTTP_ADAPTER_URL
+              value: {{ default  (printf "http://%s-adapter-http:%s" .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
+            - name: MG_READER_URL
+              value: {{ default  (printf "http://%s-reader:%s" .Release.Name (.Values.reader.httpPort | toString )) .Values.ui.readerUrl }}
+            - name: MG_BACKEND_URL
+              value: {{ default  (printf "http://%s-backend:%s" .Release.Name (.Values.backend.httpPort | toString )) .Values.ui.backendUrl }}
+            - name: MG_JOURNAL_URL
+              value: {{ default  (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
+            - name: MG_BILLING_URL
+              value: {{ default  (printf "http://%s-billing:%s" .Release.Name (.Values.billing.httpPort | toString )) .Values.ui.billingUrl }}
+            - name: MG_RE_URL
+              value: {{ default  (printf "http://%s-re:%s" .Release.Name (.Values.re.httpPort | toString )) .Values.ui.reUrl }}
+            - name: MG_GOOGLE_CLIENT_ID
               value: {{ .Values.ui.googleClientID | quote }}
             - name: SMQ_GOOGLE_CLIENT_SECRET
               value: {{ .Values.ui.googleClientSecret | quote }}
-            {{- $googleRedirectHostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.googleRedirectHostname }}
             - name: SMQ_GOOGLE_REDIRECT_URL
               value: {{$googleRedirectHostname}}{{.Values.ui.googleRedirectPath }}
             - name: SMQ_GOOGLE_STATE
               value: {{ .Values.ui.googleState | quote }}
-            - name: SMQ_UI_HASH_KEY
-              value: {{ .Values.ui.hashKey | quote }}
-            - name: SMQ_UI_BLOCK_KEY
-              value: {{ .Values.ui.blockKey | quote }}
+            - name: MG_UI_NAME
+              value: {{ .Values.ui.name | quote }}
+            - name: MG_UI_BASE_PATH
+              value: {{ .Values.ui.basePath | quote }}
+            - NEXT_PUBLIC_MG_UI_BASE_PATH
+              value: {{ .Values.ui.publicBasePath | quote }}
+            - NEXT_PUBLIC_UI_STRIPE_PK
+              value: {{ .Values.ui.stripePK | quote }}
+            - NEXT_PUBLIC_UI_STRIPE_SK
+              value: {{ .Values.ui.stripeSK | quote }}
+            - name: MG_UI_TYPE
+              value: {{ .Values.ui.type | quote }}
+            - name: NEXT_PUBLIC_BACKEND_URL
+              value: {{ .Values.ui.backendUrl | quote }}
+            - name: NEXTAUTH_SECRET
+              value: {{ .Values.ui.nextauthSecret | quote }}
+            - name: RUNTIME_ENV
+              value: {{ .Values.ui.runtimeEnv | quote }}
+            - name: MG_UI_PORT
+              value: {{ .Values.ui.httpPort | quote }}
+            {{- $hostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.hostname }}
+            {{- if $hostname }}
+            - name: SMQ_UI_HOST_URL
+              value: {{ $hostname | quote }}
+            {{- end }}
           ports:
-            - containerPort: {{ .Values.ui.port }}
+            - containerPort: {{ .Values.ui.httpPort }}
               protocol: TCP
           stdin: true
           tty: true

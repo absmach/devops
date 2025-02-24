@@ -12,5 +12,5 @@ spec:
     component: ui
   ports:
     - protocol: TCP
-      port: {{ .Values.ui.port }}
+      port: {{ .Values.ui.httpPort }}
 {{- end }}
