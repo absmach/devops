@@ -25,7 +25,7 @@ spec:
     spec:
       {{- with (default .Values.defaults.image.pullSecrets .Values.ui.image.pullSecrets) }}
       imagePullSecrets:
-        {{- toYaml . | nindent 12 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -83,50 +83,44 @@ spec:
             - name: MG_UI_CONTENT_TYPE
               value: {{ .Values.ui_backend.contentType | quote }}
             - name: MG_PROFILE_PICTURE_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.ui.profilePictures.httpPort }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.ui.profilePicturesUrl.httpPort }}
             - name: MG_UI_DOCKER_ACCEPT_EULA
               value: "yes"
             - name: MG_DOMAINS_URL
-              value: {{ default  (printf "http://%s-auth:%s" .Release.Name (.Values.domains.httpPort | toString )) .Values.ui.domainsUrl }}
+              value: {{ default (printf "http://%s-auth:%s" .Release.Name (.Values.domains.httpPort | toString )) .Values.ui.domainsUrl }}
             - name: MG_USERS_URL
-              value: {{ default  (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString ))  .Values.ui.usersUrl }}
+              value: {{ default (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString )) .Values.ui.usersUrl }}
             - name: SMQ_CLIENTS_URL
-              value: {{ default  (printf "http://%s-clients:%s" .Release.Name (.Values.clients.httpPort | toString )) .Values.ui.clientsUrl }}
+              value: {{ default (printf "http://%s-clients:%s" .Release.Name (.Values.clients.httpPort | toString )) .Values.ui.clientsUrl }}
             - name: MG_CHANNELS_URL
-              value: {{ default  (printf "http://%s-channels:%s" .Release.Name (.Values.channels.httpPort | toString )) .Values.ui.channelsUrl }}
+              value: {{ default (printf "http://%s-channels:%s" .Release.Name (.Values.channels.httpPort | toString )) .Values.ui.channelsUrl }}
             - name: MG_GROUPS_URL
-              value: {{ default  (printf "http://%s-groups:%s" .Release.Name (.Values.groups.httpPort | toString )) .Values.ui.groupsUrl }}
+              value: {{ default (printf "http://%s-groups:%s" .Release.Name (.Values.groups.httpPort | toString )) .Values.ui.groupsUrl }}
             - name: MG_CERTS_URL
-              value: {{ default  (printf "http://%s-certs:%s" .Release.Name (.Values.certs.httpPort | toString )) .Values.ui.certsUrl }}
+              value: {{ default (printf "http://%s-certs:%s" .Release.Name (.Values.certs.httpPort | toString )) .Values.ui.certsUrl }}
             - name: MG_HTTP_ADAPTER_URL
-              value: {{ default  (printf "http://%s-adapter-http:%s" .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
-            - name: MG_READER_URL
-              value: {{ default  (printf "http://%s-reader:%s" .Release.Name (.Values.reader.httpPort | toString )) .Values.ui.readerUrl }}
+              value: {{ default (printf "http://%s-adapter-http:%s" .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
             - name: MG_BACKEND_URL
-              value: {{ default  (printf "http://%s-backend:%s" .Release.Name (.Values.backend.httpPort | toString )) .Values.ui.backendUrl }}
+              value: {{ default (printf "http://%s-backend:%s" .Release.Name (.Values.ui_backend.httpPort | toString )) .Values.ui.backendUrl }}
             - name: MG_JOURNAL_URL
-              value: {{ default  (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
-            - name: MG_BILLING_URL
-              value: {{ default  (printf "http://%s-billing:%s" .Release.Name (.Values.billing.httpPort | toString )) .Values.ui.billingUrl }}
-            - name: MG_RE_URL
-              value: {{ default  (printf "http://%s-re:%s" .Release.Name (.Values.re.httpPort | toString )) .Values.ui.reUrl }}
+              value: {{ default (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
             - name: MG_GOOGLE_CLIENT_ID
               value: {{ .Values.ui.googleClientID | quote }}
             - name: SMQ_GOOGLE_CLIENT_SECRET
               value: {{ .Values.ui.googleClientSecret | quote }}
             - name: SMQ_GOOGLE_REDIRECT_URL
-              value: {{$googleRedirectHostname}}{{.Values.ui.googleRedirectPath }}
+              value: "{{ .Values.ui.googleRedirectHostname }}{{ .Values.ui.googleRedirectPath }}"
             - name: SMQ_GOOGLE_STATE
               value: {{ .Values.ui.googleState | quote }}
             - name: MG_UI_NAME
               value: {{ .Values.ui.name | quote }}
             - name: MG_UI_BASE_PATH
               value: {{ .Values.ui.basePath | quote }}
-            - NEXT_PUBLIC_MG_UI_BASE_PATH
+            - name: NEXT_PUBLIC_MG_UI_BASE_PATH
               value: {{ .Values.ui.publicBasePath | quote }}
-            - NEXT_PUBLIC_UI_STRIPE_PK
+            - name: NEXT_PUBLIC_UI_STRIPE_PK
               value: {{ .Values.ui.stripePK | quote }}
-            - NEXT_PUBLIC_UI_STRIPE_SK
+            - name: NEXT_PUBLIC_UI_STRIPE_SK
               value: {{ .Values.ui.stripeSK | quote }}
             - name: MG_UI_TYPE
               value: {{ .Values.ui.type | quote }}

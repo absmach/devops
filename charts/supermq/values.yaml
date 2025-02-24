@@ -1022,7 +1022,6 @@ ui:
   # sendTelemetry: true
   # logLevel: "error"
   backendUrl: "http://supermq-backend:9097"
-  billingUrl: "http://supermq-billing:9022"
   certsUrl: "http://supermq-certs:9019"
   channelsUrl: "http://supermq-channels:9005"
   clientsUrl: "http://supermq-clients:9006"
@@ -1031,8 +1030,6 @@ ui:
   httpAdpaterUrl: "http://supermq-adapter-http:8008"
   journalUrl: "http://supermq-journal:9021"
   usersUrl: "http://supermq-users:9002"
-  readerUrl: "http://supermq-timescale-reader:9011"
-  reUrl: "http://supermq-re:9008"
   replicaCount: 1
   stripePK: "pk_test_51Nx4FgA1iGzEdinBptY1FUfIzttWcQAh3Njc9N5sH5JIPzOyvedliBBGgDykWFrjAHlGnvE7b1imuzFDEP4ijwMe003gkwSPkl"
   stripeSK: ""
