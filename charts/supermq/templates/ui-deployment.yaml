@@ -1,5 +1,6 @@
 # Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
+
 {{- if .Values.ui.enabled }}
 
 apiVersion: apps/v1
@@ -18,10 +19,8 @@ spec:
         app: {{ .Release.Name }}
         component: ui
     spec:
-      {{- with (default .Values.defaults.image.pullSecrets .Values.ui.image.pullSecrets) }}
       imagePullSecrets:
-        {{- toYaml . | nindent 12 }}
-      {{- end }}
+        - name: ghcr-secret
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       containers:
@@ -39,7 +38,7 @@ spec:
               value: {{ $hostname | quote }}
             {{- end }}
             - name: SMQ_UI_PATH_PREFIX
-              value: {{ .Values.ui.pathPrefix | quote  }}
+              value: {{ .Values.ui.pathPrefix | quote }}
             - name: SMQ_HTTP_ADAPTER_URL
               value: {{ default (printf "http://%s-adapter-http:%s " .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
             - name: SMQ_THINGS_URL
@@ -51,7 +50,7 @@ spec:
             - name: SMQ_JOURNAL_URL
               value: {{ default  (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
             - name: SMQ_UI_CONTENT_TYPE
-              value: {{ .Values.ui.contentType | quote  }}
+              value: {{ .Values.ui.contentType | quote }}
             - name: MG_UI_DOCKER_ACCEPT_EULA
               value: "yes"
             - name: SMQ_UI_DB_HOST
@@ -63,24 +62,24 @@ spec:
             - name: SMQ_UI_DB_PORT
               value: {{ .Values.postgresqlui.port | quote }}
             - name: SMQ_UI_DB_USER
-              value: {{ .Values.postgresqlui.username | quote  }}
+              value: {{ .Values.postgresqlui.username | quote }}
             - name: SMQ_UI_DB_PASS
-              value: {{ .Values.postgresqlui.password | quote  }}
+              value: {{ .Values.postgresqlui.password | quote }}
             - name: SMQ_UI_DB_NAME
-              value: {{ .Values.postgresqlui.database | quote  }}
+              value: {{ .Values.postgresqlui.database | quote }}
             - name: SMQ_GOOGLE_CLIENT_ID
-              value: {{ .Values.ui.googleClientID | quote  }}
+              value: {{ .Values.ui.googleClientID | quote }}
             - name: SMQ_GOOGLE_CLIENT_SECRET
-              value: {{ .Values.ui.googleClientSecret | quote  }}
+              value: {{ .Values.ui.googleClientSecret | quote }}
             {{- $googleRedirectHostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.googleRedirectHostname }}
             - name: SMQ_GOOGLE_REDIRECT_URL
-              value: {{$googleRedirectHostname}}{{.Values.ui.googleRedirectPath  }}
+              value: {{$googleRedirectHostname}}{{.Values.ui.googleRedirectPath }}
             - name: SMQ_GOOGLE_STATE
-              value: {{ .Values.ui.googleState | quote  }}
+              value: {{ .Values.ui.googleState | quote }}
             - name: SMQ_UI_HASH_KEY
-              value: {{ .Values.ui.hashKey | quote  }}
+              value: {{ .Values.ui.hashKey | quote }}
             - name: SMQ_UI_BLOCK_KEY
-              value: {{ .Values.ui.blockKey | quote  }}
+              value: {{ .Values.ui.blockKey | quote }}
           ports:
             - containerPort: {{ .Values.ui.port }}
               protocol: TCP

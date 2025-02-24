@@ -369,7 +369,7 @@ redisclients:
   cacheKeyduration: "10m"
   ## values of bitnami/redis
   auth:
-      enabled: false
+    enabled: false
   master:
     containerPorts:
       redis: 6379
@@ -451,7 +451,6 @@ redisdomains:
     replicaCount: 0
   volumePermissions:
     enabled: true
-
 
 envoy:
   image:
@@ -1013,20 +1012,14 @@ ui:
     repository: "ghcr.io/absmach/magistrala/ui-smq"
     tag: "latest"
     pullPolicy: "IfNotPresent"
-    # pullSecrets: {}
-    # logLevel: "error"
-  # hostname: ""
-  # contentTypes: "application/senml+json"
+    pullSecrets:
+      - ghcr-secret
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  # logLevel: "error"
   replicaCount: 1
   port: 9095
   pathPrefix: "/ui"
-  # hostUrl: "https://domain-name"
-  # httpAdapterUrl: "http://supermq-adapter-http:8008"
-  # usersUrl: "http://supermq-users:9002"
-  # authUrl: "http://supermq-auth:8189"
-  # clientsUrl: "http://supermq-clients:9000"
-  # journalUrl: "http:///supermq-auth:9021"
-  # domainsUrl: "http://supermq-auth:8189"
   googleClientID: ""
   googleClientSecret: ""
   googleRedirectHostname: "https://stage-domain-name"

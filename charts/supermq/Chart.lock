@@ -44,6 +44,9 @@ dependencies:
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 19.6.2
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 19.6.2
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.28.1
@@ -56,5 +59,5 @@ dependencies:
 - name: fluent-bit
   repository: https://fluent.github.io/helm-charts
   version: 0.48.5
-digest: sha256:d9210afb7e480601d8b77aa9c30df43cb51f2836441ec6d2ce3567fe1d571695
-generated: "2025-02-21T23:37:54.778328846+05:30"
+digest: sha256:a159f316ee477525ac8c65fc4812ed7f5af9238160ba25508af5c6867fe9ef66
+generated: "2025-02-24T14:05:38.406670738+03:00"
