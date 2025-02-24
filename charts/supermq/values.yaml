@@ -100,6 +100,7 @@ adapter_http:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   httpPort: 8008
+  replicaCount: 1
   # logLevel: "error"
   # The logging level for the adapter_http service. Common options are "debug", "info", "warn", "error".
   # Adjust this based on the verbosity of logs you require.
@@ -116,7 +117,7 @@ adapter_ws:
     # tag: "latest"
     # pullPolicy: "IfNotPresent"
   # logLevel: "error"
-  replicaCount: 3
+  replicaCount: 1
   httpPort: 8186
   # nodeSelector: {}
   # affinity: {}
@@ -132,7 +133,7 @@ auth:
   # logLevel: error
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
-  # replicaCount: 3
+  replicaCount: 3
   httpPort: 9001
   grpcPort: 7001
   grpcTimeout: "300s"
@@ -317,7 +318,7 @@ clients:
   # logLevel: error
   # sendTelemetry: true
   # jaegerTraceRatio: 1.0
-  # replicaCount: 3
+  replicaCount: 3
   httpPort: 9006
   replicaCount: 3
   authGrpcPort: 7006
@@ -426,7 +427,7 @@ envoy:
     pullPolicy: "IfNotPresent"
     repository: "envoyproxy/envoy"
     tag: "v1.31-latest"
-  # replicaCount: 3
+    replicaCount: 3
 
 fluent-bit:
   enabled: true
@@ -468,7 +469,7 @@ groups:
   # logLevel: "error"
   # sendTelemetry: true
   # jaegerTraceRatio: 1.0
-  # replicaCount: 3
+  replicaCount: 3
   httpPort: 9004
   replicaCount: 3
   grpcPort: 7004
@@ -637,7 +638,7 @@ postgresqljournal:
       size: 2Gi
 
 mqtt:
-  # replicaCount: 3
+  replicaCount: 3
   enabled: true
   securityContext:
     runAsUser: 10000
@@ -838,7 +839,7 @@ prometheus:
     enabled: false
 
 spicedb:
-  # replicaCount: 1
+  replicaCount: 1
   image:
     pullSecrets: {}
     repository: authzed/spicedb
