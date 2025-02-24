@@ -83,7 +83,6 @@ spec:
             - name: MG_UI_CONTENT_TYPE
               value: {{ .Values.ui_backend.contentType | quote }}
             - name: MG_PROFILE_PICTURE_URL
-              value: {{ default (printf "http://%s-profile-pictures:%s" .Release.Name (.Values.profile_pictures.httpPort | toString )) .Values.ui.profilePicturesUrl }}
               value: {{ .Release.Name }}-envoy:{{ .Values.ui.profilePictures.httpPort }}
             - name: MG_UI_DOCKER_ACCEPT_EULA
               value: "yes"
@@ -149,4 +148,16 @@ spec:
               protocol: TCP
           stdin: true
           tty: true
+      {{- with .Values.ui.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}
