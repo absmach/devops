@@ -56,7 +56,7 @@ spec:
             - name: SMQ_AUTH_GRPC_TIMEOUT
               value: {{ .Values.auth.grpcTimeout | quote }}
             - name: SMQ_CLIENTS_URL
-              value: http://{{ .Release.Name }}-clients:{{ .Values.clients.httpPort }}
+              value: {{ .Release.Name }}-clients:{{ .Values.clients.httpPort }}
             - name: SMQ_CERTS_DB_HOST
             {{- if .Values.postgresqlcerts.enabled }}
               value: {{ .Release.Name }}-postgresqlcerts
