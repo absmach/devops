@@ -636,6 +636,7 @@ jaeger:
           port: 4318
   query:
     replicaCount: 1
+    basePath: /jaeger
     resources:
       requests:
         cpu: 200m
