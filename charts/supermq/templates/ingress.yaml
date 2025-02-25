@@ -34,7 +34,6 @@ spec:
                 name: {{ .Release.Name }}-clients
                 port:
                   number: {{ .Values.clients.httpPort }}
-
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
@@ -61,52 +60,48 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-        # Domains Service
-        - path: /domains
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-domains
-              port:
-                number: {{ .Values.domains.httpPort }}
-        - path: /invitations
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-domains
-              port:
-                number: {{ .Values.domains.httpPort }}
-
-        # Users service
-        - path: /users
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-users
-              port:
-                number: {{ .Values.users.httpPort }}
-        - path: /password
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-users
-              port:
-                number: {{ .Values.users.httpPort }}
-        - path: /authorize
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-users
-              port:
-                number: {{ .Values.users.httpPort }}
-        - path: /oauth/callback
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ .Release.Name }}-users
-              port:
-                number: {{ .Values.users.httpPort }}
-
+          - path: /domains
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-domains
+                port:
+                  number: {{ .Values.domains.httpPort }}
+          - path: /invitations
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-domains
+                port:
+                  number: {{ .Values.domains.httpPort }}
+          - path: /users
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+          - path: /password
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+          - path: /authorize
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
+          - path: /oauth/callback
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-users
+                port:
+                  number: {{ .Values.users.httpPort }}
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
@@ -120,10 +115,10 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-nginx-ingress-groups-channels-clients
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1/$2
 {{- if .Values.ingress.annotations }}
 {{ toYaml .Values.ingress.annotations | indent 4 }}
 {{- end }}
-    nginx.ingress.kubernetes.io/rewrite-target: /$1/$2
   labels:
 {{- if .Values.ingress.labels }}
 {{ toYaml .Values.ingress.labels | indent 4 }}
@@ -134,32 +129,27 @@ spec:
     - host: "{{ .Values.ingress.hostname }}"
       http:
         paths:
-        # Groups service
-        - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(groups)"
-          pathType: ImplementationSpecific
-          backend:
-            service:
-              name: {{ .Release.Name }}-groups
-              port:
-                number: {{ .Values.groups.httpPort }}
-
-        # Clients Service
-        - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(clients)"
-          pathType: ImplementationSpecific
-          backend:
-            service:
-              name: {{ .Release.Name }}-clients
-              port:
-                number: {{ .Values.clients.httpPort }}
-        # Channels Service
-        - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(channels)"
-          pathType: ImplementationSpecific
-          backend:
-            service:
-              name: {{ .Release.Name }}-channels
-              port:
-                number: {{ .Values.channels.httpPort }}
-
+          - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(groups)"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-groups
+                port:
+                  number: {{ .Values.groups.httpPort }}
+          - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(clients)"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-clients
+                port:
+                  number: {{ .Values.clients.httpPort }}
+          - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(channels)"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-channels
+                port:
+                  number: {{ .Values.channels.httpPort }}
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
@@ -183,9 +173,9 @@ metadata:
 {{- if .Values.ingress.annotations }}
 {{ toYaml .Values.ingress.annotations | indent 4 }}
 {{- end }}
-{{- if .Values.ingress.labels }}
   labels:
-{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- if .Values.ingress.labels }}
+{{ toYaml .Values.ingress.labels | indent 2 }}
 {{- end }}
 spec:
   ingressClassName: nginx
@@ -232,20 +222,19 @@ spec:
 {{- end }}
 
 ---
-# Ingress for Grafana
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-grafana
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    {{- if .Values.ingress.annotations }}
-    {{ toYaml .Values.ingress.annotations | indent 4 }}
-    {{- end }}
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
   labels:
-    {{- if .Values.ingress.labels }}
-    {{ toYaml .Values.ingress.labels | indent 4 }}
-    {{- end }}
+{{- if .Values.ingress.labels }}
+{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- end }}
 spec:
   ingressClassName: nginx
   rules:
@@ -267,20 +256,19 @@ spec:
 {{- end }}
 
 ---
-# Ingress for Jaeger
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-jaeger
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    {{- if .Values.ingress.annotations }}
-    {{ toYaml .Values.ingress.annotations | indent 4 }}
-    {{- end }}
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
   labels:
-    {{- if .Values.ingress.labels }}
-    {{ toYaml .Values.ingress.labels | indent 4 }}
-    {{- end }}
+{{- if .Values.ingress.labels }}
+{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- end }}
 spec:
   ingressClassName: nginx
   rules:
@@ -302,20 +290,19 @@ spec:
 {{- end }}
 
 ---
-# Ingress for Prometheus
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-prometheus
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    {{- if .Values.ingress.annotations }}
-    {{ toYaml .Values.ingress.annotations | indent 4 }}
-    {{- end }}
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
   labels:
-    {{- if .Values.ingress.labels }}
-    {{ toYaml .Values.ingress.labels | indent 4 }}
-    {{- end }}
+{{- if .Values.ingress.labels }}
+{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- end }}
 spec:
   ingressClassName: nginx
   rules:
@@ -345,6 +332,7 @@ metadata:
 data:
   1883: "{{ .Release.Namespace }}/{{ .Release.Name }}-envoy:1883"
   8883: "{{ .Release.Namespace }}/{{ .Release.Name }}-nginx-internal:8883"
+
 ---
 apiVersion: v1
 kind: ConfigMap
