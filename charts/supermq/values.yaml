@@ -1015,7 +1015,7 @@ ui:
   type: "smq"
   name: "Magistrala UI"
   basePath: /
-  publicBasePat: /
+  publicBasePath: /
   image:
     repository: "ghcr.io/absmach/magistrala/ui-smq"
     tag: "latest"
@@ -1036,11 +1036,13 @@ ui:
   replicaCount: 1
   stripePK: "pk_test_51Nx4FgA1iGzEdinBptY1FUfIzttWcQAh3Njc9N5sH5JIPzOyvedliBBGgDykWFrjAHlGnvE7b1imuzFDEP4ijwMe003gkwSPkl"
   stripeSK: ""
+  hostname: "146.190.176.148"
+  nextauthUrl: "http://146.190.176.148"
   httpPort: 3000
   pathPrefix: "/ui"
   googleClientID: ""
   googleClientSecret: ""
-  googleRedirectHostname: "http://146.190.176.148:3000"
+  googleRedirectHostname: "http://146.190.176.148"
   googleRedirectPath: "/oauth/callback/google"
   googleState: "somerandomstring"
   nextauthSecret: "4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="

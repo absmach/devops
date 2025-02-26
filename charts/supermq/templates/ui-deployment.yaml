@@ -130,11 +130,17 @@ spec:
               value: {{ .Values.ui.nextauthSecret | quote }}
             - name: RUNTIME_ENV
               value: {{ .Values.ui.runtimeEnv | quote }}
+            - name: NEXTAUTH_URL
+              value: {{ .Values.ui.nextauthUrl | quote }}
+            - name: NEXT_PUBLIC_HOST_URL
+              value: {{ .Values.ui.nextauthUrl | quote }}
+            - name: NEXT_PUBLIC_UI_STRIPE_RETURN_URL
+              value: {{ .Values.ui.nextauthUrl | quote }}
             - name: MG_UI_PORT
               value: {{ .Values.ui.httpPort | quote }}
             {{- $hostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.hostname }}
             {{- if $hostname }}
-            - name: SMQ_UI_HOST_URL
+            - name: MG_UI_HOST_URL
               value: {{ $hostname | quote }}
             {{- end }}
           ports:
