@@ -37,7 +37,6 @@ dependencies:
     alias: cassandra
     condition: jaeger.enabled
 
-
   - name: postgresql
     version: "12.5.6"
     repository: "@bitnami"
@@ -133,4 +132,3 @@ dependencies:
     repository: "https://fluent.github.io/helm-charts"
     alias: fluent-bit
     condition: fluent-bit.enabled
-
