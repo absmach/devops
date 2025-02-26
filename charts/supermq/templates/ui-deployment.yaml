@@ -90,7 +90,7 @@ spec:
               value: {{ default (printf "http://%s-auth:%s" .Release.Name (.Values.domains.httpPort | toString )) .Values.ui.domainsUrl }}
             - name: MG_USERS_URL
               value: {{ default (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString )) .Values.ui.usersUrl }}
-            - name: SMQ_CLIENTS_URL
+            - name: MG_CLIENTS_URL
               value: {{ default (printf "http://%s-clients:%s" .Release.Name (.Values.clients.httpPort | toString )) .Values.ui.clientsUrl }}
             - name: MG_CHANNELS_URL
               value: {{ default (printf "http://%s-channels:%s" .Release.Name (.Values.channels.httpPort | toString )) .Values.ui.channelsUrl }}
@@ -106,11 +106,11 @@ spec:
               value: {{ default (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
             - name: MG_GOOGLE_CLIENT_ID
               value: {{ .Values.ui.googleClientID | quote }}
-            - name: SMQ_GOOGLE_CLIENT_SECRET
+            - name: MG_GOOGLE_CLIENT_SECRET
               value: {{ .Values.ui.googleClientSecret | quote }}
-            - name: SMQ_GOOGLE_REDIRECT_URL
+            - name: MG_GOOGLE_REDIRECT_URL
               value: "{{ .Values.ui.googleRedirectHostname }}{{ .Values.ui.googleRedirectPath }}"
-            - name: SMQ_GOOGLE_STATE
+            - name: MG_GOOGLE_STATE
               value: {{ .Values.ui.googleState | quote }}
             - name: MG_UI_NAME
               value: {{ .Values.ui.name | quote }}
