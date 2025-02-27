@@ -34,8 +34,6 @@ spec:
           image: "{{ default (printf "%s/ui" .Values.defaults.image.rootRepository) .Values.ui.image.repository }}:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
           env:
-            - name: MG_UI_LOG_LEVEL
-              value: {{ default .Values.defaults.logLevel .Values.ui.logLevel | quote }}
             - name: MG_DOMAINS_URL
               value: {{ default (printf "http://%s-auth:%s" .Release.Name (.Values.domains.httpPort | toString )) .Values.ui.domainsUrl }}
             - name: MG_USERS_URL
@@ -68,10 +66,6 @@ spec:
               value: {{ .Values.ui.basePath | quote }}
             - name: NEXT_PUBLIC_MG_UI_BASE_PATH
               value: {{ .Values.ui.publicBasePath | quote }}
-            - name: NEXT_PUBLIC_UI_STRIPE_PK
-              value: {{ .Values.ui.stripePK | quote }}
-            - name: NEXT_PUBLIC_UI_STRIPE_SK
-              value: {{ .Values.ui.stripeSK | quote }}
             - name: MG_UI_TYPE
               value: {{ .Values.ui.type | quote }}
             - name: NEXT_PUBLIC_BACKEND_URL
@@ -84,16 +78,10 @@ spec:
               value: {{ .Values.ui.nextauthUrl | quote }}
             - name: NEXT_PUBLIC_HOST_URL
               value: {{ .Values.ui.nextauthUrl | quote }}
-            - name: NEXT_PUBLIC_UI_STRIPE_RETURN_URL
-              value: {{ .Values.ui.nextauthUrl | quote }}
             - name: MG_PROFILE_PICTURE_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.ui.profilePicturesUrl.httpPort }}
             - name: MG_UI_DOCKER_ACCEPT_EULA
               value: "yes"
-            - name: MG_UI_PORT
-              value: {{ .Values.ui.httpPort | quote }}
-            {{- $hostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.hostname }}
-            {{- if $hostname }}
           ports:
             - containerPort: {{ .Values.ui.httpPort }}
               protocol: TCP
