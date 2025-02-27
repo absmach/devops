@@ -1051,8 +1051,17 @@ ui:
     httpPort: 9011
   profilePicturesUrl:
     httpPort: 9097
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 ui_backend:
+  enabled: true
+  image:
+    repository: "ghcr.io/absmach/magistrala/ui-backend"
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
+  replicaCount: 1
   loglevel: error
   httpPort: 9097
   serverCert: ""
@@ -1063,12 +1072,15 @@ ui_backend:
   sslRootCert: ""
   verificationTLS: "false"
   contentType: "application/senml+json"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 postgresqlbackend:
   ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
   enabled: true
-  name: postgresql-ui
-  host: postgresql-ui
+  name: postgresql-backend
+  host: postgresql-backend
   port: &postgresqlUIPort 5432
   database: &postgresqlUIDatabase supermq
   username: &postgresqlUIUsername supermq
