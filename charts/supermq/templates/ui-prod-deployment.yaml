@@ -94,9 +94,6 @@ spec:
               value: {{ .Values.ui.httpPort | quote }}
             {{- $hostname := default (printf "https://%s" .Values.ingress.hostname) .Values.ui.hostname }}
             {{- if $hostname }}
-            - name: MG_UI_HOST_URL
-              value: {{ $hostname | quote }}
-            {{- end }}
           ports:
             - containerPort: {{ .Values.ui.httpPort }}
               protocol: TCP
