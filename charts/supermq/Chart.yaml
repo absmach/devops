@@ -38,61 +38,61 @@ dependencies:
     condition: jaeger.enabled
 
   - name: postgresql
-    version: "12.5.6"
+    version: "15.2.10"
     repository: "@bitnami"
     alias: postgresqlauth
     condition: postgresqlauth.enabled
 
   - name: postgresql
-    version: "12.5.6"
+    version: "15.2.10"
     repository: "@bitnami"
     alias: postgresqlspicedb
     condition: postgresqlspicedb.enabled
 
   - name: postgresql
-    version: "12.5.6"
+    version: "15.2.10"
     repository: "@bitnami"
     alias: postgresqlchannels
     condition: postgresqlchannels.enabled
 
   - name: postgresql
-    version: "12.5.6"
+    version: "15.2.10"
     repository: "@bitnami"
     alias: postgresqlclients
     condition: postgresqlclients.enabled
 
   - name: postgresql
-    version: "12.5.6"
+    version: "15.2.10"
     repository: "@bitnami"
     alias: postgresqldomains
     condition: postgresqldomains.enabled
 
   - name: postgresql
-    version: "12.5.6"
+    version: "15.2.10"
     repository: "@bitnami"
     alias: postgresqlgroups
     condition: postgresqlgroups.enabled
 
   - name: postgresql
-    version: "12.5.6"
+    version: "15.2.10"
     repository: "@bitnami"
     alias: postgresqlusers
     condition: postgresqlusers.enabled
 
   - name: postgresql
-    version: "12.5.6"
+    version: "15.2.10"
     repository: "@bitnami"
     alias: postgresqlcerts
     condition: postgresqlcerts.enabled
 
   - name: postgresql
-    version: "12.5.6"
+    version: "15.2.10"
     repository: "@bitnami"
     alias: postgresqljournal
     condition: postgresqljournal.enabled
 
   - name: postgresql
-    version: "12.5.6"
+    version: "15.2.10"
     repository: "@bitnami"
     alias: postgresqlbackend
     condition: postgresqlbackend.enabled

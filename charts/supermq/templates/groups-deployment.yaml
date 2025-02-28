@@ -67,7 +67,7 @@ spec:
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
             - name: SMQ_DOMAINS_GRPC_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.domains.grpcPort | quote }}
+              value: {{ .Release.Name }}-envoy:{{ .Values.domains.grpcPort  }}
             - name: SMQ_DOMAINS_GRPC_TIMEOUT
               value: {{ .Values.domains.grpcTimeout | quote }}
             - name: SMQ_ES_URL
