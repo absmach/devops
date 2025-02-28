@@ -325,7 +325,6 @@ clients:
   grpcTimeout: "1s"
   grpcClientCert: "./ssl/certs/clients-grpc-client.crt"
   grpcClientKey: "./ssl/certs/clients-grpc-client.key"
-  authHttpPort: 9001
   # logLevel: "error"
   # nodeSelector: {}
   # affinity: {}
@@ -1034,8 +1033,6 @@ ui:
   journalUrl: "http://supermq-journal:9021"
   usersUrl: "http://supermq-users:9002"
   replicaCount: 1
-  stripePK: "pk_test_51Nx4FgA1iGzEdinBptY1FUfIzttWcQAh3Njc9N5sH5JIPzOyvedliBBGgDykWFrjAHlGnvE7b1imuzFDEP4ijwMe003gkwSPkl"
-  stripeSK: ""
   hostname: "146.190.176.148"
   nextauthUrl: "http://146.190.176.148"
   httpPort: 3000

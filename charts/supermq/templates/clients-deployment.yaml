@@ -47,7 +47,7 @@ spec:
             - name: SMQ_CLIENTS_AUTH_HTTP_HOST
               value: "0.0.0.0"
             - name: SMQ_CLIENTS_AUTH_HTTP_PORT
-              value: {{ .Values.clients.authHttpPort | quote}}
+              value: {{ .Values.auth.httpPort | quote }}
             - name: SMQ_CLIENTS_CACHE_URL
               {{- if .Values.redisclients.enabled }}
               value: redis://{{ .Release.Name }}-redisclients-master:{{ .Values.redisclients.master.service.ports.redis	 }}/0
@@ -78,9 +78,10 @@ spec:
               value: "0.0.0.0"
             - name: SMQ_CLIENTS_HTTP_PORT
               value: {{ .Values.clients.httpPort | quote }}
-
             - name: SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: SMQ_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
             - name: SMQ_CHANNELS_URL
               value: {{ .Release.Name }}-channels:{{ .Values.channels.httpPort }}
             - name: SMQ_CHANNELS_GRPC_URL
@@ -112,7 +113,7 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.clients.authGrpcPort }}
               protocol: TCP
-            - containerPort: {{ .Values.clients.authHttpPort }}
+            - containerPort: {{ .Values.auth.httpPort }}
               protocol: TCP
           volumeMounts:
             - name: spicedb-schema
