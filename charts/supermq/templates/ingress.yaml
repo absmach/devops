@@ -34,8 +34,6 @@ spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        # You can still list a hostname here if you have one, 
-        # but if .Values.ingress.tls.hostname is empty, omit.
         - {{ .Values.ingress.tls.hostname | default "example.com" }}
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
@@ -112,8 +110,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-nginx-ingress-groups-channels-clients
+  # Removed the rewrite-target annotation so we don't break /clients
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1/$2
 {{- if .Values.ingress.annotations }}
 {{ toYaml .Values.ingress.annotations | indent 4 }}
 {{- end }}
@@ -126,6 +124,16 @@ spec:
   rules:
     - http:
         paths:
+          # NEW direct path for /clients so that /clients/{id}/tags works
+          - path: /clients
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-clients
+                port:
+                  number: {{ .Values.clients.httpPort }}
+
+          # Existing regex paths for domainID + /groups|clients|channels
           - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(groups)"
             pathType: ImplementationSpecific
             backend:
@@ -133,6 +141,7 @@ spec:
                 name: {{ .Release.Name }}-groups
                 port:
                   number: {{ .Values.groups.httpPort }}
+
           - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(clients)"
             pathType: ImplementationSpecific
             backend:
@@ -140,6 +149,7 @@ spec:
                 name: {{ .Release.Name }}-clients
                 port:
                   number: {{ .Values.clients.httpPort }}
+
           - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(channels)"
             pathType: ImplementationSpecific
             backend:
