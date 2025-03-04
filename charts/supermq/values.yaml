@@ -546,7 +546,7 @@ grafana:
   adminPassword: "12345678"
   grafana.ini:
     server:
-      root_url: http://localhost/grafana
+      root_url: /grafana
       serve_from_sub_path: true
   datasources:
     datasources.yaml:
@@ -571,7 +571,7 @@ ingress:
     kubernetes.io/ingress.class: "nginx"
   labels: {}
   # Uncomment this block for TLS support in public ingress
-  # hostname: "localhost"
+  hostname: "localhost"
   # tls:
   #   hostname: ""
   #   secret: "supermq-server"
@@ -1012,9 +1012,8 @@ postgresqlusers:
 ui:
   enabled: true
   type: "smq"
+  httpPort: 3000
   name: "Magistrala UI"
-  basePath: /
-  publicBasePath: /
   image:
     repository: "ghcr.io/absmach/magistrala/ui-smq"
     tag: "latest"
@@ -1023,24 +1022,28 @@ ui:
   # jaegerTraceRatio: 1.0
   # sendTelemetry: true
   # logLevel: "error"
-  backendUrl: "http://supermq-backend:9097"
-  certsUrl: "http://supermq-certs:9019"
-  channelsUrl: "http://supermq-channels:9005"
-  clientsUrl: "http://supermq-clients:9006"
-  domainsUrl: "http://supermq-domains:9003"
-  groupsUrl: "http://supermq-groups:9004"
-  httpAdpaterUrl: "http://supermq-adapter-http:8008"
-  journalUrl: "http://supermq-journal:9021"
-  usersUrl: "http://supermq-users:9002"
+  # backendUrl: "http://supermq-backend:9097"
+  # certsUrl: "http://supermq-certs:9019"
+  # channelsUrl: "http://supermq-channels:9005"
+  # clientsUrl: "http://supermq-clients:9006"
+  # domainsUrl: "http://supermq-domains:9003"
+  # groupsUrl: "http://supermq-groups:9004"
+  # httpAdpaterUrl: "http://supermq-adapter-http:8008"
+  # journalUrl: "http://supermq-journal:9021"
+  # usersUrl: "http://supermq-users:9002"
   replicaCount: 1
-  hostname: "146.190.176.148"
-  nextauthUrl: "http://146.190.176.148"
-  httpPort: 3000
-  pathPrefix: "/ui"
+  basePath: "/"
+  nextPublicBasePath: "/"
+  nextPublicNextAuthBasePath: "/api/auth"
+  nextAuthSecret: "4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="
+  # nextAuthUrl: "http://localhost/api/auth"
+  # nextPublicHostUrl: "http://localhost"
+  # nextPublicBackendUrl: "http://localhost/uibackend"
+  # mgProfilePictureUrl: "http://localhost"
   googleClientID: ""
   googleClientSecret: ""
-  googleRedirectHostname: "http://146.190.176.148"
-  googleRedirectPath: "/oauth/callback/google"
+  # googleRedirectHostname: "http://localhost"
+  # googleRedirectPath: "/api/oauth/callback/google"
   googleState: "somerandomstring"
   nextauthSecret: "4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="
   runtimeEnv: "production"
@@ -1052,7 +1055,7 @@ ui:
   # affinity: {}
   # tolerations: {}
 
-ui_backend:
+uibackend:
   enabled: true
   image:
     repository: "ghcr.io/absmach/magistrala/ui-backend"

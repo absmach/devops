@@ -17,6 +17,7 @@ spec:
   rules:
     - http:
         paths:
+          ## In future after implementing UI prefix add like this  {{ default "/" .Values.ui.basePath }}
           - path: /
             pathType: Prefix
             backend:
@@ -34,7 +35,43 @@ spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        - {{ .Values.ingress.tls.hostname | default "example.com" }}
+        # You can still list a hostname here if you have one,
+        # but if .Values.ingress.tls.hostname is empty, omit.
+        - {{ .Values.ingress.tls.hostname }}
+      secretName: {{ .Values.ingress.tls.secret }}
+{{- end }}
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-nginx-ingress-uibackend
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+  labels:
+{{- if .Values.ingress.labels }}
+{{ toYaml .Values.ingress.labels | indent 4 }}
+{{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          ## UI Backend
+          - path: /api/uibackend/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Release.Name }}-uibackend
+                port:
+                  number: {{ .Values.uibackend.httpPort }}
+{{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.tls.hostname }}
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
 
@@ -44,6 +81,7 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-nginx-ingress-domains-users
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 {{- if .Values.ingress.annotations }}
 {{ toYaml .Values.ingress.annotations | indent 4 }}
 {{- end }}
@@ -56,43 +94,43 @@ spec:
   rules:
     - http:
         paths:
-          - path: /domains
-            pathType: Prefix
+          - path: /api/(domains/?.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-domains
                 port:
                   number: {{ .Values.domains.httpPort }}
-          - path: /invitations
-            pathType: Prefix
+          - path: /api/(invitations/?.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-domains
                 port:
                   number: {{ .Values.domains.httpPort }}
-          - path: /users
-            pathType: Prefix
+          - path: /api/(users/?.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
-          - path: /password
-            pathType: Prefix
+          - path: /api/(password/?.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
-          - path: /authorize
-            pathType: Prefix
+          - path: /api/(authorize/?.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-users
                 port:
                   number: {{ .Values.users.httpPort }}
-          - path: /oauth/callback
-            pathType: Prefix
+          - path: /api/(oauth/callback/?.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-users
@@ -101,7 +139,7 @@ spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        - {{ .Values.ingress.tls.hostname | default "example.com" }}
+        - {{ .Values.ingress.tls.hostname  }}
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
 
@@ -111,6 +149,7 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-nginx-ingress-groups-channels-clients
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1/$2
 {{- if .Values.ingress.annotations }}
 {{ toYaml .Values.ingress.annotations | indent 4 }}
 {{- end }}
@@ -123,7 +162,9 @@ spec:
   rules:
     - http:
         paths:
-          - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(groups)"
+
+          # Existing regex paths for domainID + /groups|clients|channels
+          - path: "/api/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(groups)"
             pathType: ImplementationSpecific
             backend:
               service:
@@ -131,7 +172,7 @@ spec:
                 port:
                   number: {{ .Values.groups.httpPort }}
 
-          - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(clients)"
+          - path: "/api/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(clients)"
             pathType: ImplementationSpecific
             backend:
               service:
@@ -139,7 +180,7 @@ spec:
                 port:
                   number: {{ .Values.clients.httpPort }}
 
-          - path: "/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(channels)"
+          - path: "/api/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(channels)"
             pathType: ImplementationSpecific
             backend:
               service:
@@ -149,7 +190,7 @@ spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        - {{ .Values.ingress.tls.hostname | default "example.com" }}
+        - {{ .Values.ingress.tls.hostname }}
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
 
@@ -179,14 +220,14 @@ spec:
     - http:
         paths:
           {{- if and (ne .Values.nginxInternal.mtls.tls "") (ne .Values.nginxInternal.mtls.intermediateCrt "") }}
-          - path: /(http/?.*)
+          - path: /api/(http/?.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-nginx-internal
                 port:
                   number: 80
-          - path: /(mqtt)
+          - path: /api/(mqtt)
             pathType: ImplementationSpecific
             backend:
               service:
@@ -194,14 +235,14 @@ spec:
                 port:
                   number: 80
           {{- else }}
-          - path: /(http/?.*)
+          - path: /api/(http/?.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}-adapter-http
                 port:
                   number: {{ .Values.adapter_http.httpPort }}
-          - path: /(mqtt)
+          - path: /api/(mqtt)
             pathType: ImplementationSpecific
             backend:
               service:
@@ -212,7 +253,7 @@ spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        - {{ .Values.ingress.tls.hostname | default "example.com" }}
+        - {{ .Values.ingress.tls.hostname }}
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
 
@@ -245,7 +286,7 @@ spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        - {{ .Values.ingress.tls.hostname | default "example.com" }}
+        - {{ .Values.ingress.tls.hostname }}
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
 
@@ -278,7 +319,7 @@ spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        - {{ .Values.ingress.tls.hostname | default "example.com" }}
+        - {{ .Values.ingress.tls.hostname  }}
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
 
@@ -311,7 +352,7 @@ spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        - {{ .Values.ingress.tls.hostname | default "example.com" }}
+        - {{ .Values.ingress.tls.hostname  }}
       secretName: {{ .Values.ingress.tls.secret }}
 {{- end }}
 

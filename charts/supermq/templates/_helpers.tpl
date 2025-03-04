@@ -41,6 +41,14 @@ tls.key: {{ $cert.Key | b64enc }}
 {{- end -}}
 
 
+{{- define "supermq.hostname" -}}
+{{- if .Values.ingress.tls -}}
+https://{{ .Values.ingress.hostname }}
+{{- else -}}
+http://{{ .Values.ingress.hostname }}
+{{- end -}}
+{{- end -}}
+
 {{- define "validateSpiceDBDatastoreEngine" -}}
 {{- if and (not (eq . "memory")) (not (eq . "postgres")) -}}
   {{- fail "Invalid value for .Values.spicedb.datastore.engine. Must be 'memory' or 'postgres'." -}}

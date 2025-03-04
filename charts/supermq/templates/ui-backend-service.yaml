@@ -1,7 +1,7 @@
 # Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
-{{- if .Values.ui_backend.enabled }}
+{{- if .Values.uibackend.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,8 +13,8 @@ spec:
   type: ClusterIP
   ports:
     - name: http
-      port: {{ .Values.ui_backend.httpPort }}
-      targetPort: {{ .Values.ui_backend.httpPort }}
+      port: {{ .Values.uibackend.httpPort }}
+      targetPort: {{ .Values.uibackend.httpPort }}
   selector:
     app: {{ .Release.Name }}
     component: backend

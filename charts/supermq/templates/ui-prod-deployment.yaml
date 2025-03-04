@@ -34,8 +34,12 @@ spec:
           image: "{{ default (printf "%s/ui" .Values.defaults.image.rootRepository) .Values.ui.image.repository }}:{{ default .Values.defaults.image.tag .Values.ui.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.ui.image.pullPolicy }}
           env:
+            - name: MG_UI_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.ui.logLevel | quote }}
+            - name: MG_UI_DOCKER_ACCEPT_EULA
+              value: "yes"
             - name: MG_DOMAINS_URL
-              value: {{ default (printf "http://%s-auth:%s" .Release.Name (.Values.domains.httpPort | toString )) .Values.ui.domainsUrl }}
+              value: {{ default (printf "http://%s-domains:%s" .Release.Name (.Values.domains.httpPort | toString )) .Values.ui.domainsUrl }}
             - name: MG_USERS_URL
               value: {{ default (printf "http://%s-users:%s" .Release.Name (.Values.users.httpPort | toString )) .Values.ui.usersUrl }}
             - name: MG_CLIENTS_URL
@@ -49,7 +53,7 @@ spec:
             - name: MG_HTTP_ADAPTER_URL
               value: {{ default (printf "http://%s-adapter-http:%s" .Release.Name (.Values.adapter_http.httpPort | toString )) .Values.ui.httpAdapterUrl }}
             - name: MG_BACKEND_URL
-              value: {{ default (printf "http://%s-backend:%s" .Release.Name (.Values.ui_backend.httpPort | toString )) .Values.ui.backendUrl }}
+              value: {{ default (printf "http://%s-backend:%s" .Release.Name (.Values.uibackend.httpPort | toString )) .Values.ui.backendUrl }}
             - name: MG_JOURNAL_URL
               value: {{ default (printf "http://%s-journal:%s" .Release.Name (.Values.journal.httpPort | toString )) .Values.ui.journalUrl }}
             - name: MG_GOOGLE_CLIENT_ID
@@ -57,7 +61,7 @@ spec:
             - name: MG_GOOGLE_CLIENT_SECRET
               value: {{ .Values.ui.googleClientSecret | quote }}
             - name: MG_GOOGLE_REDIRECT_URL
-              value: "{{ .Values.ui.googleRedirectHostname }}{{ .Values.ui.googleRedirectPath }}"
+              value: {{ printf "%s%s" (.Values.ui.googleRedirectHostname | default (include "supermq.hostname" .)) (.Values.ui.googleRedirectPath | default "/api/oauth/callback/google") | quote }}
             - name: MG_GOOGLE_STATE
               value: {{ .Values.ui.googleState | quote }}
             - name: MG_UI_NAME
@@ -65,23 +69,23 @@ spec:
             - name: MG_UI_BASE_PATH
               value: {{ .Values.ui.basePath | quote }}
             - name: NEXT_PUBLIC_MG_UI_BASE_PATH
-              value: {{ .Values.ui.publicBasePath | quote }}
+              value: {{ .Values.ui.nextPublicBasePath | default .Values.ui.basePath | quote }}
+            - name: NEXT_PUBLIC_NEXTAUTH_BASE_PATH
+              value: {{ .Values.ui.nextPublicNextAuthBasePath | quote }}
             - name: MG_UI_TYPE
               value: {{ .Values.ui.type | quote }}
             - name: NEXT_PUBLIC_BACKEND_URL
-              value: {{ .Values.ui.backendUrl | quote }}
+              value: {{ .Values.ui.nextPublicBackendUrl | default (printf "%s/api/uibackend" (include "supermq.hostname" .)) | quote }}
             - name: NEXTAUTH_SECRET
-              value: {{ .Values.ui.nextauthSecret | quote }}
+              value: {{ .Values.ui.nextAuthSecret | quote }}
             - name: RUNTIME_ENV
-              value: {{ .Values.ui.runtimeEnv | quote }}
+              value: production
             - name: NEXTAUTH_URL
-              value: {{ .Values.ui.nextauthUrl | quote }}
+              value: {{ .Values.ui.nextAuthUrl  | default (printf "%s%s" (include "supermq.hostname" .) .Values.ui.nextPublicNextAuthBasePath) | quote }}
             - name: NEXT_PUBLIC_HOST_URL
-              value: {{ .Values.ui.nextauthUrl | quote }}
+              value: {{ .Values.ui.nextPublicHostUrl | default (printf "%s%s" (include "supermq.hostname" .) .Values.ui.basePath) | quote }}
             - name: MG_PROFILE_PICTURE_URL
-              value: {{ .Release.Name }}-envoy:{{ .Values.ui.profilePicturesUrl.httpPort }}
-            - name: MG_UI_DOCKER_ACCEPT_EULA
-              value: "yes"
+              value: {{ .Values.ui.mgProfilePictureUrl | default (printf "%s/api/uibackend" (include "supermq.hostname" .)) | quote }}
           ports:
             - containerPort: {{ .Values.ui.httpPort }}
               protocol: TCP
