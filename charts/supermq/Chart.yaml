@@ -115,20 +115,8 @@ dependencies:
     alias: "vault"
     condition: vault.enabled
 
-  - name: grafana
-    version: "8.9.0"
-    repository: "https://grafana.github.io/helm-charts"
-    alias: grafana
-    condition: grafana.enabled
-
   - name: prometheus
     version: "27.3.0"
     repository: "https://prometheus-community.github.io/helm-charts"
     alias: prometheus
     condition: prometheus.enabled
-
-  - name: fluent-bit
-    version: "0.48.5"
-    repository: "https://fluent.github.io/helm-charts"
-    alias: fluent-bit
-    condition: fluent-bit.enabled

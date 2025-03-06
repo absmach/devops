@@ -22,24 +22,22 @@ Event-driven Infrastructure for Modern Cloud
 | Repository | Name | Version |
 |------------|------|---------|
 | @bitnami | common | 2.x.x |
-| @bitnami | postgresqlusers(postgresql) | 15.2.10 |
-| @bitnami | postgresqljournal(postgresql) | 15.2.10 |
+| @bitnami | postgresqldomains(postgresql) | 15.2.10 |
+| @bitnami | postgresqlspicedb(postgresql) | 15.2.10 |
 | @bitnami | postgresqlgroups(postgresql) | 15.2.10 |
 | @bitnami | postgresqlauth(postgresql) | 15.2.10 |
-| @bitnami | postgresqlspicedb(postgresql) | 15.2.10 |
+| @bitnami | postgresqlusers(postgresql) | 15.2.10 |
 | @bitnami | postgresqlchannels(postgresql) | 15.2.10 |
 | @bitnami | postgresqlclients(postgresql) | 15.2.10 |
-| @bitnami | postgresqldomains(postgresql) | 15.2.10 |
-| @bitnami | postgresqlbackend(postgresql) | 15.2.10 |
 | @bitnami | postgresqlcerts(postgresql) | 15.2.10 |
+| @bitnami | postgresqlbackend(postgresql) | 15.2.10 |
+| @bitnami | postgresqljournal(postgresql) | 15.2.10 |
 | @bitnami | redisclients(redis) | 19.6.2 |
 | @bitnami | redisdomains(redis) | 19.6.2 |
 | @hashicorp | vault(vault) | 0.28.1 |
 | @jaegertracing | jaeger | 3.1.1 |
 | @nats | nats | 1.2.1 |
 | https://charts.bitnami.com/bitnami | cassandra(cassandra) | 12.1.3 |
-| https://fluent.github.io/helm-charts | fluent-bit(fluent-bit) | 0.48.5 |
-| https://grafana.github.io/helm-charts | grafana(grafana) | 8.9.0 |
 | https://prometheus-community.github.io/helm-charts | prometheus(prometheus) | 27.3.0 |
 
 ## Values
@@ -137,29 +135,6 @@ Event-driven Infrastructure for Modern Cloud
 | envoy.image.repository | string | `"envoyproxy/envoy"` |  |
 | envoy.image.tag | string | `"v1.31-latest"` |  |
 | envoy.replicaCount | int | `1` |  |
-| fluent-bit.config.filters | string | `"[FILTER]\n    Name         kubernetes\n    Match        kube.*\n    k8s-logging.exclude off\n    Buffer_Size 256k\n"` |  |
-| fluent-bit.config.inputs | string | `"[INPUT]\n    Name             tail\n    Path             /var/log/containers/*.log\n    Read_from_head   true\n    Tag              kube.*\n"` |  |
-| fluent-bit.config.outputs | string | `"[OUTPUT]\n    Name        loki\n    Match       *\n    Host        supermq-loki.loki\n    Port        3100\n    Uri         /loki/api/v1/push\n    Labels      job=fluent-bit\n    Label_Keys  $kubernetes['namespace_name'], $kubernetes['pod_name']\n    Line_Format json\n    Auto_Kubernetes_Labels off\n"` |  |
-| fluent-bit.enabled | bool | `true` |  |
-| fluent-bit.resources | object | `{}` |  |
-| fluent-bit.serviceAccount.create | bool | `true` |  |
-| grafana."grafana.ini".server.root_url | string | `"/grafana"` |  |
-| grafana."grafana.ini".server.serve_from_sub_path | bool | `true` |  |
-| grafana.adminPassword | string | `"12345678"` |  |
-| grafana.adminUser | string | `"admin"` |  |
-| grafana.datasources."datasources.yaml".apiVersion | int | `1` |  |
-| grafana.datasources."datasources.yaml".datasources[0].access | string | `"proxy"` |  |
-| grafana.datasources."datasources.yaml".datasources[0].isDefault | bool | `true` |  |
-| grafana.datasources."datasources.yaml".datasources[0].name | string | `"Prometheus"` |  |
-| grafana.datasources."datasources.yaml".datasources[0].type | string | `"prometheus"` |  |
-| grafana.datasources."datasources.yaml".datasources[0].url | string | `"http://supermq-prometheus-server:9200"` |  |
-| grafana.datasources."datasources.yaml".datasources[1].access | string | `"proxy"` |  |
-| grafana.datasources."datasources.yaml".datasources[1].isDefault | bool | `false` |  |
-| grafana.datasources."datasources.yaml".datasources[1].name | string | `"Loki"` |  |
-| grafana.datasources."datasources.yaml".datasources[1].type | string | `"loki"` |  |
-| grafana.datasources."datasources.yaml".datasources[1].url | string | `"http://supermq-loki.loki:3100"` |  |
-| grafana.enabled | bool | `true` |  |
-| grafana.ingress.enabled | bool | `false` |  |
 | groups.grpcClientCaCerts | string | `"./ssl/certs/ca.crt"` |  |
 | groups.grpcClientCert | string | `"./ssl/certs/groups-grpc-client.crt"` |  |
 | groups.grpcClientKey | string | `"./ssl/certs/groups-grpc-client.key"` |  |

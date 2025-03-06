@@ -459,36 +459,6 @@ envoy:
     tag: "v1.31-latest"
   replicaCount: 1
 
-fluent-bit:
-  enabled: true
-  serviceAccount:
-    create: true
-  config:
-    inputs: |
-      [INPUT]
-          Name             tail
-          Path             /var/log/containers/*.log
-          Read_from_head   true
-          Tag              kube.*
-    filters: |
-      [FILTER]
-          Name         kubernetes
-          Match        kube.*
-          k8s-logging.exclude off
-          Buffer_Size 256k
-    outputs: |
-      [OUTPUT]
-          Name        loki
-          Match       *
-          Host        supermq-loki.loki
-          Port        3100
-          Uri         /loki/api/v1/push
-          Labels      job=fluent-bit
-          Label_Keys  $kubernetes['namespace_name'], $kubernetes['pod_name']
-          Line_Format json
-          Auto_Kubernetes_Labels off
-  resources: {}
-
 groups:
   image:
     {}
@@ -539,31 +509,6 @@ postgresqlgroups:
     persistence:
       enabled: true
       size: 2Gi
-
-grafana:
-  enabled: true
-  adminUser: "admin"
-  adminPassword: "12345678"
-  grafana.ini:
-    server:
-      root_url: /grafana
-      serve_from_sub_path: true
-  datasources:
-    datasources.yaml:
-      apiVersion: 1
-      datasources:
-        - name: Prometheus
-          type: prometheus
-          access: proxy
-          url: http://supermq-prometheus-server:9200
-          isDefault: true
-        - name: Loki
-          type: loki
-          access: proxy
-          url: http://supermq-loki.loki:3100
-          isDefault: false
-  ingress:
-    enabled: false
 
 ingress:
   enabled: true
