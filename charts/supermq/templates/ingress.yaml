@@ -149,7 +149,7 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-nginx-ingress-groups-channels-clients
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: "/$1/$2$3"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$1/$2"
 {{- if .Values.ingress.annotations }}
 {{ toYaml .Values.ingress.annotations | indent 4 }}
 {{- end }}
@@ -162,7 +162,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: "/api/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(groups)(.*)"
+          - path: "/api/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(groups/?.*)"
             pathType: ImplementationSpecific
             backend:
               service:
@@ -170,7 +170,7 @@ spec:
                 port:
                   number: {{ .Values.groups.httpPort }}
 
-          - path: "/api/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(clients)(.*)"
+          - path: "/api/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(clients/?.*)"
             pathType: ImplementationSpecific
             backend:
               service:
@@ -178,7 +178,7 @@ spec:
                 port:
                   number: {{ .Values.clients.httpPort }}
 
-          - path: "/api/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(channels)(.*)"
+          - path: "/api/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/(channels/?.*)"
             pathType: ImplementationSpecific
             backend:
               service:
