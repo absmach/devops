@@ -1,0 +1,119 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-groups
+spec:
+  replicas: {{ default .Values.defaults.replicaCount .Values.groups.replicaCount | int64 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: groups
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.groups.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: groups
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.groups.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-groups
+          image: "{{ default (printf "%s/groups" .Values.defaults.image.rootRepository) .Values.groups.image.repository }}:{{ default .Values.defaults.image.tag .Values.groups.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.groups.image.pullPolicy }}
+          env:
+            - name: SMQ_GROUPS_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.groups.logLevel | quote }}
+            - name: SMQ_GROUPS_HTTP_HOST
+              value: "0.0.0.0"
+            - name: SMQ_GROUPS_HTTP_PORT
+              value: "{{ .Values.groups.httpPort }}"
+            - name: SMQ_GROUPS_GRPC_HOST
+              value: "0.0.0.0"
+            - name: SMQ_GROUPS_GRPC_PORT
+              value: "{{ .Values.groups.grpcPort }}"
+            - name: SMQ_GROUPS_DB_HOST
+              {{- if .Values.postgresqlgroups.enabled }}
+              value: "{{ .Release.Name }}-postgresqlgroups"
+              {{- else }}
+              value: {{ .Values.postgresqlgroups.host | quote }}
+              {{- end }}
+            - name: SMQ_GROUPS_DB_PORT
+              value: {{ .Values.postgresqlgroups.port | quote }}
+            - name: SMQ_GROUPS_DB_NAME
+              value: {{ .Values.postgresqlgroups.database | quote }}
+            - name: SMQ_GROUPS_DB_USER
+              value: {{ .Values.postgresqlgroups.username | quote }}
+            - name: SMQ_GROUPS_DB_PASS
+              value: {{ .Values.postgresqlgroups.password | quote }}
+            - name: SMQ_CHANNELS_URL
+              value: {{ .Release.Name }}-channels:{{ .Values.channels.httpPort }}
+            - name: SMQ_CHANNELS_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.channels.grpcPort }}
+            - name: SMQ_CHANNELS_GRPC_TIMEOUT
+              value: {{ .Values.channels.grpcTimeout | quote }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.clients.grpcTimeout | quote }}
+            - name: SMQ_DOMAINS_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.domains.grpcPort  }}
+            - name: SMQ_DOMAINS_GRPC_TIMEOUT
+              value: {{ .Values.domains.grpcTimeout | quote }}
+            - name: SMQ_ES_URL
+              value: {{ .Values.nats.enabled | ternary (printf "%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
+            - name: SMQ_JAEGER_URL
+              value: {{ .Values.jaeger.enabled | ternary (printf "http://%s-jaeger-collector:%d/v1/traces" .Release.Name (.Values.jaeger.collector.service.otlp.http.port | int )) .Values.jaeger.externalUrl }}
+            - name: SMQ_JAEGER_TRACE_RATIO
+              value: {{ default .Values.jaeger.traceRatio .Values.groups.jaegerTraceRatio | quote }}
+            - name: SMQ_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.groups.sendTelemetry | quote }}
+            - name: SMQ_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: SMQ_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
+            - name: SMQ_SPICEDB_PRE_SHARED_KEY
+              value: {{ .Values.spicedb.grpc.presharedKey | quote }}
+            - name: SMQ_SPICEDB_HOST
+              value: {{ .Release.Name }}-spicedb-envoy
+            - name: SMQ_SPICEDB_PORT
+              value: {{ .Values.spicedb.grpc.port | quote }}
+            - name: SMQ_SPICEDB_SCHEMA_FILE
+              value: /schema.zed
+          ports:
+            - containerPort: {{ .Values.groups.httpPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.groups.grpcPort }}
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /schema.zed
+              name: spicedb-schema-zed
+              subPath: schema.zed
+      volumes:
+        - name: spicedb-schema-zed
+          configMap:
+            defaultMode: 256
+            name: {{ .Release.Name }}-spicedb-schema-zed
+            optional: false
+      {{- with .Values.groups.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.groups.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.groups.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

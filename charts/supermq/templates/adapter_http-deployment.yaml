@@ -1,0 +1,77 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-adapter-http
+spec:
+  replicas: {{ default .Values.defaults.replicaCount .Values.adapter_http.replicaCount | int64 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: adapter-http
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.adapter_http.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: adapter-http
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.adapter_http.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-adapter-http
+          image: "{{ default (printf "%s/http" .Values.defaults.image.rootRepository) .Values.adapter_http.image.repository }}:{{ default .Values.defaults.image.tag .Values.adapter_http.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_http.image.pullPolicy }}
+          env:
+            - name: SMQ_JAEGER_URL
+              value: {{ .Values.jaeger.enabled | ternary (printf "http://%s-jaeger-collector:%d/v1/traces" .Release.Name (.Values.jaeger.collector.service.otlp.http.port | int )) .Values.jaeger.externalUrl }}
+            - name: SMQ_JAEGER_TRACE_RATIO
+              value: {{ default .Values.jaeger.traceRatio .Values.adapter_http.jaegerTraceRatio | float64 | quote  }}
+            - name: SMQ_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.adapter_http.sendTelemetry | quote  }}
+            - name: SMQ_HTTP_ADAPTER_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.adapter_http.logLevel | quote }}
+            - name: SMQ_HTTP_ADAPTER_HOST
+              value: "0.0.0.0"
+            - name: SMQ_HTTP_ADAPTER_PORT
+              value: {{ .Values.adapter_http.httpPort | quote }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.clients.grpcTimeout | quote }}
+            - name: SMQ_CHANNELS_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.channels.grpcPort }}
+            - name: SMQ_CHANNELS_GRPC_TIMEOUT
+              value: {{ .Values.channels.grpcTimeout | quote }}
+            - name : SMQ_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: SMQ_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
+            - name: SMQ_MESSAGE_BROKER_URL
+              value: {{ .Values.nats.enabled | ternary (printf "nats://%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
+            - name: SMQ_ES_URL
+              value: {{ .Values.nats.enabled | ternary (printf "%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
+          ports:
+            - containerPort: {{ .Values.adapter_http.httpPort }}
+              protocol: TCP
+      {{- with .Values.adapter_http.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.adapter_http.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.adapter_http.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

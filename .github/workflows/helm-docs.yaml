@@ -1,4 +1,4 @@
-# Copyright (c) Magistrala
+# Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
 name: Generate Helm Docs
@@ -23,7 +23,7 @@ jobs:
         id: helm-docs
         uses: losisin/helm-docs-github-action@v1.3.1
         with:
-          chart-search-root: "charts/magistrala"
+          chart-search-root: "charts/supermq"
           values-file: "values.yaml"
           output-file: "README.md"
           template-files: "README.md.gotmpl"
@@ -32,4 +32,4 @@ jobs:
 
       - name: Show README diff
         if: failure() && steps.helm-docs.outcome == 'failure'
-        run: git diff charts/magistrala/README.md || echo "No git diff available."
+        run: git diff charts/supermq/README.md || echo "No git diff available."

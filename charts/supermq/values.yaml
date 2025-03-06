@@ -1,0 +1,1057 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+# The explanations for optional configuration parameters described in the adapter_coap section
+# apply across other services where the same named configuration parameters are used.
+
+defaults:
+  logLevel: "error"
+  image:
+    pullPolicy: "IfNotPresent"
+    rootRepository: "supermq"
+    tag: "latest"
+  replicaCount: 3
+  sendTelemetry: true
+
+adapter_coap:
+  # Image configuration for the CoAP adapter.
+  image:
+    {}
+    # pullSecrets: {}
+    # If your image repository requires authentication, you can specify image pull secrets here.
+    # Example:
+    # pullSecrets:
+    #   - my-registry-key
+
+    # repository: "supermq"
+    # The Docker repository where the adapter_coap image is stored.
+    # Set this to your preferred image repository if you are using a custom image.
+
+    # tag: "latest"
+    # The specific tag of the adapter_coap image to use.
+    # Change this to pin to a specific version or use "latest" for the most recent version.
+
+    # pullPolicy: "IfNotPresent"
+    # The image pull policy. This defines when Kubernetes should pull the Docker image.
+    # Options are "Always", "IfNotPresent", or "Never". "IfNotPresent" is generally used to avoid unnecessary pulls.
+
+  # The primary port used by the CoAP adapter for communication.
+  # Default: 5683 (standard CoAP UDP port).
+  port: 5683
+
+  # Number of replicas for high availability and scalability.
+  # Increasing this allows the service to handle more requests in parallel.
+  replicaCount: 1
+
+  # Defines the fraction of requests to trace using Jaeger. Distributed tracing monitors requests across services.
+  # Value range:
+  # - 1.0: Trace all requests (100% sampling)
+  # - 0.5: Trace 50% of requests
+  # - 0.0: Disable tracing (0% sampling)
+  # Adjust this based on your observability needs and performance considerations.
+  jaegerTraceRatio: 1.0
+
+  # Enables or disables telemetry data reporting. Telemetry collects metrics and events for monitoring.
+  # If true, the service will send telemetry data to the configured telemetry backend.
+  # Set to false if telemetry reporting is not required or should be disabled for privacy concerns.
+  sendTelemetry: true
+
+  # logLevel: "info"
+  # The logging level for the adapter_coap service. Common options are "debug", "info", "warn", "error".
+  # Adjust this based on the verbosity of logs you require.
+
+  # Node selector for pod assignment. This can be used to restrict the pod to run on specific nodes.
+  # Example:
+  # nodeSelector:
+  #   disktype: ssd
+  # nodeSelector: {}
+
+  # Pod affinity and anti-affinity settings. Use this to specify rules about how pods should be placed relative to other pods.
+  # Example:
+  # affinity:
+  #   podAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       - labelSelector:
+  #           matchExpressions:
+  #             - key: app
+  #               operator: In
+  #               values:
+  #                 - my-app
+  #         topologyKey: "kubernetes.io/hostname"
+  # affinity: {}
+
+  # Tolerations for pod scheduling. Use this to allow pods to be scheduled on nodes with specific taints.
+  # Example:
+  # tolerations:
+  #   - key: "key1"
+  #     operator: "Equal"
+  #     value: "value1"
+  #     effect: "NoSchedule"
+  # tolerations: {}
+
+adapter_http:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/adapter-http"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  httpPort: 8008
+  replicaCount: 1
+  # logLevel: "error"
+  # The logging level for the adapter_http service. Common options are "debug", "info", "warn", "error".
+  # Adjust this based on the verbosity of logs you require.
+
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+adapter_ws:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/ws"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: "error"
+  replicaCount: 1
+  httpPort: 8186
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+auth:
+  image:
+    {}
+    # pullSecrets: {}
+    # rootRepository: "supermq/auth"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: error
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  replicaCount: 1
+  httpPort: 9001
+  grpcPort: 7001
+  grpcTimeout: "300s"
+  secretKey: "supersecret"
+  adminEmail: "admin@example.com"
+  adminPassword: "12345678"
+  accessTokenDuration: "1h"
+  refreshTokenDuration: "24h"
+  grpcClientCert: "./ssl/certs/auth-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/auth-grpc-client.key"
+  grpcClientCACerts: "./ssl/certs/ca.crt"
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+
+postgresqlauth:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-auth
+  host: postgresql-auth
+  port: &postgresqlAuthPort 5432
+  database: &postgresqlAuthDatabase auth
+  username: &postgresqlAuthUsername supermq
+  password: &postgresqlAuthPassword supermq
+  ## values of bitnami/postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlAuthPassword
+        username: *postgresqlAuthUsername
+        password: *postgresqlAuthPassword
+        database: *postgresqlAuthDatabase
+      service:
+        ports:
+          postgresql: *postgresqlAuthPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+
+cassandra:
+  enabled: true
+  replicaCount: 1
+  dbUser:
+    user: cassandra
+    password: "cassandra"
+  image:
+    registry: docker.io
+    repository: bitnami/cassandra
+    tag: "5.0.3-debian-12-r0"
+    pullPolicy: IfNotPresent
+  resourcesPreset: "large"
+  service:
+    type: ClusterIP
+    ports:
+      cql: 9042
+      thrift: 9160
+  persistence:
+    enabled: true
+    size: 8Gi
+
+certs:
+  enabled: true
+  replicaCount: 1
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/certs"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 1.0
+  # logLevel: error
+  # sendTelemetry: true
+  httpPort: 9019
+  logLevel: "error"
+  signCAPath: "/etc/ssl/certs/ca.crt"
+  signCAKeyPath: "/etc/ssl/certs/ca.key"
+  sdkHost: "http://supermq-am-certs"
+  sdkCertsUrl: "${SMQ_CERTS_SDK_HOST}:9010"
+  sdkTlsVerification: "false"
+  vault:
+    url: "http://supermq-vault:8200"
+    approleRoleid: supermq
+    approleSecret: supermq
+    namespace: supermq
+    thingsCertsPkiPath: pki_int
+    thingsCertsPkiRoleName: supermq_things_certs
+
+postgresqlcerts:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-certs
+  host: postgresql-certs
+  port: &postgresqlCertsPort 5432
+  database: &postgresqlCertsDatabase certs
+  username: &postgresqlCertsUsername supermq
+  password: &postgresqlCertsPassword supermq
+  ## values of bitnami/postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlCertsPassword
+        username: *postgresqlCertsUsername
+        password: *postgresqlCertsPassword
+        database: *postgresqlCertsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlCertsPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+
+channels:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/channels"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # sendTelemetry: true
+  # logLevel: error
+  # jaegerTraceRatio: 1.0
+  replicaCount: 1
+  httpPort: 9005
+  grpcPort: 7005
+  grpcTimeout: "1s"
+  grpcClientCert: "./ssl/certs/channels-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/channels-grpc-client.key"
+  grpcServerCert: "./ssl/certs/channels-grpc-server.crt"
+  grpcServerKey: "./ssl/certs/channels-grpc-server.key"
+  grpcClientCaCerts: "./ssl/certs/ca.crt"
+
+postgresqlchannels:
+  enabled: true
+  name: postgresql-channels
+  host: channels-db
+  port: &postgresqlChannelsPort 5432
+  database: &postgresqlChannelsDatabase channels
+  username: &postgresqlChannelsUsername supermq
+  password: &postgresqlChannelsPassword supermq
+  ## values of bitnami/postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlChannelsPassword
+        username: *postgresqlChannelsUsername
+        password: *postgresqlChannelsPassword
+        database: *postgresqlChannelsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlChannelsPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+
+clients:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/clients"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: error
+  # sendTelemetry: true
+  # jaegerTraceRatio: 1.0
+  replicaCount: 1
+  httpPort: 9006
+  authGrpcPort: 7006
+  grpcTimeout: "1s"
+  grpcClientCert: "./ssl/certs/clients-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/clients-grpc-client.key"
+  # logLevel: "error"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqlclients:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-clients
+  host: postgresql-clients
+  port: &postgresqlThingsPort 5432
+  database: &postgresqlThingsDatabase clients
+  username: &postgresqlThingsUsername supermq
+  password: &postgresqlThingsPassword supermq
+  ## values of bitnami/postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlThingsPassword
+        username: *postgresqlThingsUsername
+        password: *postgresqlThingsPassword
+        database: *postgresqlThingsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlThingsPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+
+redisclients:
+  enabled: true
+  ## To use an external Jaeger instance, set 'enabled' parameter to false and specify the redis URL below using the 'externalUrl' parameter.
+  externalUrl: ""
+  cacheKeyduration: "10m"
+  ## values of bitnami/redis
+  auth:
+    enabled: false
+  master:
+    containerPorts:
+      redis: 6379
+    persistence:
+      size: 1Gi
+    service:
+      ports:
+        redis: 6379
+  replica:
+    replicaCount: 0
+  volumePermissions:
+    enabled: true
+
+domains:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/domains"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # sendTelemetry: true
+  replicaCount: 1
+  # logLevel: error
+  httpPort: 9003
+  grpcPort: 7003
+  grpcTimeout: "300s"
+  grpcClientCert: "./ssl/certs/domains-grpc-client.crt"
+  grpcClientCaCerts: "./ssl/certs/ca.crt"
+
+postgresqldomains:
+  ## If you want to use an external database, set this to false and change host & port
+  enabled: true
+  name: postgresql-domains
+  host: postgresql-domains
+  port: &postgresqlDomainsPort 5432
+  database: &postgresqlDomainsDatabase domains
+  username: &postgresqlDomainsUsername supermq
+  password: &postgresqlDomainsPassword supermq
+  ## values of bitnami/postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlDomainsPassword
+        username: *postgresqlDomainsUsername
+        password: *postgresqlDomainsPassword
+        database: *postgresqlDomainsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlDomainsPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+
+redisdomains:
+  enabled: true
+  ## To use an external Jaeger instance, set 'enabled' parameter to false and specify the redis URL below using the 'externalUrl' parameter.
+  externalUrl: ""
+  cacheKeyDuration: "10m"
+  ## values of bitnami/redis
+  auth:
+    enabled: false
+  master:
+    containerPorts:
+      redis: 6379
+    persistence:
+      size: 1Gi
+    service:
+      ports:
+        redis: 6379
+  replica:
+    replicaCount: 0
+  volumePermissions:
+    enabled: true
+
+envoy:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "envoyproxy/envoy"
+    tag: "v1.31-latest"
+  replicaCount: 1
+
+groups:
+  image:
+    {}
+    # pullSecrets: {}
+    # rootRepository: "supermq/groups"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # logLevel: "error"
+  # sendTelemetry: true
+  # jaegerTraceRatio: 1.0
+  replicaCount: 1
+  httpPort: 9004
+  grpcPort: 7004
+  grpcTimeout: "300s"
+  grpcClientCert: "./ssl/certs/groups-grpc-client.crt"
+  grpcClientKey: "./ssl/certs/groups-grpc-client.key"
+  grpcClientCaCerts: "./ssl/certs/ca.crt"
+  grpcServerCert: "./ssl/certs/groups-grpc-server.crt"
+  grpcServerKey: "./ssl/certs/groups-grpc-server.key"
+
+postgresqlgroups:
+  enabled: true
+  name: postgresql-groups
+  host: postgresql-groups
+  port: &postgresqlGroupsPort 5432
+  database: &postgresqlGroupsDatabase groups
+  username: &postgresqlGroupsUsername supermq
+  password: &postgresqlGroupsPassword supermq
+  ## values of bitnami/postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlGroupsPassword
+        username: *postgresqlGroupsUsername
+        password: *postgresqlGroupsPassword
+        database: *postgresqlGroupsDatabase
+      service:
+        ports:
+          postgresql: *postgresqlGroupsPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  labels: {}
+  # Uncomment this block for TLS support in public ingress
+  hostname: "localhost"
+  # tls:
+  #   hostname: ""
+  #   secret: "supermq-server"
+
+nginxInternal:
+  image:
+    pullPolicy: "IfNotPresent"
+    repository: "nginx"
+    tag: "1.19.1-alpine"
+  mtls:
+    # By default mTLS is disabled. If you use mTLS, comment this block.
+    tls: ""
+    intermediateCrt: ""
+    # Uncomment this block for TLS and mTLS support.
+    # Use sh script from /secrets/secrets.sh to create config maps with your certs
+    # tls: "supermq-server"
+    # intermediateCrt: "ca"
+
+jaeger:
+  enabled: true
+  ## To use an external Jaeger instance, set 'enabled' parameter to false and specify the Jaeger URL below using the 'externalUrl' parameter.
+  externalUrl: ""
+  traceRatio: 1.0
+  provisionDataStore:
+    cassandra: false
+  agent:
+    enabled: false
+  allInOne:
+    enabled: false
+  storage:
+    type: cassandra
+    cassandra:
+      host: "{{ .Release.Name }}-cassandra"
+      keyspace: supermq_jaeger
+      user: "cassandra"
+      password: "cassandra"
+      schema:
+        create: true
+        keyspace: supermq_jaeger
+        datacenter: dc1
+        trace_ttl: 48h
+        dependencies_ttl: 48d
+        compaction_window: 2h
+        replication_factor: 1
+  collector:
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: 200m
+        memory: 300Mi
+      limits:
+        cpu: 400m
+        memory: 500Mi
+    service:
+      otlp:
+        grpc:
+          name: otlp-grpc
+          port: 4317
+        http:
+          name: otlp-http
+          port: 4318
+  query:
+    replicaCount: 1
+    basePath: /jaeger
+    resources:
+      requests:
+        cpu: 200m
+        memory: 300Mi
+      limits:
+        cpu: 400m
+        memory: 500Mi
+    service:
+      type: ClusterIP
+      port: 16686
+      admin:
+        name: admin
+        targetPort: admin
+
+journal:
+  enabled: true
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/journal"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  # logLevel: "error"
+  replicaCount: 1
+  httpPort: 9021
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqljournal:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-journal
+  host: postgresql-journal
+  port: &postgresqlJournalPort 5432
+  database: &postgresqlJournalDatabase journal
+  username: &postgresqlJournalUsername supermq
+  password: &postgresqlJournalPassword supermq
+  ## values of bitnami/postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlJournalPassword
+        username: *postgresqlJournalUsername
+        password: *postgresqlJournalPassword
+        database: *postgresqlJournalDatabase
+      service:
+        ports:
+          postgresql: *postgresqlJournalPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+
+mqtt:
+  replicaCount: 1
+  enabled: true
+  securityContext:
+    runAsUser: 10000
+    runAsGroup: 10000
+    fsGroup: 10000
+  adapter:
+    image:
+      pullSecrets: {}
+      # repository: "supermq/mqtt"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
+    mqttPort: 1884
+    wsPort: 8081
+    logLevel: "error"
+    forwarderTimeout: "30s"
+    qos: "2"
+  broker:
+    image:
+      repository: "supermq/vernemq"
+      # tag: "latest"
+      # pullPolicy: "IfNotPresent"
+    mqttPort: 1883
+    wsPort: 8080
+    logLevel: "error"
+    persistentVolume:
+      size: 5Gi
+  redisESPort: 6379
+  redisCachePort: 6379
+
+nats:
+  enabled: true
+  ## To use an external NATS instance, set 'enabled' parameter to false and specify the NATS URL below using the 'externalAddress' parameter.
+  externalAddress: ""
+  config:
+    cluster:
+      enabled: false
+      replicas: 3
+    jetstream:
+      enabled: true
+      fileStore:
+        enabled: true
+        pvc:
+          enabled: true
+      memoryStore:
+        enabled: true
+        maxSize: 2Gi
+
+prometheus:
+  enabled: true
+
+  pushgateway:
+    enabled: false
+
+  rbac:
+    create: true
+
+  serviceAccounts:
+    server:
+      create: true
+      name: ""
+      automountServiceAccountToken: true
+      annotations: {}
+
+  configmapReload:
+    prometheus:
+      enabled: true
+      name: configmap-reload
+      image:
+        repository: quay.io/prometheus-operator/prometheus-config-reloader
+        tag: v0.79.2
+        pullPolicy: IfNotPresent
+      containerPort: 8080
+      containerPortName: metrics
+      resources: {}
+
+  server:
+    name: server
+    image:
+      repository: quay.io/prometheus/prometheus
+      # Specify a tag if you want a fixed version (e.g. "v2.42.0"). Using blank defaults to chart’s appVersion.
+      tag: ""
+      pullPolicy: IfNotPresent
+    extraFlags:
+      - web.enable-lifecycle
+
+    resources: {}
+
+    # SecurityContext: run as non-root
+    securityContext:
+      runAsUser: 65534
+      runAsNonRoot: true
+      runAsGroup: 65534
+      fsGroup: 65534
+
+    service:
+      enabled: true
+      type: ClusterIP
+      clusterIP: ""
+      port: 9200
+      servicePort: 9200
+      targetPort: 9090
+
+      portName: metrics
+      annotations:
+        prometheus.io/scrape: "true"
+
+    persistentVolume:
+      enabled: true
+      size: 8Gi
+      mountPath: /data
+
+    livenessProbe:
+      httpGet:
+        path: /-/healthy
+        port: 9090
+        scheme: HTTP
+      initialDelaySeconds: 30
+      timeoutSeconds: 5
+
+    readinessProbe:
+      httpGet:
+        path: /-/ready
+        port: 9090
+        scheme: HTTP
+      initialDelaySeconds: 5
+      timeoutSeconds: 5
+
+    ingress:
+      enabled: false
+      ingressClassName: "nginx"
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+      hosts:
+        - prometheus.example.com
+
+  nodeExporter:
+    enabled: true
+    image:
+      repository: quay.io/prometheus/node-exporter
+      tag: v1.8.2
+      pullPolicy: IfNotPresent
+    containerPort: 9100
+    hostPort: 9100
+    service:
+      enabled: true
+      type: ClusterIP
+      clusterIP: ""
+      port: 9100
+      servicePort: 9100
+      targetPort: 9100
+      annotations:
+        prometheus.io/scrape: "true"
+    extraArgs:
+      - --web.listen-address=0.0.0.0:9100
+    livenessProbe:
+      httpGet:
+        path: /metrics
+        port: 9100
+        scheme: HTTP
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    readinessProbe:
+      httpGet:
+        path: /metrics
+        port: 9100
+        scheme: HTTP
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+    nodeSelector:
+      kubernetes.io/os: linux
+    hostNetwork: true
+    hostPID: true
+
+  alertmanager:
+    enabled: true
+    persistence:
+      size: 2Gi
+
+  kubeStateMetrics:
+    enabled: true
+
+  prometheusPushgateway:
+    enabled: false
+
+spicedb:
+  replicaCount: 1
+  image:
+    pullSecrets: {}
+    repository: authzed/spicedb
+    tag: latest
+    # pullPolicy: "IfNotPresent"
+  grpc:
+    presharedKey: "12345678"
+    port: 50051
+  datastore:
+    ## engine can be any one of the two options: postgres (default) , memory
+    engine: postgres
+  dispatch:
+    port: 50053
+    enabled: false
+  http:
+    enabled: false
+    port: 8443
+  metrics:
+    enabled: true
+    port: 9090
+  nodeSelector: {}
+  affinity: {}
+  tolerations: {}
+
+postgresqlspicedb:
+  ## If you want to use an external database, set this to false and change host & port
+  enabled: true
+  name: postgresql-spicedb
+  host: postgresql-spicedb
+  port: &postgresqlSpicedbPort 5432
+  database: &postgresqlSpicedbDatabase spicedb
+  username: &postgresqlSpicedbUsername supermq
+  password: &postgresqlSpicedbPassword supermq
+  ## values of bitnami/postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlSpicedbPassword
+        username: *postgresqlSpicedbUsername
+        password: *postgresqlSpicedbPassword
+        database: *postgresqlSpicedbDatabase
+      service:
+        ports:
+          postgresql: *postgresqlSpicedbPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+
+users:
+  image:
+    {}
+    # pullSecrets: {}
+    # repository: "supermq/users"
+    # tag: "latest"
+    # pullPolicy: "IfNotPresent"
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  # logLevel: "error"
+  replicaCount: 1
+  httpPort: 9002
+  admin:
+    email: "admin@example.com"
+    password: "12345678"
+    username: "admin"
+    firstname: "super"
+    lastname: "admin"
+  secretKey: "supersecret"
+  accessTokenDuration: "15m"
+  refreshTokenDuration: "24h"
+  passwordRegex: "^.{8,}$"
+  tokenResetEndpoint: "/reset-request"
+  allowSelfRegister: true
+  deleteInterval: "24h"
+  deleteAfter: "720h"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqlusers:
+  ## If you want to use an external database, set this to false and change host & port
+  enabled: true
+  name: postgresql-users
+  host: postgresql-users
+  port: &postgresqlUsersPort 5432
+  database: &postgresqlUsersDatabase users
+  username: &postgresqlUsersUsername supermq
+  password: &postgresqlUsersPassword supermq
+  ## values of bitnami/postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlUsersPassword
+        username: *postgresqlUsersUsername
+        password: *postgresqlUsersPassword
+        database: *postgresqlUsersDatabase
+      service:
+        ports:
+          postgresql: *postgresqlUsersPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+
+ui:
+  enabled: true
+  type: "smq"
+  httpPort: 3000
+  name: "Magistrala UI"
+  image:
+    repository: "ghcr.io/absmach/magistrala/ui-smq"
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
+    pullSecrets: {}
+  # jaegerTraceRatio: 1.0
+  # sendTelemetry: true
+  # logLevel: "error"
+  # backendUrl: "http://supermq-backend:9097"
+  # certsUrl: "http://supermq-certs:9019"
+  # channelsUrl: "http://supermq-channels:9005"
+  # clientsUrl: "http://supermq-clients:9006"
+  # domainsUrl: "http://supermq-domains:9003"
+  # groupsUrl: "http://supermq-groups:9004"
+  # httpAdpaterUrl: "http://supermq-adapter-http:8008"
+  # journalUrl: "http://supermq-journal:9021"
+  # usersUrl: "http://supermq-users:9002"
+  replicaCount: 1
+  basePath: "/"
+  nextPublicBasePath: "/"
+  nextPublicNextAuthBasePath: "/api/auth"
+  nextAuthSecret: "4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="
+  # nextAuthUrl: "http://localhost/api/auth"
+  # nextPublicHostUrl: "http://localhost"
+  # nextPublicBackendUrl: "http://localhost/uibackend"
+  # mgProfilePictureUrl: "http://localhost"
+  googleClientID: ""
+  googleClientSecret: ""
+  # googleRedirectHostname: "http://localhost"
+  # googleRedirectPath: "/api/oauth/callback/google"
+  googleState: "somerandomstring"
+  nextauthSecret: "4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="
+  runtimeEnv: "production"
+  timescaleReader:
+    httpPort: 9011
+  profilePicturesUrl:
+    httpPort: 9097
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+uibackend:
+  enabled: true
+  image:
+    repository: "ghcr.io/absmach/magistrala/ui-backend"
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
+  replicaCount: 1
+  loglevel: error
+  httpPort: 9097
+  serverCert: ""
+  serverKey: ""
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
+  verificationTLS: "false"
+  contentType: "application/senml+json"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
+
+postgresqlbackend:
+  ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
+  enabled: true
+  name: postgresql-backend
+  host: postgresql-backend
+  port: &postgresqlUIPort 5432
+  database: &postgresqlUIDatabase supermq
+  username: &postgresqlUIUsername supermq
+  password: &postgresqlUIPassword supermq
+  ## values of bitnami/postgres
+  global:
+    postgresql:
+      auth:
+        postgresPassword: *postgresqlUIPassword
+        username: *postgresqlUIUsername
+        password: *postgresqlUIPassword
+        database: *postgresqlUIDatabase
+      service:
+        ports:
+          postgresql: *postgresqlUIPort
+  primary:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "150m"
+        memory: "192Mi"
+    persistence:
+      enabled: true
+      size: 2Gi
+
+vault:
+  enabled: false

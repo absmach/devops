@@ -1,0 +1,122 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v2
+name: Supermq
+description: Event-driven Infrastructure for Modern Cloud
+icon: https://avatars1.githubusercontent.com/u/13207490
+type: application
+version: 0.16.0
+appVersion: "0.16.0"
+home: https://abstractmachines.fr/supermq.html
+sources:
+  - https://hub.docker.com/u/supermq
+maintainers:
+  - name: drasko
+    email: drasko.draskovic@abstractmachines.fr
+  - name: dusan
+    email: dusan.borovcanin@abstractmachines.fr
+
+dependencies:
+  - name: common
+    version: 2.x.x
+    repository: "@bitnami"
+
+  - name: nats
+    version: "1.2.1"
+    repository: "@nats"
+
+  - name: jaeger
+    version: "3.1.1"
+    repository: "@jaegertracing"
+    condition: jaeger.enabled
+
+  - name: cassandra
+    version: "12.1.3"
+    repository: "https://charts.bitnami.com/bitnami"
+    alias: cassandra
+    condition: jaeger.enabled
+
+  - name: postgresql
+    version: "15.2.10"
+    repository: "@bitnami"
+    alias: postgresqlauth
+    condition: postgresqlauth.enabled
+
+  - name: postgresql
+    version: "15.2.10"
+    repository: "@bitnami"
+    alias: postgresqlspicedb
+    condition: postgresqlspicedb.enabled
+
+  - name: postgresql
+    version: "15.2.10"
+    repository: "@bitnami"
+    alias: postgresqlchannels
+    condition: postgresqlchannels.enabled
+
+  - name: postgresql
+    version: "15.2.10"
+    repository: "@bitnami"
+    alias: postgresqlclients
+    condition: postgresqlclients.enabled
+
+  - name: postgresql
+    version: "15.2.10"
+    repository: "@bitnami"
+    alias: postgresqldomains
+    condition: postgresqldomains.enabled
+
+  - name: postgresql
+    version: "15.2.10"
+    repository: "@bitnami"
+    alias: postgresqlgroups
+    condition: postgresqlgroups.enabled
+
+  - name: postgresql
+    version: "15.2.10"
+    repository: "@bitnami"
+    alias: postgresqlusers
+    condition: postgresqlusers.enabled
+
+  - name: postgresql
+    version: "15.2.10"
+    repository: "@bitnami"
+    alias: postgresqlcerts
+    condition: postgresqlcerts.enabled
+
+  - name: postgresql
+    version: "15.2.10"
+    repository: "@bitnami"
+    alias: postgresqljournal
+    condition: postgresqljournal.enabled
+
+  - name: postgresql
+    version: "15.2.10"
+    repository: "@bitnami"
+    alias: postgresqlbackend
+    condition: postgresqlbackend.enabled
+
+  - name: redis
+    version: "19.6.2"
+    repository: "@bitnami"
+    alias: redisclients
+    condition: redisclients.enabled
+
+  - name: redis
+    version: "19.6.2"
+    repository: "@bitnami"
+    alias: redisdomains
+    condition: redisdomains.enabled
+
+  - name: vault
+    version: "0.28.1"
+    repository: "@hashicorp"
+    alias: "vault"
+    condition: vault.enabled
+
+  - name: prometheus
+    version: "27.3.0"
+    repository: "https://prometheus-community.github.io/helm-charts"
+    alias: prometheus
+    condition: prometheus.enabled

@@ -1,0 +1,138 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-clients
+spec:
+  replicas: {{ default .Values.defaults.replicaCount .Values.clients.replicaCount | int64 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: clients
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.clients.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: clients
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.clients.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-clients
+          image: "{{ default (printf "%s/clients" .Values.defaults.image.rootRepository) .Values.clients.image.repository }}:{{ default .Values.defaults.image.tag .Values.clients.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.clients.image.pullPolicy }}
+          env:
+            - name: SMQ_JAEGER_URL
+              value: {{ .Values.jaeger.enabled | ternary (printf "http://%s-jaeger-collector:%d/v1/traces" .Release.Name (.Values.jaeger.collector.service.otlp.http.port | int )) .Values.jaeger.externalUrl }}
+            - name: SMQ_JAEGER_TRACE_RATIO
+              value: {{ default .Values.jaeger.traceRatio .Values.clients.jaegerTraceRatio | quote  }}
+            - name: SMQ_SEND_TELEMETRY
+              value: {{ default .Values.defaults.sendTelemetry .Values.clients.sendTelemetry | quote  }}
+            - name: SMQ_CLIENTS_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.clients.logLevel  | quote }}
+            - name: SMQ_CLIENTS_AUTH_GRPC_HOST
+              value: "0.0.0.0"
+            - name: SMQ_CLIENTS_AUTH_GRPC_PORT
+              value: {{ .Values.clients.authGrpcPort | quote}}
+            - name: SMQ_CLIENTS_AUTH_HTTP_HOST
+              value: "0.0.0.0"
+            - name: SMQ_CLIENTS_AUTH_HTTP_PORT
+              value: {{ .Values.auth.httpPort | quote }}
+            - name: SMQ_CLIENTS_CACHE_URL
+              {{- if .Values.redisclients.enabled }}
+              value: redis://{{ .Release.Name }}-redisclients-master:{{ .Values.redisclients.master.service.ports.redis	 }}/0
+              {{- else }}
+              value: {{ .Values.redisclients.externalUrl | quote }}
+              {{- end }}
+            - name: SMQ_CLIENTS_CACHE_KEY_DURATION
+              value: {{ .Values.redisclients.cacheKeyDuration | quote }}
+            - name: SMQ_SPICEDB_SCHEMA_FILE
+              value: /schema.zed
+            - name: SMQ_CLIENTS_DB_HOST
+            {{- if .Values.postgresqlclients.enabled }}
+              value: {{ .Release.Name }}-postgresqlclients
+            {{- else }}
+              value: {{ .Values.postgresqlclients.host | quote}}
+            {{- end }}
+            - name: SMQ_CLIENTS_DB_PORT
+              value: {{ .Values.postgresqlclients.port | quote}}
+            - name: SMQ_CLIENTS_DB_USER
+              value: {{ .Values.postgresqlclients.username | quote }}
+            - name: SMQ_CLIENTS_DB_PASS
+              value: {{ .Values.postgresqlclients.password | quote }}
+            - name: SMQ_CLIENTS_DB_NAME
+              value: {{ .Values.postgresqlclients.database | quote }}
+            - name: SMQ_ES_URL
+              value: {{ .Values.nats.enabled | ternary (printf "%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
+            - name: SMQ_CLIENTS_HTTP_HOST
+              value: "0.0.0.0"
+            - name: SMQ_CLIENTS_HTTP_PORT
+              value: {{ .Values.clients.httpPort | quote }}
+            - name: SMQ_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: SMQ_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
+            - name: SMQ_CHANNELS_URL
+              value: {{ .Release.Name }}-channels:{{ .Values.channels.httpPort }}
+            - name: SMQ_CHANNELS_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.channels.grpcPort }}
+            - name: SMQ_CHANNELS_GRPC_TIMEOUT
+              value: {{ .Values.channels.grpcTimeout | quote }}
+            - name: SMQ_GROUPS_URL
+              value: {{ .Release.Name }}-groups:{{ .Values.groups.httpPort }}
+            - name: SMQ_GROUPS_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.groups.grpcPort }}
+            - name: SMQ_GROUPS_GRPC_TIMEOUT
+              value: {{ .Values.groups.grpcTimeout | quote }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
+              value: {{ .Values.domains.grpcClientCert | quote }}
+            - name: SMQ_DOMAINS_GRPC_CLIENT_KEY
+              value: {{ .Values.domains.grpcClientKey | quote }}
+            - name: SMQ_DOMAINS_GRPC_TIMEOUT
+              value: {{ .Values.domains.grpcTimeout | quote }}
+            - name: SMQ_DOMAINS_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.domains.grpcPort }}
+            - name: SMQ_SPICEDB_PRE_SHARED_KEY
+              value: {{.Values.spicedb.grpc.presharedKey | quote }}
+            - name: SMQ_SPICEDB_HOST
+              value: {{ .Release.Name }}-spicedb-envoy
+            - name: SMQ_SPICEDB_PORT
+              value: {{ .Values.spicedb.grpc.port | quote}}
+          ports:
+            - containerPort: {{ .Values.clients.httpPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.clients.authGrpcPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.auth.httpPort }}
+              protocol: TCP
+          volumeMounts:
+            - name: spicedb-schema
+              mountPath: /schema.zed
+              subPath: schema.zed
+      volumes:
+        - name: spicedb-schema
+          configMap:
+            name: {{ .Release.Name }}-spicedb-schema-zed
+
+      {{- with .Values.clients.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.clients.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.clients.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
