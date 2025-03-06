@@ -21,20 +21,23 @@ Event-driven Infrastructure for Modern Cloud
 
 | Repository | Name | Version |
 |------------|------|---------|
-| @bitnami | postgresqlusers(postgresql) | 12.5.6 |
-| @bitnami | postgresqlchannels(postgresql) | 12.5.6 |
-| @bitnami | postgresqlui(postgresql) | 12.5.6 |
-| @bitnami | postgresqlspicedb(postgresql) | 12.5.6 |
-| @bitnami | postgresqlcerts(postgresql) | 12.5.6 |
-| @bitnami | postgresqlclients(postgresql) | 12.5.6 |
-| @bitnami | postgresqldomains(postgresql) | 12.5.6 |
-| @bitnami | postgresqljournal(postgresql) | 12.5.6 |
-| @bitnami | postgresqlauth(postgresql) | 12.5.6 |
-| @bitnami | postgresqlgroups(postgresql) | 12.5.6 |
-| @bitnami | redis-clients(redis) | 19.6.2 |
+| @bitnami | common | 2.x.x |
+| @bitnami | postgresqlusers(postgresql) | 15.2.10 |
+| @bitnami | postgresqljournal(postgresql) | 15.2.10 |
+| @bitnami | postgresqlgroups(postgresql) | 15.2.10 |
+| @bitnami | postgresqlauth(postgresql) | 15.2.10 |
+| @bitnami | postgresqlspicedb(postgresql) | 15.2.10 |
+| @bitnami | postgresqlchannels(postgresql) | 15.2.10 |
+| @bitnami | postgresqlclients(postgresql) | 15.2.10 |
+| @bitnami | postgresqldomains(postgresql) | 15.2.10 |
+| @bitnami | postgresqlbackend(postgresql) | 15.2.10 |
+| @bitnami | postgresqlcerts(postgresql) | 15.2.10 |
+| @bitnami | redisclients(redis) | 19.6.2 |
+| @bitnami | redisdomains(redis) | 19.6.2 |
 | @hashicorp | vault(vault) | 0.28.1 |
 | @jaegertracing | jaeger | 3.1.1 |
 | @nats | nats | 1.2.1 |
+| https://charts.bitnami.com/bitnami | cassandra(cassandra) | 12.1.3 |
 | https://fluent.github.io/helm-charts | fluent-bit(fluent-bit) | 0.48.5 |
 | https://grafana.github.io/helm-charts | grafana(grafana) | 8.9.0 |
 | https://prometheus-community.github.io/helm-charts | prometheus(prometheus) | 27.3.0 |
@@ -46,15 +49,19 @@ Event-driven Infrastructure for Modern Cloud
 | adapter_coap.image | object | `{}` |  |
 | adapter_coap.jaegerTraceRatio | float | `1` |  |
 | adapter_coap.port | int | `5683` |  |
+| adapter_coap.replicaCount | int | `1` |  |
 | adapter_coap.sendTelemetry | bool | `true` |  |
 | adapter_http.httpPort | int | `8008` |  |
 | adapter_http.image | object | `{}` |  |
+| adapter_http.replicaCount | int | `1` |  |
 | adapter_ws.httpPort | int | `8186` |  |
 | adapter_ws.image | object | `{}` |  |
+| adapter_ws.replicaCount | int | `1` |  |
 | auth.accessTokenDuration | string | `"1h"` |  |
 | auth.adminEmail | string | `"admin@example.com"` |  |
 | auth.adminPassword | string | `"12345678"` |  |
 | auth.affinity | object | `{}` |  |
+| auth.grpcClientCACerts | string | `"./ssl/certs/ca.crt"` |  |
 | auth.grpcClientCert | string | `"./ssl/certs/auth-grpc-client.crt"` |  |
 | auth.grpcClientKey | string | `"./ssl/certs/auth-grpc-client.key"` |  |
 | auth.grpcPort | int | `7001` |  |
@@ -63,12 +70,28 @@ Event-driven Infrastructure for Modern Cloud
 | auth.image | object | `{}` |  |
 | auth.nodeSelector | object | `{}` |  |
 | auth.refreshTokenDuration | string | `"24h"` |  |
+| auth.replicaCount | int | `1` |  |
 | auth.secretKey | string | `"supersecret"` |  |
 | auth.tolerations | object | `{}` |  |
+| cassandra.dbUser.password | string | `"cassandra"` |  |
+| cassandra.dbUser.user | string | `"cassandra"` |  |
+| cassandra.enabled | bool | `true` |  |
+| cassandra.image.pullPolicy | string | `"IfNotPresent"` |  |
+| cassandra.image.registry | string | `"docker.io"` |  |
+| cassandra.image.repository | string | `"bitnami/cassandra"` |  |
+| cassandra.image.tag | string | `"5.0.3-debian-12-r0"` |  |
+| cassandra.persistence.enabled | bool | `true` |  |
+| cassandra.persistence.size | string | `"8Gi"` |  |
+| cassandra.replicaCount | int | `1` |  |
+| cassandra.resourcesPreset | string | `"large"` |  |
+| cassandra.service.ports.cql | int | `9042` |  |
+| cassandra.service.ports.thrift | int | `9160` |  |
+| cassandra.service.type | string | `"ClusterIP"` |  |
 | certs.enabled | bool | `true` |  |
 | certs.httpPort | int | `9019` |  |
 | certs.image | object | `{}` |  |
 | certs.logLevel | string | `"error"` |  |
+| certs.replicaCount | int | `1` |  |
 | certs.sdkCertsUrl | string | `"${SMQ_CERTS_SDK_HOST}:9010"` |  |
 | certs.sdkHost | string | `"http://supermq-am-certs"` |  |
 | certs.sdkTlsVerification | string | `"false"` |  |
@@ -89,43 +112,39 @@ Event-driven Infrastructure for Modern Cloud
 | channels.grpcTimeout | string | `"1s"` |  |
 | channels.httpPort | int | `9005` |  |
 | channels.image | object | `{}` |  |
+| channels.replicaCount | int | `1` |  |
 | clients.authGrpcPort | int | `7006` |  |
-| clients.authHttpPort | int | `9001` |  |
-| clients.cacheKeyduration | string | `"10m"` |  |
 | clients.grpcClientCert | string | `"./ssl/certs/clients-grpc-client.crt"` |  |
 | clients.grpcClientKey | string | `"./ssl/certs/clients-grpc-client.key"` |  |
 | clients.grpcTimeout | string | `"1s"` |  |
 | clients.httpPort | int | `9006` |  |
 | clients.image | object | `{}` |  |
-| clients.redisCachePort | int | `6379` |  |
-| clients.redisESPort | int | `6379` |  |
-| defaults.eventStreamURL | string | `"supermq-nats:4222"` |  |
+| clients.replicaCount | int | `1` |  |
 | defaults.image.pullPolicy | string | `"IfNotPresent"` |  |
 | defaults.image.rootRepository | string | `"supermq"` |  |
 | defaults.image.tag | string | `"latest"` |  |
-| defaults.jaegerCollectorPort | int | `4318` |  |
-| defaults.jaegerTraceRatio | float | `1` |  |
 | defaults.logLevel | string | `"error"` |  |
-| defaults.natsPort | int | `4222` |  |
 | defaults.replicaCount | int | `3` |  |
 | defaults.sendTelemetry | bool | `true` |  |
-| domains.cacheKeyduration | string | `"10m"` |  |
 | domains.grpcClientCaCerts | string | `"./ssl/certs/ca.crt"` |  |
 | domains.grpcClientCert | string | `"./ssl/certs/domains-grpc-client.crt"` |  |
 | domains.grpcPort | int | `7003` |  |
 | domains.grpcTimeout | string | `"300s"` |  |
 | domains.httpPort | int | `9003` |  |
 | domains.image | object | `{}` |  |
-| domains.redisTCPPort | int | `6379` |  |
+| domains.replicaCount | int | `1` |  |
 | envoy.image.pullPolicy | string | `"IfNotPresent"` |  |
 | envoy.image.repository | string | `"envoyproxy/envoy"` |  |
 | envoy.image.tag | string | `"v1.31-latest"` |  |
+| envoy.replicaCount | int | `1` |  |
 | fluent-bit.config.filters | string | `"[FILTER]\n    Name         kubernetes\n    Match        kube.*\n    k8s-logging.exclude off\n    Buffer_Size 256k\n"` |  |
 | fluent-bit.config.inputs | string | `"[INPUT]\n    Name             tail\n    Path             /var/log/containers/*.log\n    Read_from_head   true\n    Tag              kube.*\n"` |  |
 | fluent-bit.config.outputs | string | `"[OUTPUT]\n    Name        loki\n    Match       *\n    Host        supermq-loki.loki\n    Port        3100\n    Uri         /loki/api/v1/push\n    Labels      job=fluent-bit\n    Label_Keys  $kubernetes['namespace_name'], $kubernetes['pod_name']\n    Line_Format json\n    Auto_Kubernetes_Labels off\n"` |  |
 | fluent-bit.enabled | bool | `true` |  |
 | fluent-bit.resources | object | `{}` |  |
 | fluent-bit.serviceAccount.create | bool | `true` |  |
+| grafana."grafana.ini".server.root_url | string | `"/grafana"` |  |
+| grafana."grafana.ini".server.serve_from_sub_path | bool | `true` |  |
 | grafana.adminPassword | string | `"12345678"` |  |
 | grafana.adminUser | string | `"admin"` |  |
 | grafana.datasources."datasources.yaml".apiVersion | int | `1` |  |
@@ -140,7 +159,7 @@ Event-driven Infrastructure for Modern Cloud
 | grafana.datasources."datasources.yaml".datasources[1].type | string | `"loki"` |  |
 | grafana.datasources."datasources.yaml".datasources[1].url | string | `"http://supermq-loki.loki:3100"` |  |
 | grafana.enabled | bool | `true` |  |
-| grafana.service.type | string | `"LoadBalancer"` |  |
+| grafana.ingress.enabled | bool | `false` |  |
 | groups.grpcClientCaCerts | string | `"./ssl/certs/ca.crt"` |  |
 | groups.grpcClientCert | string | `"./ssl/certs/groups-grpc-client.crt"` |  |
 | groups.grpcClientKey | string | `"./ssl/certs/groups-grpc-client.key"` |  |
@@ -150,25 +169,52 @@ Event-driven Infrastructure for Modern Cloud
 | groups.grpcTimeout | string | `"300s"` |  |
 | groups.httpPort | int | `9004` |  |
 | groups.image | object | `{}` |  |
-| ingress.annotations | object | `{}` |  |
+| groups.replicaCount | int | `1` |  |
+| ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | ingress.enabled | bool | `true` |  |
+| ingress.hostname | string | `"localhost"` |  |
 | ingress.labels | object | `{}` |  |
 | jaeger.agent.enabled | bool | `false` |  |
 | jaeger.allInOne.enabled | bool | `false` |  |
-| jaeger.cassandra.persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
-| jaeger.cassandra.persistence.enabled | bool | `true` |  |
-| jaeger.cassandra.persistence.size | string | `"10Gi"` |  |
-| jaeger.cassandra.persistence.storageClass | string | `"do-block-storage"` |  |
+| jaeger.collector.replicaCount | int | `1` |  |
+| jaeger.collector.resources.limits.cpu | string | `"400m"` |  |
+| jaeger.collector.resources.limits.memory | string | `"500Mi"` |  |
+| jaeger.collector.resources.requests.cpu | string | `"200m"` |  |
+| jaeger.collector.resources.requests.memory | string | `"300Mi"` |  |
 | jaeger.collector.service.otlp.grpc.name | string | `"otlp-grpc"` |  |
 | jaeger.collector.service.otlp.grpc.port | int | `4317` |  |
 | jaeger.collector.service.otlp.http.name | string | `"otlp-http"` |  |
 | jaeger.collector.service.otlp.http.port | int | `4318` |  |
-| jaeger.fullnameOverride | string | `"supermq-jaeger"` |  |
-| jaeger.provisionDataStore.cassandra | bool | `true` |  |
+| jaeger.enabled | bool | `true` |  |
+| jaeger.externalUrl | string | `""` |  |
+| jaeger.provisionDataStore.cassandra | bool | `false` |  |
+| jaeger.query.basePath | string | `"/jaeger"` |  |
+| jaeger.query.replicaCount | int | `1` |  |
+| jaeger.query.resources.limits.cpu | string | `"400m"` |  |
+| jaeger.query.resources.limits.memory | string | `"500Mi"` |  |
+| jaeger.query.resources.requests.cpu | string | `"200m"` |  |
+| jaeger.query.resources.requests.memory | string | `"300Mi"` |  |
+| jaeger.query.service.admin.name | string | `"admin"` |  |
+| jaeger.query.service.admin.targetPort | string | `"admin"` |  |
+| jaeger.query.service.port | int | `16686` |  |
+| jaeger.query.service.type | string | `"ClusterIP"` |  |
+| jaeger.storage.cassandra.host | string | `"{{ .Release.Name }}-cassandra"` |  |
+| jaeger.storage.cassandra.keyspace | string | `"supermq_jaeger"` |  |
+| jaeger.storage.cassandra.password | string | `"cassandra"` |  |
+| jaeger.storage.cassandra.schema.compaction_window | string | `"2h"` |  |
+| jaeger.storage.cassandra.schema.create | bool | `true` |  |
+| jaeger.storage.cassandra.schema.datacenter | string | `"dc1"` |  |
+| jaeger.storage.cassandra.schema.dependencies_ttl | string | `"48d"` |  |
+| jaeger.storage.cassandra.schema.keyspace | string | `"supermq_jaeger"` |  |
+| jaeger.storage.cassandra.schema.replication_factor | int | `1` |  |
+| jaeger.storage.cassandra.schema.trace_ttl | string | `"48h"` |  |
+| jaeger.storage.cassandra.user | string | `"cassandra"` |  |
 | jaeger.storage.type | string | `"cassandra"` |  |
+| jaeger.traceRatio | float | `1` |  |
 | journal.enabled | bool | `true` |  |
 | journal.httpPort | int | `9021` |  |
 | journal.image | object | `{}` |  |
+| journal.replicaCount | int | `1` |  |
 | mqtt.adapter.forwarderTimeout | string | `"30s"` |  |
 | mqtt.adapter.image.pullSecrets | object | `{}` |  |
 | mqtt.adapter.logLevel | string | `"error"` |  |
@@ -183,6 +229,7 @@ Event-driven Infrastructure for Modern Cloud
 | mqtt.enabled | bool | `true` |  |
 | mqtt.redisCachePort | int | `6379` |  |
 | mqtt.redisESPort | int | `6379` |  |
+| mqtt.replicaCount | int | `1` |  |
 | mqtt.securityContext.fsGroup | int | `10000` |  |
 | mqtt.securityContext.runAsGroup | int | `10000` |  |
 | mqtt.securityContext.runAsUser | int | `10000` |  |
@@ -193,6 +240,8 @@ Event-driven Infrastructure for Modern Cloud
 | nats.config.jetstream.fileStore.pvc.enabled | bool | `true` |  |
 | nats.config.jetstream.memoryStore.enabled | bool | `true` |  |
 | nats.config.jetstream.memoryStore.maxSize | string | `"2Gi"` |  |
+| nats.enabled | bool | `true` |  |
+| nats.externalAddress | string | `""` |  |
 | nginxInternal.image.pullPolicy | string | `"IfNotPresent"` |  |
 | nginxInternal.image.repository | string | `"nginx"` |  |
 | nginxInternal.image.tag | string | `"1.19.1-alpine"` |  |
@@ -209,7 +258,31 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqlauth.name | string | `"postgresql-auth"` |  |
 | postgresqlauth.password | string | `"supermq"` |  |
 | postgresqlauth.port | int | `5432` |  |
+| postgresqlauth.primary.persistence.enabled | bool | `true` |  |
+| postgresqlauth.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlauth.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlauth.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlauth.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlauth.primary.resources.requests.memory | string | `"128Mi"` |  |
 | postgresqlauth.username | string | `"supermq"` |  |
+| postgresqlbackend.database | string | `"supermq"` |  |
+| postgresqlbackend.enabled | bool | `true` |  |
+| postgresqlbackend.global.postgresql.auth.database | string | `"supermq"` |  |
+| postgresqlbackend.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlbackend.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlbackend.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlbackend.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlbackend.host | string | `"postgresql-backend"` |  |
+| postgresqlbackend.name | string | `"postgresql-backend"` |  |
+| postgresqlbackend.password | string | `"supermq"` |  |
+| postgresqlbackend.port | int | `5432` |  |
+| postgresqlbackend.primary.persistence.enabled | bool | `true` |  |
+| postgresqlbackend.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlbackend.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlbackend.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlbackend.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlbackend.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqlbackend.username | string | `"supermq"` |  |
 | postgresqlcerts.database | string | `"certs"` |  |
 | postgresqlcerts.enabled | bool | `true` |  |
 | postgresqlcerts.global.postgresql.auth.database | string | `"certs"` |  |
@@ -221,6 +294,12 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqlcerts.name | string | `"postgresql-certs"` |  |
 | postgresqlcerts.password | string | `"supermq"` |  |
 | postgresqlcerts.port | int | `5432` |  |
+| postgresqlcerts.primary.persistence.enabled | bool | `true` |  |
+| postgresqlcerts.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlcerts.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlcerts.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlcerts.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlcerts.primary.resources.requests.memory | string | `"128Mi"` |  |
 | postgresqlcerts.username | string | `"supermq"` |  |
 | postgresqlchannels.database | string | `"channels"` |  |
 | postgresqlchannels.enabled | bool | `true` |  |
@@ -233,6 +312,12 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqlchannels.name | string | `"postgresql-channels"` |  |
 | postgresqlchannels.password | string | `"supermq"` |  |
 | postgresqlchannels.port | int | `5432` |  |
+| postgresqlchannels.primary.persistence.enabled | bool | `true` |  |
+| postgresqlchannels.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlchannels.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlchannels.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlchannels.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlchannels.primary.resources.requests.memory | string | `"128Mi"` |  |
 | postgresqlchannels.username | string | `"supermq"` |  |
 | postgresqlclients.database | string | `"clients"` |  |
 | postgresqlclients.enabled | bool | `true` |  |
@@ -245,6 +330,12 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqlclients.name | string | `"postgresql-clients"` |  |
 | postgresqlclients.password | string | `"supermq"` |  |
 | postgresqlclients.port | int | `5432` |  |
+| postgresqlclients.primary.persistence.enabled | bool | `true` |  |
+| postgresqlclients.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlclients.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlclients.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlclients.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlclients.primary.resources.requests.memory | string | `"128Mi"` |  |
 | postgresqlclients.username | string | `"supermq"` |  |
 | postgresqldomains.database | string | `"domains"` |  |
 | postgresqldomains.enabled | bool | `true` |  |
@@ -257,6 +348,12 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqldomains.name | string | `"postgresql-domains"` |  |
 | postgresqldomains.password | string | `"supermq"` |  |
 | postgresqldomains.port | int | `5432` |  |
+| postgresqldomains.primary.persistence.enabled | bool | `true` |  |
+| postgresqldomains.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqldomains.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqldomains.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqldomains.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqldomains.primary.resources.requests.memory | string | `"128Mi"` |  |
 | postgresqldomains.username | string | `"supermq"` |  |
 | postgresqlgroups.database | string | `"groups"` |  |
 | postgresqlgroups.enabled | bool | `true` |  |
@@ -269,6 +366,12 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqlgroups.name | string | `"postgresql-groups"` |  |
 | postgresqlgroups.password | string | `"supermq"` |  |
 | postgresqlgroups.port | int | `5432` |  |
+| postgresqlgroups.primary.persistence.enabled | bool | `true` |  |
+| postgresqlgroups.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlgroups.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlgroups.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlgroups.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlgroups.primary.resources.requests.memory | string | `"128Mi"` |  |
 | postgresqlgroups.username | string | `"supermq"` |  |
 | postgresqljournal.database | string | `"journal"` |  |
 | postgresqljournal.enabled | bool | `true` |  |
@@ -281,6 +384,12 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqljournal.name | string | `"postgresql-journal"` |  |
 | postgresqljournal.password | string | `"supermq"` |  |
 | postgresqljournal.port | int | `5432` |  |
+| postgresqljournal.primary.persistence.enabled | bool | `true` |  |
+| postgresqljournal.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqljournal.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqljournal.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqljournal.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqljournal.primary.resources.requests.memory | string | `"128Mi"` |  |
 | postgresqljournal.username | string | `"supermq"` |  |
 | postgresqlspicedb.database | string | `"spicedb"` |  |
 | postgresqlspicedb.enabled | bool | `true` |  |
@@ -293,19 +402,13 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqlspicedb.name | string | `"postgresql-spicedb"` |  |
 | postgresqlspicedb.password | string | `"supermq"` |  |
 | postgresqlspicedb.port | int | `5432` |  |
+| postgresqlspicedb.primary.persistence.enabled | bool | `true` |  |
+| postgresqlspicedb.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlspicedb.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlspicedb.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlspicedb.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlspicedb.primary.resources.requests.memory | string | `"128Mi"` |  |
 | postgresqlspicedb.username | string | `"supermq"` |  |
-| postgresqlui.database | string | `"ui"` |  |
-| postgresqlui.enabled | bool | `true` |  |
-| postgresqlui.global.postgresql.auth.database | string | `"ui"` |  |
-| postgresqlui.global.postgresql.auth.password | string | `"supermq"` |  |
-| postgresqlui.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
-| postgresqlui.global.postgresql.auth.username | string | `"supermq"` |  |
-| postgresqlui.global.postgresql.service.ports.postgresql | int | `5432` |  |
-| postgresqlui.host | string | `"postgresql-ui"` |  |
-| postgresqlui.name | string | `"postgresql-ui"` |  |
-| postgresqlui.password | string | `"supermq"` |  |
-| postgresqlui.port | int | `5432` |  |
-| postgresqlui.username | string | `"supermq"` |  |
 | postgresqlusers.database | string | `"users"` |  |
 | postgresqlusers.enabled | bool | `true` |  |
 | postgresqlusers.global.postgresql.auth.database | string | `"users"` |  |
@@ -317,6 +420,12 @@ Event-driven Infrastructure for Modern Cloud
 | postgresqlusers.name | string | `"postgresql-users"` |  |
 | postgresqlusers.password | string | `"supermq"` |  |
 | postgresqlusers.port | int | `5432` |  |
+| postgresqlusers.primary.persistence.enabled | bool | `true` |  |
+| postgresqlusers.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlusers.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlusers.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlusers.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlusers.primary.resources.requests.memory | string | `"128Mi"` |  |
 | postgresqlusers.username | string | `"supermq"` |  |
 | prometheus.alertmanager.enabled | bool | `true` |  |
 | prometheus.alertmanager.persistence.size | string | `"2Gi"` |  |
@@ -368,7 +477,7 @@ Event-driven Infrastructure for Modern Cloud
 | prometheus.server.image.repository | string | `"quay.io/prometheus/prometheus"` |  |
 | prometheus.server.image.tag | string | `""` |  |
 | prometheus.server.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
-| prometheus.server.ingress.enabled | bool | `true` |  |
+| prometheus.server.ingress.enabled | bool | `false` |  |
 | prometheus.server.ingress.hosts[0] | string | `"prometheus.example.com"` |  |
 | prometheus.server.ingress.ingressClassName | string | `"nginx"` |  |
 | prometheus.server.livenessProbe.httpGet.path | string | `"/-/healthy"` |  |
@@ -377,11 +486,9 @@ Event-driven Infrastructure for Modern Cloud
 | prometheus.server.livenessProbe.initialDelaySeconds | int | `30` |  |
 | prometheus.server.livenessProbe.timeoutSeconds | int | `5` |  |
 | prometheus.server.name | string | `"server"` |  |
-| prometheus.server.persistentVolume.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | prometheus.server.persistentVolume.enabled | bool | `true` |  |
 | prometheus.server.persistentVolume.mountPath | string | `"/data"` |  |
 | prometheus.server.persistentVolume.size | string | `"8Gi"` |  |
-| prometheus.server.persistentVolume.storageClass | string | `"do-block-storage"` |  |
 | prometheus.server.readinessProbe.httpGet.path | string | `"/-/ready"` |  |
 | prometheus.server.readinessProbe.httpGet.port | int | `9090` |  |
 | prometheus.server.readinessProbe.httpGet.scheme | string | `"HTTP"` |  |
@@ -404,9 +511,24 @@ Event-driven Infrastructure for Modern Cloud
 | prometheus.serviceAccounts.server.automountServiceAccountToken | bool | `true` |  |
 | prometheus.serviceAccounts.server.create | bool | `true` |  |
 | prometheus.serviceAccounts.server.name | string | `""` |  |
-| redis-clients.cluster.enabled | bool | `false` |  |
-| redis-clients.usePassword | bool | `false` |  |
-| redis-clients.volumePermissions.enabled | bool | `true` |  |
+| redisclients.auth.enabled | bool | `false` |  |
+| redisclients.cacheKeyduration | string | `"10m"` |  |
+| redisclients.enabled | bool | `true` |  |
+| redisclients.externalUrl | string | `""` |  |
+| redisclients.master.containerPorts.redis | int | `6379` |  |
+| redisclients.master.persistence.size | string | `"1Gi"` |  |
+| redisclients.master.service.ports.redis | int | `6379` |  |
+| redisclients.replica.replicaCount | int | `0` |  |
+| redisclients.volumePermissions.enabled | bool | `true` |  |
+| redisdomains.auth.enabled | bool | `false` |  |
+| redisdomains.cacheKeyDuration | string | `"10m"` |  |
+| redisdomains.enabled | bool | `true` |  |
+| redisdomains.externalUrl | string | `""` |  |
+| redisdomains.master.containerPorts.redis | int | `6379` |  |
+| redisdomains.master.persistence.size | string | `"1Gi"` |  |
+| redisdomains.master.service.ports.redis | int | `6379` |  |
+| redisdomains.replica.replicaCount | int | `0` |  |
+| redisdomains.volumePermissions.enabled | bool | `true` |  |
 | spicedb.affinity | object | `{}` |  |
 | spicedb.datastore.engine | string | `"postgres"` |  |
 | spicedb.dispatch.enabled | bool | `false` |  |
@@ -421,19 +543,43 @@ Event-driven Infrastructure for Modern Cloud
 | spicedb.metrics.enabled | bool | `true` |  |
 | spicedb.metrics.port | int | `9090` |  |
 | spicedb.nodeSelector | object | `{}` |  |
+| spicedb.replicaCount | int | `1` |  |
 | spicedb.tolerations | object | `{}` |  |
-| ui.blockKey | string | `"UtgZjr92jwRY6SPUndHXiyl9QY8qTUyZ"` |  |
-| ui.contentType | string | `"application/senml+json"` |  |
+| ui.basePath | string | `"/"` |  |
 | ui.enabled | bool | `true` |  |
 | ui.googleClientID | string | `""` |  |
 | ui.googleClientSecret | string | `""` |  |
-| ui.googleRedirectHostname | string | `"https://stage-domain-name"` |  |
-| ui.googleRedirectPath | string | `"/oauth/callback/google"` |  |
 | ui.googleState | string | `"somerandomstring"` |  |
-| ui.hashKey | string | `"5jx4x2Qg9OUmzpP5dbveWQ"` |  |
-| ui.image | object | `{}` |  |
-| ui.pathPrefix | string | `"/ui"` |  |
-| ui.port | int | `9095` |  |
+| ui.httpPort | int | `3000` |  |
+| ui.image.pullPolicy | string | `"IfNotPresent"` |  |
+| ui.image.pullSecrets | object | `{}` |  |
+| ui.image.repository | string | `"ghcr.io/absmach/magistrala/ui-smq"` |  |
+| ui.image.tag | string | `"latest"` |  |
+| ui.name | string | `"Magistrala UI"` |  |
+| ui.nextAuthSecret | string | `"4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="` |  |
+| ui.nextPublicBasePath | string | `"/"` |  |
+| ui.nextPublicNextAuthBasePath | string | `"/api/auth"` |  |
+| ui.nextauthSecret | string | `"4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="` |  |
+| ui.profilePicturesUrl.httpPort | int | `9097` |  |
+| ui.replicaCount | int | `1` |  |
+| ui.runtimeEnv | string | `"production"` |  |
+| ui.timescaleReader.httpPort | int | `9011` |  |
+| ui.type | string | `"smq"` |  |
+| uibackend.contentType | string | `"application/senml+json"` |  |
+| uibackend.enabled | bool | `true` |  |
+| uibackend.httpPort | int | `9097` |  |
+| uibackend.image.pullPolicy | string | `"IfNotPresent"` |  |
+| uibackend.image.repository | string | `"ghcr.io/absmach/magistrala/ui-backend"` |  |
+| uibackend.image.tag | string | `"latest"` |  |
+| uibackend.loglevel | string | `"error"` |  |
+| uibackend.replicaCount | int | `1` |  |
+| uibackend.serverCert | string | `""` |  |
+| uibackend.serverKey | string | `""` |  |
+| uibackend.sslCert | string | `""` |  |
+| uibackend.sslKey | string | `""` |  |
+| uibackend.sslMode | string | `"disable"` |  |
+| uibackend.sslRootCert | string | `""` |  |
+| uibackend.verificationTLS | string | `"false"` |  |
 | users.accessTokenDuration | string | `"15m"` |  |
 | users.admin.email | string | `"admin@example.com"` |  |
 | users.admin.firstname | string | `"super"` |  |
@@ -447,6 +593,7 @@ Event-driven Infrastructure for Modern Cloud
 | users.image | object | `{}` |  |
 | users.passwordRegex | string | `"^.{8,}$"` |  |
 | users.refreshTokenDuration | string | `"24h"` |  |
+| users.replicaCount | int | `1` |  |
 | users.secretKey | string | `"supersecret"` |  |
 | users.tokenResetEndpoint | string | `"/reset-request"` |  |
 | vault.enabled | bool | `false` |  |
