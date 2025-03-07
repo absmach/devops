@@ -33,13 +33,13 @@ spec:
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.adapter_coap.image.pullPolicy }}
           env:
             - name: SMQ_JAEGER_URL
-              value: "http://{{ .Release.Name }}-jaeger-collector:{{ .Values.defaults.jaegerCollectorPort }}/v1/traces"
+              value: {{ .Values.jaeger.enabled | ternary (printf "http://%s-jaeger-collector:%d/v1/traces" .Release.Name (.Values.jaeger.collector.service.otlp.http.port | int )) .Values.jaeger.externalUrl }}
             - name: SMQ_JAEGER_TRACE_RATIO
-              value: {{ default .Values.defaults.jaegerTraceRatio .Values.adapter_coap.jaegerTraceRatio | quote  }}
+              value: {{ default .Values.jaeger.traceRatio .Values.adapter_coap.jaegerTraceRatio | quote  }}
             - name: SMQ_SEND_TELEMETRY
               value: {{ default .Values.defaults.sendTelemetry .Values.adapter_coap.sendTelemetry | quote  }}
             - name: SMQ_MESSAGE_BROKER_URL
-              value: nats://{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}
+              value: {{ .Values.nats.enabled | ternary (printf "nats://%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
             - name: SMQ_CLIENTS_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
             - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
@@ -59,7 +59,7 @@ spec:
             - name: SMQ_COAP_ADAPTER_PORT
               value: {{ .Values.adapter_coap.port | quote }}
             - name: SMQ_ES_URL
-              value: "{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}"
+              value: {{ .Values.nats.enabled | ternary (printf "%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
           ports:
             - containerPort: {{ .Values.adapter_coap.port }}
               protocol: UDP

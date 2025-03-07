@@ -1,0 +1,106 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.uibackend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-backend
+  labels:
+    app: {{ .Release.Name }}
+    component: backend
+spec:
+  replicas: {{ default .Values.defaults.replicaCount .Values.uibackend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      component: backend
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "{{ .Values.uibackend.httpPort }}"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Release.Name }}
+        component: backend
+    spec:
+      {{- with (default .Values.defaults.image.pullSecrets .Values.uibackend.image.pullSecrets) }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-backend
+          image: "{{ default (printf "%s/uibackend" .Values.defaults.image.rootRepository) .Values.uibackend.image.repository }}:{{ default .Values.defaults.image.tag .Values.uibackend.image.tag }}"
+          imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.uibackend.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.uibackend.httpPort }}
+              protocol: TCP
+          stdin: true
+          tty: true
+          env:
+            - name: MG_BACKEND_LOG_LEVEL
+              value: {{ default .Values.defaults.logLevel .Values.uibackend.logLevel | quote }}
+            - name: MG_BACKEND_HTTP_HOST
+              value: "0.0.0.0"
+            - name: MG_BACKEND_HTTP_PORT
+              value: {{ .Values.uibackend.httpPort | quote }}
+            - name: MG_BACKEND_HTTP_SERVER_CERT
+              value: {{ .Values.uibackend.serverCert | quote }}
+            - name: MG_BACKEND_HTTP_SERVER_KEY
+              value: {{ .Values.uibackend.serverKey | quote }}
+            - name: MG_BACKEND_DB_HOST
+              {{- if .Values.postgresqlbackend.enabled }}
+              value: {{ .Release.Name }}-postgresqlbackend
+              {{- else }}
+              value: {{ .Values.postgresqlbackend.host }}
+              {{- end }}
+            - name: MG_BACKEND_DB_PORT
+              value: {{ .Values.postgresqlbackend.port | quote }}
+            - name: MG_BACKEND_DB_USER
+              value: {{ .Values.postgresqlbackend.username | quote }}
+            - name: MG_BACKEND_DB_PASS
+              value: {{ .Values.postgresqlbackend.password | quote }}
+            - name: MG_BACKEND_DB_NAME
+              value: {{ .Values.postgresqlbackend.database | quote }}
+            - name: MG_BACKEND_DB_SSL_MODE
+              value: {{ .Values.uibackend.sslMode | quote }}
+            - name: MG_BACKEND_DB_SSL_CERT
+              value: {{ .Values.uibackend.sslCert | quote }}
+            - name: MG_BACKEND_DB_SSL_KEY
+              value: {{ .Values.uibackend.sslKey | quote }}
+            - name: MG_BACKEND_DB_SSL_ROOT_CERT
+              value: {{ .Values.uibackend.sslRootCert | quote }}
+            - name: MG_AUTH_GRPC_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+            - name: MG_AUTH_GRPC_TIMEOUT
+              value: {{ .Values.auth.grpcTimeout | quote }}
+            - name: MG_AUTH_GRPC_CLIENT_CERT
+              value: {{ .Values.auth.grpcClientCert | quote }}
+            - name: MG_AUTH_GRPC_CLIENT_KEY
+              value: {{ .Values.auth.grpcClientKey | quote }}
+            - name: MG_AUTH_GRPC_CLIENT_CA_CERTS
+              value: {{ .Values.auth.grpcClientCACerts | quote }}
+            - name: MG_UI_VERIFICATION_TLS
+              value: {{ .Values.uibackend.verificationTLS | quote }}
+            - name: MG_UI_CONTENT_TYPE
+              value: {{ .Values.uibackend.contentType | quote }}
+            - name: MG_PROFILE_PICTURE_URL
+              value: {{ .Release.Name }}-envoy:{{ .Values.ui.profilePicturesUrl.httpPort }}
+            - name: MG_UI_DOCKER_ACCEPT_EULA
+              value: "yes"
+      {{- with .Values.uibackend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.uibackend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.uibackend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

@@ -66,9 +66,13 @@ spec:
             - name: SMQ_DOMAINS_DB_NAME
               value: {{ .Values.postgresqldomains.database | quote }}
             - name: SMQ_DOMAINS_CACHE_URL
-              value: redis://{{ .Release.Name }}-domains-redis:{{ .Values.domains.redisTCPPort }}/0
+              {{- if .Values.redisdomains.enabled }}
+              value: redis://{{ .Release.Name }}-redisdomains-master:{{ .Values.redisdomains.master.service.ports.redis	 }}/0
+              {{- else }}
+              value: {{ .Values.redisdomains.externalUrl | quote }}
+              {{- end }}
             - name: SMQ_DOMAINS_CACHE_KEY_DURATION
-              value: {{ .Values.domains.cacheKeyduration | quote }}
+              value: {{ .Values.redisdomains.cacheKeyDuration | quote }}
             - name: SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: SMQ_AUTH_GRPC_TIMEOUT
@@ -96,13 +100,13 @@ spec:
             - name: SMQ_DOMAINS_DB_SSL_ROOT_CERT
               value: {{ .Values.domains.sslRootCert | quote }}
             - name: SMQ_JAEGER_URL
-              value: "http://{{ .Release.Name }}-jaeger-collector:4318/v1/traces"
+              value: {{ .Values.jaeger.enabled | ternary (printf "http://%s-jaeger-collector:%d/v1/traces" .Release.Name (.Values.jaeger.collector.service.otlp.http.port | int )) .Values.jaeger.externalUrl }}
             - name: SMQ_JAEGER_TRACE_RATIO
-              value: {{ default .Values.defaults.jaegerTraceRatio .Values.adapter_coap.jaegerTraceRatio | quote  }}
+              value: {{ default .Values.jaeger.traceRatio .Values.domains.jaegerTraceRatio | quote  }}
             - name: SMQ_SEND_TELEMETRY
               value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
             - name: SMQ_ES_URL
-              value: "{{ .Release.Name }}-nats:{{ .Values.defaults.natsPort }}"
+              value: {{ .Values.nats.enabled | ternary (printf "%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
           volumeMounts:
             - name: spicedb-schema-zed
               mountPath: /schema.zed
