@@ -50,6 +50,14 @@ spec:
               value: {{ .Values.postgresqlchannels.username | quote }}
             - name: SMQ_CHANNELS_DB_PASS
               value: {{ .Values.postgresqlchannels.password | quote }}
+            - name: SMQ_CHANNELS_DB_SSL_MODE
+              value: {{ .Values.channels.sslMode | quote }}
+            - name: SMQ_CHANNELS_DB_SSL_CERT
+              value: {{ .Values.channels.sslCert | quote }}
+            - name: SMQ_CHANNELS_DB_SSL_KEY
+              value: {{ .Values.channels.sslKey | quote }}
+            - name: SMQ_CHANNELS_DB_SSL_ROOT_CERT
+              value: {{ .Values.channels.sslRootCert | quote }}
             - name: SMQ_SPICEDB_SCHEMA_FILE
               value: /schema.zed
             - name : SMQ_AUTH_GRPC_URL

@@ -71,6 +71,16 @@ spec:
               value: {{ .Values.postgresqlcerts.username | quote }}
             - name: SMQ_CERTS_DB_PASS
               value: {{ .Values.postgresqlcerts.password | quote }}
+            - name: AM_CERTS_DB_SSL_MODE
+              value: {{ .Values.certs.sslMode | quote }}
+            - name: SMQ_CERTS_DB_SSL_MODE
+              value: {{ .Values.certs.sslMode | quote }}
+            - name: SMQ_CERTS_DB_SSL_CERT
+              value: {{ .Values.certs.sslCert | quote }}
+            - name: SMQ_CERTS_DB_SSL_KEY
+              value: {{ .Values.certs.sslKey | quote }}
+            - name: SMQ_CERTS_DB_SSL_ROOT_CERT
+              value: {{ .Values.certs.sslRootCert | quote }}
             - name: SMQ_CERTS_SIGN_CA_PATH
               value: {{ .Values.certs.signCAPath }}
             - name: SMQ_CERTS_SIGN_CA_KEY_PATH
