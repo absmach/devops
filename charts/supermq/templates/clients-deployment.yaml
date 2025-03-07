@@ -40,9 +40,9 @@ spec:
               value: {{ default .Values.defaults.sendTelemetry .Values.clients.sendTelemetry | quote  }}
             - name: SMQ_CLIENTS_LOG_LEVEL
               value: {{ default .Values.defaults.logLevel .Values.clients.logLevel  | quote }}
-            - name: SMQ_CLIENTS_AUTH_GRPC_HOST
+            - name: SMQ_CLIENTS_GRPC_HOST
               value: "0.0.0.0"
-            - name: SMQ_CLIENTS_AUTH_GRPC_PORT
+            - name: SMQ_CLIENTS_GRPC_PORT
               value: {{ .Values.clients.authGrpcPort | quote}}
             - name: SMQ_CLIENTS_AUTH_HTTP_HOST
               value: "0.0.0.0"

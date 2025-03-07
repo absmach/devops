@@ -186,9 +186,9 @@ spec:
               value: {{ .Values.mqtt.adapter.qos | quote }}
             - name: SMQ_MQTT_ADAPTER_WS_TARGET_PATH
               value: "/mqtt"
-            - name: SMQ_CLIENTS_AUTH_GRPC_URL
+            - name: SMQ_CLIENTS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort | quote }}
-            - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
+            - name: SMQ_CLIENTS_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
             - name: SMQ_CHANNELS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.channels.grpcPort | quote }}

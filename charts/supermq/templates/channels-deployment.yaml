@@ -60,13 +60,13 @@ spec:
               value: {{ .Values.auth.grpcClientCert | quote }}
             - name: SMQ_AUTH_GRPC_CLIENT_KEY
               value: {{ .Values.auth.grpcClientKey | quote }}
-            - name: SMQ_CLIENTS_AUTH_GRPC_URL
+            - name: SMQ_CLIENTS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.clients.authGrpcPort }}
-            - name: SMQ_CLIENTS_AUTH_GRPC_TIMEOUT
+            - name: SMQ_CLIENTS_GRPC_TIMEOUT
               value: {{ .Values.clients.grpcTimeout | quote }}
-            - name: SMQ_CLIENTS_AUTH_GRPC_CLIENT_CERT
+            - name: SMQ_CLIENTS_GRPC_CLIENT_CERT
               value: "{{ .Values.clients.grpcClientCert }}"
-            - name: SMQ_CLIENTS_AUTH_GRPC_CLIENT_KEY
+            - name: SMQ_CLIENTS_GRPC_CLIENT_KEY
               value: "{{ .Values.clients.grpcClientKey }}"
             - name: SMQ_GROUPS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.groups.grpcPort }}
@@ -111,4 +111,3 @@ spec:
         - name: spicedb-schema
           configMap:
             name: {{ .Release.Name }}-spicedb-schema-zed
-
