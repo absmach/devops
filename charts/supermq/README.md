@@ -2,7 +2,7 @@
 
 Event-driven Infrastructure for Modern Cloud
 
-![Version: 0.16.1](https://img.shields.io/badge/Version-0.16.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.0](https://img.shields.io/badge/AppVersion-0.16.0-informational?style=flat-square)
+![Version: 0.16.2](https://img.shields.io/badge/Version-0.16.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.0](https://img.shields.io/badge/AppVersion-0.16.0-informational?style=flat-square)
 
 **Homepage:** <https://abstractmachines.fr/supermq.html>
 
@@ -70,6 +70,10 @@ Event-driven Infrastructure for Modern Cloud
 | auth.refreshTokenDuration | string | `"24h"` |  |
 | auth.replicaCount | int | `1` |  |
 | auth.secretKey | string | `"supersecret"` |  |
+| auth.sslCert | string | `""` |  |
+| auth.sslKey | string | `""` |  |
+| auth.sslMode | string | `"disable"` |  |
+| auth.sslRootCert | string | `""` |  |
 | auth.tolerations | object | `{}` |  |
 | cassandra.dbUser.password | string | `"cassandra"` |  |
 | cassandra.dbUser.user | string | `"cassandra"` |  |
@@ -95,6 +99,10 @@ Event-driven Infrastructure for Modern Cloud
 | certs.sdkTlsVerification | string | `"false"` |  |
 | certs.signCAKeyPath | string | `"/etc/ssl/certs/ca.key"` |  |
 | certs.signCAPath | string | `"/etc/ssl/certs/ca.crt"` |  |
+| certs.sslCert | string | `""` |  |
+| certs.sslKey | string | `""` |  |
+| certs.sslMode | string | `"disable"` |  |
+| certs.sslRootCert | string | `""` |  |
 | certs.vault.approleRoleid | string | `"supermq"` |  |
 | certs.vault.approleSecret | string | `"supermq"` |  |
 | certs.vault.namespace | string | `"supermq"` |  |
@@ -111,6 +119,10 @@ Event-driven Infrastructure for Modern Cloud
 | channels.httpPort | int | `9005` |  |
 | channels.image | object | `{}` |  |
 | channels.replicaCount | int | `1` |  |
+| channels.sslCert | string | `""` |  |
+| channels.sslKey | string | `""` |  |
+| channels.sslMode | string | `"disable"` |  |
+| channels.sslRootCert | string | `""` |  |
 | clients.authGrpcPort | int | `7006` |  |
 | clients.grpcClientCert | string | `"./ssl/certs/clients-grpc-client.crt"` |  |
 | clients.grpcClientKey | string | `"./ssl/certs/clients-grpc-client.key"` |  |
@@ -118,6 +130,10 @@ Event-driven Infrastructure for Modern Cloud
 | clients.httpPort | int | `9006` |  |
 | clients.image | object | `{}` |  |
 | clients.replicaCount | int | `1` |  |
+| clients.sslCert | string | `""` |  |
+| clients.sslKey | string | `""` |  |
+| clients.sslMode | string | `"disable"` |  |
+| clients.sslRootCert | string | `""` |  |
 | defaults.image.pullPolicy | string | `"IfNotPresent"` |  |
 | defaults.image.rootRepository | string | `"supermq"` |  |
 | defaults.image.tag | string | `"latest"` |  |
@@ -131,6 +147,10 @@ Event-driven Infrastructure for Modern Cloud
 | domains.httpPort | int | `9003` |  |
 | domains.image | object | `{}` |  |
 | domains.replicaCount | int | `1` |  |
+| domains.sslCert | string | `""` |  |
+| domains.sslKey | string | `""` |  |
+| domains.sslMode | string | `"disable"` |  |
+| domains.sslRootCert | string | `""` |  |
 | envoy.image.pullPolicy | string | `"IfNotPresent"` |  |
 | envoy.image.repository | string | `"envoyproxy/envoy"` |  |
 | envoy.image.tag | string | `"v1.31-latest"` |  |
@@ -145,6 +165,10 @@ Event-driven Infrastructure for Modern Cloud
 | groups.httpPort | int | `9004` |  |
 | groups.image | object | `{}` |  |
 | groups.replicaCount | int | `1` |  |
+| groups.sslCert | string | `""` |  |
+| groups.sslKey | string | `""` |  |
+| groups.sslMode | string | `"disable"` |  |
+| groups.sslRootCert | string | `""` |  |
 | ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | ingress.enabled | bool | `true` |  |
 | ingress.hostname | string | `"localhost"` |  |
@@ -190,6 +214,10 @@ Event-driven Infrastructure for Modern Cloud
 | journal.httpPort | int | `9021` |  |
 | journal.image | object | `{}` |  |
 | journal.replicaCount | int | `1` |  |
+| journal.sslCert | string | `""` |  |
+| journal.sslKey | string | `""` |  |
+| journal.sslMode | string | `"disable"` |  |
+| journal.sslRootCert | string | `""` |  |
 | mqtt.adapter.forwarderTimeout | string | `"30s"` |  |
 | mqtt.adapter.image.pullSecrets | object | `{}` |  |
 | mqtt.adapter.logLevel | string | `"error"` |  |
@@ -570,5 +598,9 @@ Event-driven Infrastructure for Modern Cloud
 | users.refreshTokenDuration | string | `"24h"` |  |
 | users.replicaCount | int | `1` |  |
 | users.secretKey | string | `"supersecret"` |  |
+| users.sslCert | string | `""` |  |
+| users.sslKey | string | `""` |  |
+| users.sslMode | string | `"disable"` |  |
+| users.sslRootCert | string | `""` |  |
 | users.tokenResetEndpoint | string | `"/reset-request"` |  |
 | vault.enabled | bool | `false` |  |

@@ -56,6 +56,14 @@ spec:
               value: {{ .Values.postgresqlgroups.username | quote }}
             - name: SMQ_GROUPS_DB_PASS
               value: {{ .Values.postgresqlgroups.password | quote }}
+            - name: SMQ_GROUPS_DB_SSL_MODE
+              value: {{ .Values.groups.sslMode | quote }}
+            - name: SMQ_GROUPS_DB_SSL_CERT
+              value: {{ .Values.groups.sslCert | quote }}
+            - name: SMQ_GROUPS_DB_SSL_KEY
+              value: {{ .Values.groups.sslKey | quote }}
+            - name: SMQ_GROUPS_DB_SSL_ROOT_CERT
+              value: {{ .Values.groups.sslRootCert | quote }}
             - name: SMQ_CHANNELS_URL
               value: {{ .Release.Name }}-channels:{{ .Values.channels.httpPort }}
             - name: SMQ_CHANNELS_GRPC_URL

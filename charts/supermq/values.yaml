@@ -142,6 +142,10 @@ auth:
   grpcClientCert: "./ssl/certs/auth-grpc-client.crt"
   grpcClientKey: "./ssl/certs/auth-grpc-client.key"
   grpcClientCACerts: "./ssl/certs/ca.crt"
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   nodeSelector: {}
   affinity: {}
   tolerations: {}
@@ -218,6 +222,10 @@ certs:
   sdkHost: "http://supermq-am-certs"
   sdkCertsUrl: "${SMQ_CERTS_SDK_HOST}:9010"
   sdkTlsVerification: "false"
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   vault:
     url: "http://supermq-vault:8200"
     approleRoleid: supermq
@@ -272,6 +280,10 @@ channels:
   httpPort: 9005
   grpcPort: 7005
   grpcTimeout: "1s"
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   grpcClientCert: "./ssl/certs/channels-grpc-client.crt"
   grpcClientKey: "./ssl/certs/channels-grpc-client.key"
   grpcServerCert: "./ssl/certs/channels-grpc-server.crt"
@@ -323,6 +335,10 @@ clients:
   httpPort: 9006
   authGrpcPort: 7006
   grpcTimeout: "1s"
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   grpcClientCert: "./ssl/certs/clients-grpc-client.crt"
   grpcClientKey: "./ssl/certs/clients-grpc-client.key"
   # logLevel: "error"
@@ -396,6 +412,10 @@ domains:
   httpPort: 9003
   grpcPort: 7003
   grpcTimeout: "300s"
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   grpcClientCert: "./ssl/certs/domains-grpc-client.crt"
   grpcClientCaCerts: "./ssl/certs/ca.crt"
 
@@ -473,6 +493,10 @@ groups:
   httpPort: 9004
   grpcPort: 7004
   grpcTimeout: "300s"
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   grpcClientCert: "./ssl/certs/groups-grpc-client.crt"
   grpcClientKey: "./ssl/certs/groups-grpc-client.key"
   grpcClientCaCerts: "./ssl/certs/ca.crt"
@@ -608,6 +632,10 @@ journal:
   # logLevel: "error"
   replicaCount: 1
   httpPort: 9021
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
@@ -918,6 +946,10 @@ users:
   allowSelfRegister: true
   deleteInterval: "24h"
   deleteAfter: "720h"
+  sslMode: "disable"
+  sslCert: ""
+  sslKey: ""
+  sslRootCert: ""
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}

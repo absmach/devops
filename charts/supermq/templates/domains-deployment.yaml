@@ -65,6 +65,14 @@ spec:
               value: {{ .Values.postgresqldomains.password | quote }}
             - name: SMQ_DOMAINS_DB_NAME
               value: {{ .Values.postgresqldomains.database | quote }}
+            - name: SMQ_DOMAINS_DB_SSL_MODE
+              value: {{ .Values.domains.sslMode | quote }}
+            - name: SMQ_DOMAINS_DB_SSL_CERT
+              value: {{ .Values.domains.sslCert | quote }}
+            - name: SMQ_DOMAINS_DB_SSL_KEY
+              value: {{ .Values.domains.sslKey | quote }}
+            - name: SMQ_DOMAINS_DB_SSL_ROOT_CERT
+              value: {{ .Values.domains.sslRootCert | quote }}
             - name: SMQ_DOMAINS_CACHE_URL
               {{- if .Values.redisdomains.enabled }}
               value: redis://{{ .Release.Name }}-redisdomains-master:{{ .Values.redisdomains.master.service.ports.redis	 }}/0

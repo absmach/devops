@@ -84,6 +84,14 @@ spec:
               value: {{ .Release.Name }}-spicedb-envoy
             - name: SMQ_SPICEDB_PORT
               value: {{ .Values.spicedb.grpc.port | quote }}
+            - name: SMQ_AUTH_DB_SSL_MODE
+              value: {{ .Values.auth.sslMode | quote }}
+            - name: SMQ_AUTH_DB_SSL_CERT
+              value: {{ .Values.auth.sslCert | quote }}
+            - name: SMQ_AUTH_DB_SSL_KEY
+              value: {{ .Values.auth.sslKey | quote }}
+            - name: SMQ_AUTH_DB_SSL_ROOT_CERT
+              value: {{ .Values.auth.sslRootCert | quote }}
             - name: SMQ_SPICEDB_SCHEMA_FILE
               value: /schema.zed
             - name: SMQ_SPICEDB_PRE_SHARED_KEY
