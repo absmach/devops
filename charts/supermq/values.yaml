@@ -17,23 +17,24 @@ adapter_coap:
   # Image configuration for the CoAP adapter.
   image:
     {}
-    # pullSecrets: {}
+
     # If your image repository requires authentication, you can specify image pull secrets here.
     # Example:
     # pullSecrets:
     #   - my-registry-key
+    # pullSecrets: {}
 
-    # repository: "supermq"
     # The Docker repository where the adapter_coap image is stored.
     # Set this to your preferred image repository if you are using a custom image.
+    # repository: "supermq"
 
-    # tag: "latest"
     # The specific tag of the adapter_coap image to use.
     # Change this to pin to a specific version or use "latest" for the most recent version.
+    # tag: "latest"
 
-    # pullPolicy: "IfNotPresent"
     # The image pull policy. This defines when Kubernetes should pull the Docker image.
     # Options are "Always", "IfNotPresent", or "Never". "IfNotPresent" is generally used to avoid unnecessary pulls.
+    # pullPolicy: "IfNotPresent"
 
   # The primary port used by the CoAP adapter for communication.
   # Default: 5683 (standard CoAP UDP port).
@@ -56,9 +57,18 @@ adapter_coap:
   # Set to false if telemetry reporting is not required or should be disabled for privacy concerns.
   sendTelemetry: true
 
-  # logLevel: "info"
   # The logging level for the adapter_coap service. Common options are "debug", "info", "warn", "error".
   # Adjust this based on the verbosity of logs you require.
+  logLevel: "error"
+
+  # Resource requests and limits for the CoAP adapter.
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
 
   # Node selector for pod assignment. This can be used to restrict the pod to run on specific nodes.
   # Example:
@@ -98,10 +108,14 @@ adapter_http:
     # pullPolicy: "IfNotPresent"
   httpPort: 8008
   replicaCount: 1
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
   # logLevel: "error"
-  # The logging level for the adapter_http service. Common options are "debug", "info", "warn", "error".
-  # Adjust this based on the verbosity of logs you require.
-
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
@@ -116,6 +130,13 @@ adapter_ws:
   # logLevel: "error"
   replicaCount: 1
   httpPort: 8186
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
@@ -142,10 +163,6 @@ auth:
   grpcClientCert: "./ssl/certs/auth-grpc-client.crt"
   grpcClientKey: "./ssl/certs/auth-grpc-client.key"
   grpcClientCACerts: "./ssl/certs/ca.crt"
-  sslMode: "disable"
-  sslCert: ""
-  sslKey: ""
-  sslRootCert: ""
   nodeSelector: {}
   affinity: {}
   tolerations: {}
@@ -233,6 +250,16 @@ certs:
     namespace: supermq
     thingsCertsPkiPath: pki_int
     thingsCertsPkiRoleName: supermq_things_certs
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 postgresqlcerts:
   ## If you want to use an external database, set this to false and change host & port to external postgresql server host & port respectively
@@ -289,6 +316,16 @@ channels:
   grpcServerCert: "./ssl/certs/channels-grpc-server.crt"
   grpcServerKey: "./ssl/certs/channels-grpc-server.key"
   grpcClientCaCerts: "./ssl/certs/ca.crt"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 postgresqlchannels:
   enabled: true
@@ -341,6 +378,13 @@ clients:
   sslRootCert: ""
   grpcClientCert: "./ssl/certs/clients-grpc-client.crt"
   grpcClientKey: "./ssl/certs/clients-grpc-client.key"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
   # logLevel: "error"
   # nodeSelector: {}
   # affinity: {}
@@ -394,8 +438,22 @@ redisclients:
     service:
       ports:
         redis: 6379
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+      limits:
+        cpu: "1000m"
+        memory: "1Gi"
   replica:
     replicaCount: 0
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
   volumePermissions:
     enabled: true
 
@@ -418,6 +476,16 @@ domains:
   sslRootCert: ""
   grpcClientCert: "./ssl/certs/domains-grpc-client.crt"
   grpcClientCaCerts: "./ssl/certs/ca.crt"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 postgresqldomains:
   ## If you want to use an external database, set this to false and change host & port
@@ -467,6 +535,13 @@ redisdomains:
     service:
       ports:
         redis: 6379
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
   replica:
     replicaCount: 0
   volumePermissions:
@@ -478,6 +553,13 @@ envoy:
     repository: "envoyproxy/envoy"
     tag: "v1.31-latest"
   replicaCount: 1
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
 
 groups:
   image:
@@ -502,6 +584,16 @@ groups:
   grpcClientCaCerts: "./ssl/certs/ca.crt"
   grpcServerCert: "./ssl/certs/groups-grpc-server.crt"
   grpcServerKey: "./ssl/certs/groups-grpc-server.key"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 postgresqlgroups:
   enabled: true
@@ -554,6 +646,13 @@ nginxInternal:
     # By default mTLS is disabled. If you use mTLS, comment this block.
     tls: ""
     intermediateCrt: ""
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
     # Uncomment this block for TLS and mTLS support.
     # Use sh script from /secrets/secrets.sh to create config maps with your certs
     # tls: "supermq-server"
@@ -632,10 +731,6 @@ journal:
   # logLevel: "error"
   replicaCount: 1
   httpPort: 9021
-  sslMode: "disable"
-  sslCert: ""
-  sslKey: ""
-  sslRootCert: ""
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
@@ -702,6 +797,16 @@ mqtt:
       size: 5Gi
   redisESPort: 6379
   redisCachePort: 6379
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+  # nodeSelector: {}
+  # affinity: {}
+  # tolerations: {}
 
 nats:
   enabled: true
@@ -723,20 +828,16 @@ nats:
 
 prometheus:
   enabled: true
-
   pushgateway:
     enabled: false
-
   rbac:
     create: true
-
   serviceAccounts:
     server:
       create: true
       name: ""
       automountServiceAccountToken: true
       annotations: {}
-
   configmapReload:
     prometheus:
       enabled: true
@@ -747,8 +848,13 @@ prometheus:
         pullPolicy: IfNotPresent
       containerPort: 8080
       containerPortName: metrics
-      resources: {}
-
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "64Mi"
+        limits:
+          cpu: "100m"
+          memory: "128Mi"
   server:
     name: server
     image:
@@ -758,16 +864,19 @@ prometheus:
       pullPolicy: IfNotPresent
     extraFlags:
       - web.enable-lifecycle
-
-    resources: {}
-
-    # SecurityContext: run as non-root
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "256Mi"
+      limits:
+        cpu: "400m"
+        memory: "512Mi"
+    # SecurityContext: run as non-root user
     securityContext:
       runAsUser: 65534
       runAsNonRoot: true
       runAsGroup: 65534
       fsGroup: 65534
-
     service:
       enabled: true
       type: ClusterIP
@@ -775,16 +884,13 @@ prometheus:
       port: 9200
       servicePort: 9200
       targetPort: 9090
-
       portName: metrics
       annotations:
         prometheus.io/scrape: "true"
-
     persistentVolume:
       enabled: true
       size: 8Gi
       mountPath: /data
-
     livenessProbe:
       httpGet:
         path: /-/healthy
@@ -792,7 +898,6 @@ prometheus:
         scheme: HTTP
       initialDelaySeconds: 30
       timeoutSeconds: 5
-
     readinessProbe:
       httpGet:
         path: /-/ready
@@ -800,7 +905,6 @@ prometheus:
         scheme: HTTP
       initialDelaySeconds: 5
       timeoutSeconds: 5
-
     ingress:
       enabled: false
       ingressClassName: "nginx"
@@ -808,7 +912,6 @@ prometheus:
         kubernetes.io/ingress.class: "nginx"
       hosts:
         - prometheus.example.com
-
   nodeExporter:
     enabled: true
     image:
@@ -828,6 +931,13 @@ prometheus:
         prometheus.io/scrape: "true"
     extraArgs:
       - --web.listen-address=0.0.0.0:9100
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "64Mi"
+      limits:
+        cpu: "100m"
+        memory: "128Mi"
     livenessProbe:
       httpGet:
         path: /metrics
@@ -850,15 +960,12 @@ prometheus:
       kubernetes.io/os: linux
     hostNetwork: true
     hostPID: true
-
   alertmanager:
     enabled: true
     persistence:
       size: 2Gi
-
   kubeStateMetrics:
     enabled: true
-
   prometheusPushgateway:
     enabled: false
 
@@ -887,6 +994,13 @@ spicedb:
   nodeSelector: {}
   affinity: {}
   tolerations: {}
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
 
 postgresqlspicedb:
   ## If you want to use an external database, set this to false and change host & port
@@ -946,10 +1060,6 @@ users:
   allowSelfRegister: true
   deleteInterval: "24h"
   deleteAfter: "720h"
-  sslMode: "disable"
-  sslCert: ""
-  sslKey: ""
-  sslRootCert: ""
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
@@ -1028,6 +1138,13 @@ ui:
     httpPort: 9011
   profilePicturesUrl:
     httpPort: 9097
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
@@ -1049,6 +1166,13 @@ uibackend:
   sslRootCert: ""
   verificationTLS: "false"
   contentType: "application/senml+json"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
   # nodeSelector: {}
   # affinity: {}
   # tolerations: {}
@@ -1087,3 +1211,29 @@ postgresqlbackend:
 
 vault:
   enabled: false
+  server:
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "128Mi"
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+
+  injector:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "250m"
+        memory: "256Mi"
+
+  csi:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+      limits:
+        cpu: "250m"
+        memory: "256Mi"
