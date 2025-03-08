@@ -323,37 +323,6 @@ spec:
 {{- end }}
 
 ---
-# <------ MODIFIED Ingress for OpenSearch Dashboards with defaultBackend ------>
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ .Release.Name }}-opensearch-dashboards
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-{{- if .Values.ingress.annotations }}
-{{ toYaml .Values.ingress.annotations | indent 4 }}
-{{- end }}
-  labels:
-{{- if .Values.ingress.labels }}
-{{ toYaml .Values.ingress.labels | indent 4 }}
-{{- end }}
-spec:
-  ingressClassName: nginx
-  defaultBackend:
-    service:
-      name: {{ .Release.Name }}-opensearch-dashboards
-      port:
-        number: 5601
-
-  {{- /* If you want TLS here, you can still specify it, but there's no host: under rules. */ -}}
-{{- if .Values.ingress.tls }}
-  tls:
-    - hosts:
-        - {{ .Values.ingress.tls.hostname }}
-      secretName: {{ .Values.ingress.tls.secret }}
-{{- end }}
-
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
