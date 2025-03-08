@@ -2,7 +2,7 @@
 
 Event-driven Infrastructure for Modern Cloud
 
-![Version: 0.16.1](https://img.shields.io/badge/Version-0.16.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.0](https://img.shields.io/badge/AppVersion-0.16.0-informational?style=flat-square)
+![Version: 0.16.3](https://img.shields.io/badge/Version-0.16.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.0](https://img.shields.io/badge/AppVersion-0.16.0-informational?style=flat-square)
 
 **Homepage:** <https://abstractmachines.fr/supermq.html>
 
@@ -46,19 +46,31 @@ Event-driven Infrastructure for Modern Cloud
 |-----|------|---------|-------------|
 | adapter_coap.image | object | `{}` |  |
 | adapter_coap.jaegerTraceRatio | float | `1` |  |
+| adapter_coap.logLevel | string | `"error"` |  |
 | adapter_coap.port | int | `5683` |  |
 | adapter_coap.replicaCount | int | `1` |  |
+| adapter_coap.resources.limits.cpu | string | `"200m"` |  |
+| adapter_coap.resources.limits.memory | string | `"256Mi"` |  |
+| adapter_coap.resources.requests.cpu | string | `"100m"` |  |
+| adapter_coap.resources.requests.memory | string | `"128Mi"` |  |
 | adapter_coap.sendTelemetry | bool | `true` |  |
 | adapter_http.httpPort | int | `8008` |  |
 | adapter_http.image | object | `{}` |  |
 | adapter_http.replicaCount | int | `1` |  |
+| adapter_http.resources.limits.cpu | string | `"200m"` |  |
+| adapter_http.resources.limits.memory | string | `"256Mi"` |  |
+| adapter_http.resources.requests.cpu | string | `"100m"` |  |
+| adapter_http.resources.requests.memory | string | `"128Mi"` |  |
 | adapter_ws.httpPort | int | `8186` |  |
 | adapter_ws.image | object | `{}` |  |
 | adapter_ws.replicaCount | int | `1` |  |
+| adapter_ws.resources.limits.cpu | string | `"200m"` |  |
+| adapter_ws.resources.limits.memory | string | `"256Mi"` |  |
+| adapter_ws.resources.requests.cpu | string | `"100m"` |  |
+| adapter_ws.resources.requests.memory | string | `"128Mi"` |  |
 | auth.accessTokenDuration | string | `"1h"` |  |
 | auth.adminEmail | string | `"admin@example.com"` |  |
 | auth.adminPassword | string | `"12345678"` |  |
-| auth.affinity | object | `{}` |  |
 | auth.grpcClientCACerts | string | `"./ssl/certs/ca.crt"` |  |
 | auth.grpcClientCert | string | `"./ssl/certs/auth-grpc-client.crt"` |  |
 | auth.grpcClientKey | string | `"./ssl/certs/auth-grpc-client.key"` |  |
@@ -66,11 +78,13 @@ Event-driven Infrastructure for Modern Cloud
 | auth.grpcTimeout | string | `"300s"` |  |
 | auth.httpPort | int | `9001` |  |
 | auth.image | object | `{}` |  |
-| auth.nodeSelector | object | `{}` |  |
 | auth.refreshTokenDuration | string | `"24h"` |  |
 | auth.replicaCount | int | `1` |  |
+| auth.resources.limits.cpu | string | `"200m"` |  |
+| auth.resources.limits.memory | string | `"256Mi"` |  |
+| auth.resources.requests.cpu | string | `"100m"` |  |
+| auth.resources.requests.memory | string | `"128Mi"` |  |
 | auth.secretKey | string | `"supersecret"` |  |
-| auth.tolerations | object | `{}` |  |
 | cassandra.dbUser.password | string | `"cassandra"` |  |
 | cassandra.dbUser.user | string | `"cassandra"` |  |
 | cassandra.enabled | bool | `true` |  |
@@ -90,6 +104,10 @@ Event-driven Infrastructure for Modern Cloud
 | certs.image | object | `{}` |  |
 | certs.logLevel | string | `"error"` |  |
 | certs.replicaCount | int | `1` |  |
+| certs.resources.limits.cpu | string | `"200m"` |  |
+| certs.resources.limits.memory | string | `"256Mi"` |  |
+| certs.resources.requests.cpu | string | `"100m"` |  |
+| certs.resources.requests.memory | string | `"128Mi"` |  |
 | certs.sdkCertsUrl | string | `"${SMQ_CERTS_SDK_HOST}:9010"` |  |
 | certs.sdkHost | string | `"http://supermq-am-certs"` |  |
 | certs.sdkTlsVerification | string | `"false"` |  |
@@ -111,6 +129,10 @@ Event-driven Infrastructure for Modern Cloud
 | channels.httpPort | int | `9005` |  |
 | channels.image | object | `{}` |  |
 | channels.replicaCount | int | `1` |  |
+| channels.resources.limits.cpu | string | `"200m"` |  |
+| channels.resources.limits.memory | string | `"256Mi"` |  |
+| channels.resources.requests.cpu | string | `"100m"` |  |
+| channels.resources.requests.memory | string | `"128Mi"` |  |
 | clients.authGrpcPort | int | `7006` |  |
 | clients.grpcClientCert | string | `"./ssl/certs/clients-grpc-client.crt"` |  |
 | clients.grpcClientKey | string | `"./ssl/certs/clients-grpc-client.key"` |  |
@@ -118,6 +140,10 @@ Event-driven Infrastructure for Modern Cloud
 | clients.httpPort | int | `9006` |  |
 | clients.image | object | `{}` |  |
 | clients.replicaCount | int | `1` |  |
+| clients.resources.limits.cpu | string | `"200m"` |  |
+| clients.resources.limits.memory | string | `"256Mi"` |  |
+| clients.resources.requests.cpu | string | `"100m"` |  |
+| clients.resources.requests.memory | string | `"128Mi"` |  |
 | defaults.image.pullPolicy | string | `"IfNotPresent"` |  |
 | defaults.image.rootRepository | string | `"supermq"` |  |
 | defaults.image.tag | string | `"latest"` |  |
@@ -131,10 +157,18 @@ Event-driven Infrastructure for Modern Cloud
 | domains.httpPort | int | `9003` |  |
 | domains.image | object | `{}` |  |
 | domains.replicaCount | int | `1` |  |
+| domains.resources.limits.cpu | string | `"200m"` |  |
+| domains.resources.limits.memory | string | `"256Mi"` |  |
+| domains.resources.requests.cpu | string | `"100m"` |  |
+| domains.resources.requests.memory | string | `"128Mi"` |  |
 | envoy.image.pullPolicy | string | `"IfNotPresent"` |  |
 | envoy.image.repository | string | `"envoyproxy/envoy"` |  |
 | envoy.image.tag | string | `"v1.31-latest"` |  |
 | envoy.replicaCount | int | `1` |  |
+| envoy.resources.limits.cpu | string | `"200m"` |  |
+| envoy.resources.limits.memory | string | `"256Mi"` |  |
+| envoy.resources.requests.cpu | string | `"100m"` |  |
+| envoy.resources.requests.memory | string | `"128Mi"` |  |
 | groups.grpcClientCaCerts | string | `"./ssl/certs/ca.crt"` |  |
 | groups.grpcClientCert | string | `"./ssl/certs/groups-grpc-client.crt"` |  |
 | groups.grpcClientKey | string | `"./ssl/certs/groups-grpc-client.key"` |  |
@@ -145,6 +179,10 @@ Event-driven Infrastructure for Modern Cloud
 | groups.httpPort | int | `9004` |  |
 | groups.image | object | `{}` |  |
 | groups.replicaCount | int | `1` |  |
+| groups.resources.limits.cpu | string | `"200m"` |  |
+| groups.resources.limits.memory | string | `"256Mi"` |  |
+| groups.resources.requests.cpu | string | `"100m"` |  |
+| groups.resources.requests.memory | string | `"128Mi"` |  |
 | ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | ingress.enabled | bool | `true` |  |
 | ingress.hostname | string | `"localhost"` |  |
@@ -190,6 +228,10 @@ Event-driven Infrastructure for Modern Cloud
 | journal.httpPort | int | `9021` |  |
 | journal.image | object | `{}` |  |
 | journal.replicaCount | int | `1` |  |
+| journal.resources.limits.cpu | string | `"200m"` |  |
+| journal.resources.limits.memory | string | `"256Mi"` |  |
+| journal.resources.requests.cpu | string | `"100m"` |  |
+| journal.resources.requests.memory | string | `"128Mi"` |  |
 | mqtt.adapter.forwarderTimeout | string | `"30s"` |  |
 | mqtt.adapter.image.pullSecrets | object | `{}` |  |
 | mqtt.adapter.logLevel | string | `"error"` |  |
@@ -205,6 +247,10 @@ Event-driven Infrastructure for Modern Cloud
 | mqtt.redisCachePort | int | `6379` |  |
 | mqtt.redisESPort | int | `6379` |  |
 | mqtt.replicaCount | int | `1` |  |
+| mqtt.resources.limits.cpu | string | `"200m"` |  |
+| mqtt.resources.limits.memory | string | `"256Mi"` |  |
+| mqtt.resources.requests.cpu | string | `"100m"` |  |
+| mqtt.resources.requests.memory | string | `"128Mi"` |  |
 | mqtt.securityContext.fsGroup | int | `10000` |  |
 | mqtt.securityContext.runAsGroup | int | `10000` |  |
 | mqtt.securityContext.runAsUser | int | `10000` |  |
@@ -222,6 +268,10 @@ Event-driven Infrastructure for Modern Cloud
 | nginxInternal.image.tag | string | `"1.19.1-alpine"` |  |
 | nginxInternal.mtls.intermediateCrt | string | `""` |  |
 | nginxInternal.mtls.tls | string | `""` |  |
+| nginxInternal.resources.limits.cpu | string | `"200m"` |  |
+| nginxInternal.resources.limits.memory | string | `"256Mi"` |  |
+| nginxInternal.resources.requests.cpu | string | `"100m"` |  |
+| nginxInternal.resources.requests.memory | string | `"128Mi"` |  |
 | postgresqlauth.database | string | `"auth"` |  |
 | postgresqlauth.enabled | bool | `true` |  |
 | postgresqlauth.global.postgresql.auth.database | string | `"auth"` |  |
@@ -411,7 +461,10 @@ Event-driven Infrastructure for Modern Cloud
 | prometheus.configmapReload.prometheus.image.repository | string | `"quay.io/prometheus-operator/prometheus-config-reloader"` |  |
 | prometheus.configmapReload.prometheus.image.tag | string | `"v0.79.2"` |  |
 | prometheus.configmapReload.prometheus.name | string | `"configmap-reload"` |  |
-| prometheus.configmapReload.prometheus.resources | object | `{}` |  |
+| prometheus.configmapReload.prometheus.resources.limits.cpu | string | `"100m"` |  |
+| prometheus.configmapReload.prometheus.resources.limits.memory | string | `"128Mi"` |  |
+| prometheus.configmapReload.prometheus.resources.requests.cpu | string | `"50m"` |  |
+| prometheus.configmapReload.prometheus.resources.requests.memory | string | `"64Mi"` |  |
 | prometheus.enabled | bool | `true` |  |
 | prometheus.kubeStateMetrics.enabled | bool | `true` |  |
 | prometheus.nodeExporter.containerPort | int | `9100` |  |
@@ -434,6 +487,10 @@ Event-driven Infrastructure for Modern Cloud
 | prometheus.nodeExporter.readinessProbe.httpGet.scheme | string | `"HTTP"` |  |
 | prometheus.nodeExporter.readinessProbe.initialDelaySeconds | int | `5` |  |
 | prometheus.nodeExporter.readinessProbe.periodSeconds | int | `10` |  |
+| prometheus.nodeExporter.resources.limits.cpu | string | `"100m"` |  |
+| prometheus.nodeExporter.resources.limits.memory | string | `"128Mi"` |  |
+| prometheus.nodeExporter.resources.requests.cpu | string | `"50m"` |  |
+| prometheus.nodeExporter.resources.requests.memory | string | `"64Mi"` |  |
 | prometheus.nodeExporter.service.annotations."prometheus.io/scrape" | string | `"true"` |  |
 | prometheus.nodeExporter.service.clusterIP | string | `""` |  |
 | prometheus.nodeExporter.service.enabled | bool | `true` |  |
@@ -469,7 +526,10 @@ Event-driven Infrastructure for Modern Cloud
 | prometheus.server.readinessProbe.httpGet.scheme | string | `"HTTP"` |  |
 | prometheus.server.readinessProbe.initialDelaySeconds | int | `5` |  |
 | prometheus.server.readinessProbe.timeoutSeconds | int | `5` |  |
-| prometheus.server.resources | object | `{}` |  |
+| prometheus.server.resources.limits.cpu | string | `"400m"` |  |
+| prometheus.server.resources.limits.memory | string | `"512Mi"` |  |
+| prometheus.server.resources.requests.cpu | string | `"200m"` |  |
+| prometheus.server.resources.requests.memory | string | `"256Mi"` |  |
 | prometheus.server.securityContext.fsGroup | int | `65534` |  |
 | prometheus.server.securityContext.runAsGroup | int | `65534` |  |
 | prometheus.server.securityContext.runAsNonRoot | bool | `true` |  |
@@ -492,8 +552,16 @@ Event-driven Infrastructure for Modern Cloud
 | redisclients.externalUrl | string | `""` |  |
 | redisclients.master.containerPorts.redis | int | `6379` |  |
 | redisclients.master.persistence.size | string | `"1Gi"` |  |
+| redisclients.master.resources.limits.cpu | string | `"1000m"` |  |
+| redisclients.master.resources.limits.memory | string | `"1Gi"` |  |
+| redisclients.master.resources.requests.cpu | string | `"500m"` |  |
+| redisclients.master.resources.requests.memory | string | `"512Mi"` |  |
 | redisclients.master.service.ports.redis | int | `6379` |  |
 | redisclients.replica.replicaCount | int | `0` |  |
+| redisclients.replica.resources.limits.cpu | string | `"500m"` |  |
+| redisclients.replica.resources.limits.memory | string | `"512Mi"` |  |
+| redisclients.replica.resources.requests.cpu | string | `"250m"` |  |
+| redisclients.replica.resources.requests.memory | string | `"256Mi"` |  |
 | redisclients.volumePermissions.enabled | bool | `true` |  |
 | redisdomains.auth.enabled | bool | `false` |  |
 | redisdomains.cacheKeyDuration | string | `"10m"` |  |
@@ -501,6 +569,10 @@ Event-driven Infrastructure for Modern Cloud
 | redisdomains.externalUrl | string | `""` |  |
 | redisdomains.master.containerPorts.redis | int | `6379` |  |
 | redisdomains.master.persistence.size | string | `"1Gi"` |  |
+| redisdomains.master.resources.limits.cpu | string | `"200m"` |  |
+| redisdomains.master.resources.limits.memory | string | `"256Mi"` |  |
+| redisdomains.master.resources.requests.cpu | string | `"100m"` |  |
+| redisdomains.master.resources.requests.memory | string | `"128Mi"` |  |
 | redisdomains.master.service.ports.redis | int | `6379` |  |
 | redisdomains.replica.replicaCount | int | `0` |  |
 | redisdomains.volumePermissions.enabled | bool | `true` |  |
@@ -519,6 +591,10 @@ Event-driven Infrastructure for Modern Cloud
 | spicedb.metrics.port | int | `9090` |  |
 | spicedb.nodeSelector | object | `{}` |  |
 | spicedb.replicaCount | int | `1` |  |
+| spicedb.resources.limits.cpu | string | `"200m"` |  |
+| spicedb.resources.limits.memory | string | `"256Mi"` |  |
+| spicedb.resources.requests.cpu | string | `"100m"` |  |
+| spicedb.resources.requests.memory | string | `"128Mi"` |  |
 | spicedb.tolerations | object | `{}` |  |
 | ui.basePath | string | `"/"` |  |
 | ui.enabled | bool | `true` |  |
@@ -537,6 +613,10 @@ Event-driven Infrastructure for Modern Cloud
 | ui.nextauthSecret | string | `"4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="` |  |
 | ui.profilePicturesUrl.httpPort | int | `9097` |  |
 | ui.replicaCount | int | `1` |  |
+| ui.resources.limits.cpu | string | `"200m"` |  |
+| ui.resources.limits.memory | string | `"256Mi"` |  |
+| ui.resources.requests.cpu | string | `"100m"` |  |
+| ui.resources.requests.memory | string | `"128Mi"` |  |
 | ui.runtimeEnv | string | `"production"` |  |
 | ui.timescaleReader.httpPort | int | `9011` |  |
 | ui.type | string | `"smq"` |  |
@@ -548,6 +628,10 @@ Event-driven Infrastructure for Modern Cloud
 | uibackend.image.tag | string | `"latest"` |  |
 | uibackend.loglevel | string | `"error"` |  |
 | uibackend.replicaCount | int | `1` |  |
+| uibackend.resources.limits.cpu | string | `"200m"` |  |
+| uibackend.resources.limits.memory | string | `"256Mi"` |  |
+| uibackend.resources.requests.cpu | string | `"100m"` |  |
+| uibackend.resources.requests.memory | string | `"128Mi"` |  |
 | uibackend.serverCert | string | `""` |  |
 | uibackend.serverKey | string | `""` |  |
 | uibackend.sslCert | string | `""` |  |
@@ -569,6 +653,22 @@ Event-driven Infrastructure for Modern Cloud
 | users.passwordRegex | string | `"^.{8,}$"` |  |
 | users.refreshTokenDuration | string | `"24h"` |  |
 | users.replicaCount | int | `1` |  |
+| users.resources.limits.cpu | string | `"200m"` |  |
+| users.resources.limits.memory | string | `"256Mi"` |  |
+| users.resources.requests.cpu | string | `"100m"` |  |
+| users.resources.requests.memory | string | `"128Mi"` |  |
 | users.secretKey | string | `"supersecret"` |  |
 | users.tokenResetEndpoint | string | `"/reset-request"` |  |
+| vault.csi.resources.limits.cpu | string | `"250m"` |  |
+| vault.csi.resources.limits.memory | string | `"256Mi"` |  |
+| vault.csi.resources.requests.cpu | string | `"100m"` |  |
+| vault.csi.resources.requests.memory | string | `"128Mi"` |  |
 | vault.enabled | bool | `false` |  |
+| vault.injector.resources.limits.cpu | string | `"250m"` |  |
+| vault.injector.resources.limits.memory | string | `"256Mi"` |  |
+| vault.injector.resources.requests.cpu | string | `"100m"` |  |
+| vault.injector.resources.requests.memory | string | `"128Mi"` |  |
+| vault.server.resources.limits.cpu | string | `"500m"` |  |
+| vault.server.resources.limits.memory | string | `"256Mi"` |  |
+| vault.server.resources.requests.cpu | string | `"250m"` |  |
+| vault.server.resources.requests.memory | string | `"128Mi"` |  |
