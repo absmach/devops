@@ -53,5 +53,11 @@ dependencies:
 - name: prometheus
   repository: https://prometheus-community.github.io/helm-charts
   version: 27.3.0
-digest: sha256:e4d212053cf22053c2e17b4b279df67cce456b937bbd51c40a232ddb2acb092a
-generated: "2025-03-06T14:16:27.545530063+03:00"
+- name: fluent-bit
+  repository: https://fluent.github.io/helm-charts
+  version: 0.48.5
+- name: opensearch
+  repository: https://charts.bitnami.com/bitnami
+  version: 1.6.3
+digest: sha256:161899c35c3ca4871b07761c93fb22e4bfaa1712d176bdb66aea2f670ac933a0
+generated: "2025-03-07T14:21:06.957813984+03:00"

@@ -540,7 +540,7 @@ ingress:
     kubernetes.io/ingress.class: "nginx"
   labels: {}
   # Uncomment this block for TLS support in public ingress
-  hostname: "localhost"
+  hostname: "146.190.176.148"
   # tls:
   #   hostname: ""
   #   secret: "supermq-server"
@@ -1087,3 +1087,68 @@ postgresqlbackend:
 
 vault:
   enabled: false
+
+fluent-bit:
+  enabled: true
+  serviceAccount:
+    create: true
+  config:
+    inputs: |
+      [INPUT]
+          Name             tail
+          Path             /var/log/containers/*.log
+          Read_from_head   true
+          Tag              kube.*
+    filters: |
+      [FILTER]
+          Name         kubernetes
+          Match        kube.*
+          k8s-logging.exclude off
+          Buffer_Size 2MB
+    outputs: |
+      [OUTPUT]
+          Name                  opensearch
+          Match                 *
+          Host                  supermq-opensearch.smq.svc.cluster.local
+          Port                  9200
+          HTTP_User             admin
+          HTTP_Passwd           admin
+          Index                 supermq-logs
+          Type                  _doc
+          Logstash_Format       On
+          Logstash_Prefix       supermq-logs
+          Suppress_Type_Name    On
+          Buffer_Size           2MB
+          Replace_Dots          On
+  resourcesPreset: small
+
+opensearch:
+  enabled: true
+  clusterName: "supermq-opensearch"
+  replicas: 1
+  singleNode: true
+  resourcesPreset: small
+
+  data:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+  ingest:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+  master:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+  coordinating:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true

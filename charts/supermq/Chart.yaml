@@ -120,3 +120,15 @@ dependencies:
     repository: "https://prometheus-community.github.io/helm-charts"
     alias: prometheus
     condition: prometheus.enabled
+
+  - name: fluent-bit
+    version: "0.48.5"
+    repository: "https://fluent.github.io/helm-charts"
+    alias: fluent-bit
+    condition: fluent-bit.enabled
+
+  - name: opensearch
+    version: "1.6.3"
+    repository: "https://charts.bitnami.com/bitnami"
+    alias: opensearch
+    condition: opensearch.enabled
