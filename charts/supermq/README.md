@@ -2,23 +2,32 @@
 
 Event-driven Infrastructure for Modern Cloud
 
+<<<<<<< HEAD
 ![Version: 0.16.5](https://img.shields.io/badge/Version-0.16.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.0](https://img.shields.io/badge/AppVersion-0.16.0-informational?style=flat-square)
+=======
+<<<<<<< HEAD
+![Version: 0.16.3](https://img.shields.io/badge/Version-0.16.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.0](https://img.shields.io/badge/AppVersion-0.16.0-informational?style=flat-square)
+=======
+![Version: 0.16.4](https://img.shields.io/badge/Version-0.16.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.0](https://img.shields.io/badge/AppVersion-0.16.0-informational?style=flat-square)
+>>>>>>> 28c115d (Update chart version)
+>>>>>>> 35a1e58 (Update chart version)
 
 **Homepage:** <https://abstractmachines.fr/supermq.html>
 
 ## Maintainers
 
-| Name   | Email                                  | Url |
-| ------ | -------------------------------------- | --- |
-| drasko | <drasko.draskovic@abstractmachines.fr> |     |
-| dusan  | <dusan.borovcanin@abstractmachines.fr> |     |
+| Name | Email | Url |
+| ---- | ------ | --- |
+| drasko | <drasko.draskovic@abstractmachines.fr> |  |
+| dusan | <dusan.borovcanin@abstractmachines.fr> |  |
 
 ## Source Code
 
-- <https://hub.docker.com/u/supermq>
+* <https://hub.docker.com/u/supermq>
 
 ## Requirements
 
+<<<<<<< HEAD
 | Repository                                         | Name                           | Version |
 | -------------------------------------------------- | ------------------------------ | ------- |
 | @bitnami                                           | common                         | 2.x.x   |
@@ -43,9 +52,32 @@ Event-driven Infrastructure for Modern Cloud
 | @nats                                              | nats                           | 1.2.1   |
 | https://charts.bitnami.com/bitnami                 | cassandra(cassandra)           | 12.1.3  |
 | https://prometheus-community.github.io/helm-charts | prometheus(prometheus)         | 27.3.0  |
+=======
+| Repository | Name | Version |
+|------------|------|---------|
+| @bitnami | common | 2.x.x |
+| @bitnami | postgresqldomains(postgresql) | 15.2.10 |
+| @bitnami | postgresqlspicedb(postgresql) | 15.2.10 |
+| @bitnami | postgresqlgroups(postgresql) | 15.2.10 |
+| @bitnami | postgresqlauth(postgresql) | 15.2.10 |
+| @bitnami | postgresqlusers(postgresql) | 15.2.10 |
+| @bitnami | postgresqlchannels(postgresql) | 15.2.10 |
+| @bitnami | postgresqlclients(postgresql) | 15.2.10 |
+| @bitnami | postgresqlcerts(postgresql) | 15.2.10 |
+| @bitnami | postgresqlbackend(postgresql) | 15.2.10 |
+| @bitnami | postgresqljournal(postgresql) | 15.2.10 |
+| @bitnami | redisclients(redis) | 19.6.2 |
+| @bitnami | redisdomains(redis) | 19.6.2 |
+| @hashicorp | vault(vault) | 0.28.1 |
+| @jaegertracing | jaeger | 3.1.1 |
+| @nats | nats | 1.2.1 |
+| https://charts.bitnami.com/bitnami | cassandra(cassandra) | 12.1.3 |
+| https://prometheus-community.github.io/helm-charts | prometheus(prometheus) | 27.3.0 |
+>>>>>>> 35a1e58 (Update chart version)
 
 ## Values
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 | Key                                                                 | Type   | Default                                                    | Description |
 | ------------------------------------------------------------------- | ------ | ---------------------------------------------------------- | ----------- |
@@ -689,6 +721,8 @@ Event-driven Infrastructure for Modern Cloud
 | vault.server.resources.requests.cpu                                 | string | `"250m"`                                                   |             |
 | vault.server.resources.requests.memory                              | string | `"128Mi"`                                                  |             |
 =======
+=======
+>>>>>>> 35a1e58 (Update chart version)
 <<<<<<< HEAD
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -1253,4 +1287,571 @@ Event-driven Infrastructure for Modern Cloud
 | vault.enabled | bool | `false` | |
 
 > > > > > > > 859bc0e (Add readiness and liveliness probes)
+<<<<<<< HEAD
 >>>>>>> cb53cae (Add readiness and liveliness probes)
+=======
+=======
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| adapter_coap.image | object | `{}` |  |
+| adapter_coap.jaegerTraceRatio | float | `1` |  |
+| adapter_coap.port | int | `5683` |  |
+| adapter_coap.replicaCount | int | `1` |  |
+| adapter_coap.sendTelemetry | bool | `true` |  |
+| adapter_http.httpPort | int | `8008` |  |
+| adapter_http.image | object | `{}` |  |
+| adapter_http.replicaCount | int | `1` |  |
+| adapter_ws.httpPort | int | `8186` |  |
+| adapter_ws.image | object | `{}` |  |
+| adapter_ws.replicaCount | int | `1` |  |
+| auth.accessTokenDuration | string | `"1h"` |  |
+| auth.adminEmail | string | `"admin@example.com"` |  |
+| auth.adminPassword | string | `"12345678"` |  |
+| auth.affinity | object | `{}` |  |
+| auth.grpcClientCACerts | string | `"./ssl/certs/ca.crt"` |  |
+| auth.grpcClientCert | string | `"./ssl/certs/auth-grpc-client.crt"` |  |
+| auth.grpcClientKey | string | `"./ssl/certs/auth-grpc-client.key"` |  |
+| auth.grpcPort | int | `7001` |  |
+| auth.grpcTimeout | string | `"300s"` |  |
+| auth.httpPort | int | `9001` |  |
+| auth.image | object | `{}` |  |
+| auth.nodeSelector | object | `{}` |  |
+| auth.refreshTokenDuration | string | `"24h"` |  |
+| auth.replicaCount | int | `1` |  |
+| auth.secretKey | string | `"supersecret"` |  |
+| auth.sslCert | string | `""` |  |
+| auth.sslKey | string | `""` |  |
+| auth.sslMode | string | `"disable"` |  |
+| auth.sslRootCert | string | `""` |  |
+| auth.tolerations | object | `{}` |  |
+| cassandra.dbUser.password | string | `"cassandra"` |  |
+| cassandra.dbUser.user | string | `"cassandra"` |  |
+| cassandra.enabled | bool | `true` |  |
+| cassandra.image.pullPolicy | string | `"IfNotPresent"` |  |
+| cassandra.image.registry | string | `"docker.io"` |  |
+| cassandra.image.repository | string | `"bitnami/cassandra"` |  |
+| cassandra.image.tag | string | `"5.0.3-debian-12-r0"` |  |
+| cassandra.persistence.enabled | bool | `true` |  |
+| cassandra.persistence.size | string | `"8Gi"` |  |
+| cassandra.replicaCount | int | `1` |  |
+| cassandra.resourcesPreset | string | `"large"` |  |
+| cassandra.service.ports.cql | int | `9042` |  |
+| cassandra.service.ports.thrift | int | `9160` |  |
+| cassandra.service.type | string | `"ClusterIP"` |  |
+| certs.enabled | bool | `true` |  |
+| certs.httpPort | int | `9019` |  |
+| certs.image | object | `{}` |  |
+| certs.logLevel | string | `"error"` |  |
+| certs.replicaCount | int | `1` |  |
+| certs.sdkCertsUrl | string | `"${SMQ_CERTS_SDK_HOST}:9010"` |  |
+| certs.sdkHost | string | `"http://supermq-am-certs"` |  |
+| certs.sdkTlsVerification | string | `"false"` |  |
+| certs.signCAKeyPath | string | `"/etc/ssl/certs/ca.key"` |  |
+| certs.signCAPath | string | `"/etc/ssl/certs/ca.crt"` |  |
+| certs.sslCert | string | `""` |  |
+| certs.sslKey | string | `""` |  |
+| certs.sslMode | string | `"disable"` |  |
+| certs.sslRootCert | string | `""` |  |
+| certs.vault.approleRoleid | string | `"supermq"` |  |
+| certs.vault.approleSecret | string | `"supermq"` |  |
+| certs.vault.namespace | string | `"supermq"` |  |
+| certs.vault.thingsCertsPkiPath | string | `"pki_int"` |  |
+| certs.vault.thingsCertsPkiRoleName | string | `"supermq_things_certs"` |  |
+| certs.vault.url | string | `"http://supermq-vault:8200"` |  |
+| channels.grpcClientCaCerts | string | `"./ssl/certs/ca.crt"` |  |
+| channels.grpcClientCert | string | `"./ssl/certs/channels-grpc-client.crt"` |  |
+| channels.grpcClientKey | string | `"./ssl/certs/channels-grpc-client.key"` |  |
+| channels.grpcPort | int | `7005` |  |
+| channels.grpcServerCert | string | `"./ssl/certs/channels-grpc-server.crt"` |  |
+| channels.grpcServerKey | string | `"./ssl/certs/channels-grpc-server.key"` |  |
+| channels.grpcTimeout | string | `"1s"` |  |
+| channels.httpPort | int | `9005` |  |
+| channels.image | object | `{}` |  |
+| channels.replicaCount | int | `1` |  |
+| channels.sslCert | string | `""` |  |
+| channels.sslKey | string | `""` |  |
+| channels.sslMode | string | `"disable"` |  |
+| channels.sslRootCert | string | `""` |  |
+| clients.authGrpcPort | int | `7006` |  |
+| clients.grpcClientCert | string | `"./ssl/certs/clients-grpc-client.crt"` |  |
+| clients.grpcClientKey | string | `"./ssl/certs/clients-grpc-client.key"` |  |
+| clients.grpcTimeout | string | `"1s"` |  |
+| clients.httpPort | int | `9006` |  |
+| clients.image | object | `{}` |  |
+| clients.replicaCount | int | `1` |  |
+| clients.sslCert | string | `""` |  |
+| clients.sslKey | string | `""` |  |
+| clients.sslMode | string | `"disable"` |  |
+| clients.sslRootCert | string | `""` |  |
+| defaults.image.pullPolicy | string | `"IfNotPresent"` |  |
+| defaults.image.rootRepository | string | `"supermq"` |  |
+| defaults.image.tag | string | `"latest"` |  |
+| defaults.logLevel | string | `"error"` |  |
+| defaults.replicaCount | int | `3` |  |
+| defaults.sendTelemetry | bool | `true` |  |
+| domains.grpcClientCaCerts | string | `"./ssl/certs/ca.crt"` |  |
+| domains.grpcClientCert | string | `"./ssl/certs/domains-grpc-client.crt"` |  |
+| domains.grpcPort | int | `7003` |  |
+| domains.grpcTimeout | string | `"300s"` |  |
+| domains.httpPort | int | `9003` |  |
+| domains.image | object | `{}` |  |
+| domains.replicaCount | int | `1` |  |
+| domains.sslCert | string | `""` |  |
+| domains.sslKey | string | `""` |  |
+| domains.sslMode | string | `"disable"` |  |
+| domains.sslRootCert | string | `""` |  |
+| envoy.image.pullPolicy | string | `"IfNotPresent"` |  |
+| envoy.image.repository | string | `"envoyproxy/envoy"` |  |
+| envoy.image.tag | string | `"v1.31-latest"` |  |
+| envoy.replicaCount | int | `1` |  |
+| groups.grpcClientCaCerts | string | `"./ssl/certs/ca.crt"` |  |
+| groups.grpcClientCert | string | `"./ssl/certs/groups-grpc-client.crt"` |  |
+| groups.grpcClientKey | string | `"./ssl/certs/groups-grpc-client.key"` |  |
+| groups.grpcPort | int | `7004` |  |
+| groups.grpcServerCert | string | `"./ssl/certs/groups-grpc-server.crt"` |  |
+| groups.grpcServerKey | string | `"./ssl/certs/groups-grpc-server.key"` |  |
+| groups.grpcTimeout | string | `"300s"` |  |
+| groups.httpPort | int | `9004` |  |
+| groups.image | object | `{}` |  |
+| groups.replicaCount | int | `1` |  |
+| groups.sslCert | string | `""` |  |
+| groups.sslKey | string | `""` |  |
+| groups.sslMode | string | `"disable"` |  |
+| groups.sslRootCert | string | `""` |  |
+| ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
+| ingress.enabled | bool | `true` |  |
+| ingress.hostname | string | `"localhost"` |  |
+| ingress.labels | object | `{}` |  |
+| jaeger.agent.enabled | bool | `false` |  |
+| jaeger.allInOne.enabled | bool | `false` |  |
+| jaeger.collector.replicaCount | int | `1` |  |
+| jaeger.collector.resources.limits.cpu | string | `"400m"` |  |
+| jaeger.collector.resources.limits.memory | string | `"500Mi"` |  |
+| jaeger.collector.resources.requests.cpu | string | `"200m"` |  |
+| jaeger.collector.resources.requests.memory | string | `"300Mi"` |  |
+| jaeger.collector.service.otlp.grpc.name | string | `"otlp-grpc"` |  |
+| jaeger.collector.service.otlp.grpc.port | int | `4317` |  |
+| jaeger.collector.service.otlp.http.name | string | `"otlp-http"` |  |
+| jaeger.collector.service.otlp.http.port | int | `4318` |  |
+| jaeger.enabled | bool | `true` |  |
+| jaeger.externalUrl | string | `""` |  |
+| jaeger.provisionDataStore.cassandra | bool | `false` |  |
+| jaeger.query.basePath | string | `"/jaeger"` |  |
+| jaeger.query.replicaCount | int | `1` |  |
+| jaeger.query.resources.limits.cpu | string | `"400m"` |  |
+| jaeger.query.resources.limits.memory | string | `"500Mi"` |  |
+| jaeger.query.resources.requests.cpu | string | `"200m"` |  |
+| jaeger.query.resources.requests.memory | string | `"300Mi"` |  |
+| jaeger.query.service.admin.name | string | `"admin"` |  |
+| jaeger.query.service.admin.targetPort | string | `"admin"` |  |
+| jaeger.query.service.port | int | `16686` |  |
+| jaeger.query.service.type | string | `"ClusterIP"` |  |
+| jaeger.storage.cassandra.host | string | `"{{ .Release.Name }}-cassandra"` |  |
+| jaeger.storage.cassandra.keyspace | string | `"supermq_jaeger"` |  |
+| jaeger.storage.cassandra.password | string | `"cassandra"` |  |
+| jaeger.storage.cassandra.schema.compaction_window | string | `"2h"` |  |
+| jaeger.storage.cassandra.schema.create | bool | `true` |  |
+| jaeger.storage.cassandra.schema.datacenter | string | `"dc1"` |  |
+| jaeger.storage.cassandra.schema.dependencies_ttl | string | `"48d"` |  |
+| jaeger.storage.cassandra.schema.keyspace | string | `"supermq_jaeger"` |  |
+| jaeger.storage.cassandra.schema.replication_factor | int | `1` |  |
+| jaeger.storage.cassandra.schema.trace_ttl | string | `"48h"` |  |
+| jaeger.storage.cassandra.user | string | `"cassandra"` |  |
+| jaeger.storage.type | string | `"cassandra"` |  |
+| jaeger.traceRatio | float | `1` |  |
+| journal.enabled | bool | `true` |  |
+| journal.httpPort | int | `9021` |  |
+| journal.image | object | `{}` |  |
+| journal.replicaCount | int | `1` |  |
+| journal.sslCert | string | `""` |  |
+| journal.sslKey | string | `""` |  |
+| journal.sslMode | string | `"disable"` |  |
+| journal.sslRootCert | string | `""` |  |
+| mqtt.adapter.forwarderTimeout | string | `"30s"` |  |
+| mqtt.adapter.image.pullSecrets | object | `{}` |  |
+| mqtt.adapter.logLevel | string | `"error"` |  |
+| mqtt.adapter.mqttPort | int | `1884` |  |
+| mqtt.adapter.qos | string | `"2"` |  |
+| mqtt.adapter.wsPort | int | `8081` |  |
+| mqtt.broker.image.repository | string | `"supermq/vernemq"` |  |
+| mqtt.broker.logLevel | string | `"error"` |  |
+| mqtt.broker.mqttPort | int | `1883` |  |
+| mqtt.broker.persistentVolume.size | string | `"5Gi"` |  |
+| mqtt.broker.wsPort | int | `8080` |  |
+| mqtt.enabled | bool | `true` |  |
+| mqtt.redisCachePort | int | `6379` |  |
+| mqtt.redisESPort | int | `6379` |  |
+| mqtt.replicaCount | int | `1` |  |
+| mqtt.securityContext.fsGroup | int | `10000` |  |
+| mqtt.securityContext.runAsGroup | int | `10000` |  |
+| mqtt.securityContext.runAsUser | int | `10000` |  |
+| nats.config.cluster.enabled | bool | `false` |  |
+| nats.config.cluster.replicas | int | `3` |  |
+| nats.config.jetstream.enabled | bool | `true` |  |
+| nats.config.jetstream.fileStore.enabled | bool | `true` |  |
+| nats.config.jetstream.fileStore.pvc.enabled | bool | `true` |  |
+| nats.config.jetstream.memoryStore.enabled | bool | `true` |  |
+| nats.config.jetstream.memoryStore.maxSize | string | `"2Gi"` |  |
+| nats.enabled | bool | `true` |  |
+| nats.externalAddress | string | `""` |  |
+| nginxInternal.image.pullPolicy | string | `"IfNotPresent"` |  |
+| nginxInternal.image.repository | string | `"nginx"` |  |
+| nginxInternal.image.tag | string | `"1.19.1-alpine"` |  |
+| nginxInternal.mtls.intermediateCrt | string | `""` |  |
+| nginxInternal.mtls.tls | string | `""` |  |
+| postgresqlauth.database | string | `"auth"` |  |
+| postgresqlauth.enabled | bool | `true` |  |
+| postgresqlauth.global.postgresql.auth.database | string | `"auth"` |  |
+| postgresqlauth.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlauth.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlauth.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlauth.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlauth.host | string | `"postgresql-auth"` |  |
+| postgresqlauth.name | string | `"postgresql-auth"` |  |
+| postgresqlauth.password | string | `"supermq"` |  |
+| postgresqlauth.port | int | `5432` |  |
+| postgresqlauth.primary.persistence.enabled | bool | `true` |  |
+| postgresqlauth.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlauth.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlauth.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlauth.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlauth.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqlauth.username | string | `"supermq"` |  |
+| postgresqlbackend.database | string | `"supermq"` |  |
+| postgresqlbackend.enabled | bool | `true` |  |
+| postgresqlbackend.global.postgresql.auth.database | string | `"supermq"` |  |
+| postgresqlbackend.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlbackend.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlbackend.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlbackend.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlbackend.host | string | `"postgresql-backend"` |  |
+| postgresqlbackend.name | string | `"postgresql-backend"` |  |
+| postgresqlbackend.password | string | `"supermq"` |  |
+| postgresqlbackend.port | int | `5432` |  |
+| postgresqlbackend.primary.persistence.enabled | bool | `true` |  |
+| postgresqlbackend.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlbackend.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlbackend.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlbackend.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlbackend.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqlbackend.username | string | `"supermq"` |  |
+| postgresqlcerts.database | string | `"certs"` |  |
+| postgresqlcerts.enabled | bool | `true` |  |
+| postgresqlcerts.global.postgresql.auth.database | string | `"certs"` |  |
+| postgresqlcerts.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlcerts.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlcerts.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlcerts.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlcerts.host | string | `"postgresql-certs"` |  |
+| postgresqlcerts.name | string | `"postgresql-certs"` |  |
+| postgresqlcerts.password | string | `"supermq"` |  |
+| postgresqlcerts.port | int | `5432` |  |
+| postgresqlcerts.primary.persistence.enabled | bool | `true` |  |
+| postgresqlcerts.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlcerts.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlcerts.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlcerts.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlcerts.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqlcerts.username | string | `"supermq"` |  |
+| postgresqlchannels.database | string | `"channels"` |  |
+| postgresqlchannels.enabled | bool | `true` |  |
+| postgresqlchannels.global.postgresql.auth.database | string | `"channels"` |  |
+| postgresqlchannels.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlchannels.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlchannels.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlchannels.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlchannels.host | string | `"channels-db"` |  |
+| postgresqlchannels.name | string | `"postgresql-channels"` |  |
+| postgresqlchannels.password | string | `"supermq"` |  |
+| postgresqlchannels.port | int | `5432` |  |
+| postgresqlchannels.primary.persistence.enabled | bool | `true` |  |
+| postgresqlchannels.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlchannels.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlchannels.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlchannels.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlchannels.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqlchannels.username | string | `"supermq"` |  |
+| postgresqlclients.database | string | `"clients"` |  |
+| postgresqlclients.enabled | bool | `true` |  |
+| postgresqlclients.global.postgresql.auth.database | string | `"clients"` |  |
+| postgresqlclients.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlclients.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlclients.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlclients.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlclients.host | string | `"postgresql-clients"` |  |
+| postgresqlclients.name | string | `"postgresql-clients"` |  |
+| postgresqlclients.password | string | `"supermq"` |  |
+| postgresqlclients.port | int | `5432` |  |
+| postgresqlclients.primary.persistence.enabled | bool | `true` |  |
+| postgresqlclients.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlclients.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlclients.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlclients.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlclients.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqlclients.username | string | `"supermq"` |  |
+| postgresqldomains.database | string | `"domains"` |  |
+| postgresqldomains.enabled | bool | `true` |  |
+| postgresqldomains.global.postgresql.auth.database | string | `"domains"` |  |
+| postgresqldomains.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqldomains.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqldomains.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqldomains.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqldomains.host | string | `"postgresql-domains"` |  |
+| postgresqldomains.name | string | `"postgresql-domains"` |  |
+| postgresqldomains.password | string | `"supermq"` |  |
+| postgresqldomains.port | int | `5432` |  |
+| postgresqldomains.primary.persistence.enabled | bool | `true` |  |
+| postgresqldomains.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqldomains.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqldomains.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqldomains.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqldomains.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqldomains.username | string | `"supermq"` |  |
+| postgresqlgroups.database | string | `"groups"` |  |
+| postgresqlgroups.enabled | bool | `true` |  |
+| postgresqlgroups.global.postgresql.auth.database | string | `"groups"` |  |
+| postgresqlgroups.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlgroups.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlgroups.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlgroups.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlgroups.host | string | `"postgresql-groups"` |  |
+| postgresqlgroups.name | string | `"postgresql-groups"` |  |
+| postgresqlgroups.password | string | `"supermq"` |  |
+| postgresqlgroups.port | int | `5432` |  |
+| postgresqlgroups.primary.persistence.enabled | bool | `true` |  |
+| postgresqlgroups.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlgroups.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlgroups.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlgroups.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlgroups.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqlgroups.username | string | `"supermq"` |  |
+| postgresqljournal.database | string | `"journal"` |  |
+| postgresqljournal.enabled | bool | `true` |  |
+| postgresqljournal.global.postgresql.auth.database | string | `"journal"` |  |
+| postgresqljournal.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqljournal.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqljournal.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqljournal.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqljournal.host | string | `"postgresql-journal"` |  |
+| postgresqljournal.name | string | `"postgresql-journal"` |  |
+| postgresqljournal.password | string | `"supermq"` |  |
+| postgresqljournal.port | int | `5432` |  |
+| postgresqljournal.primary.persistence.enabled | bool | `true` |  |
+| postgresqljournal.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqljournal.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqljournal.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqljournal.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqljournal.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqljournal.username | string | `"supermq"` |  |
+| postgresqlspicedb.database | string | `"spicedb"` |  |
+| postgresqlspicedb.enabled | bool | `true` |  |
+| postgresqlspicedb.global.postgresql.auth.database | string | `"spicedb"` |  |
+| postgresqlspicedb.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlspicedb.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlspicedb.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlspicedb.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlspicedb.host | string | `"postgresql-spicedb"` |  |
+| postgresqlspicedb.name | string | `"postgresql-spicedb"` |  |
+| postgresqlspicedb.password | string | `"supermq"` |  |
+| postgresqlspicedb.port | int | `5432` |  |
+| postgresqlspicedb.primary.persistence.enabled | bool | `true` |  |
+| postgresqlspicedb.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlspicedb.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlspicedb.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlspicedb.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlspicedb.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqlspicedb.username | string | `"supermq"` |  |
+| postgresqlusers.database | string | `"users"` |  |
+| postgresqlusers.enabled | bool | `true` |  |
+| postgresqlusers.global.postgresql.auth.database | string | `"users"` |  |
+| postgresqlusers.global.postgresql.auth.password | string | `"supermq"` |  |
+| postgresqlusers.global.postgresql.auth.postgresPassword | string | `"supermq"` |  |
+| postgresqlusers.global.postgresql.auth.username | string | `"supermq"` |  |
+| postgresqlusers.global.postgresql.service.ports.postgresql | int | `5432` |  |
+| postgresqlusers.host | string | `"postgresql-users"` |  |
+| postgresqlusers.name | string | `"postgresql-users"` |  |
+| postgresqlusers.password | string | `"supermq"` |  |
+| postgresqlusers.port | int | `5432` |  |
+| postgresqlusers.primary.persistence.enabled | bool | `true` |  |
+| postgresqlusers.primary.persistence.size | string | `"2Gi"` |  |
+| postgresqlusers.primary.resources.limits.cpu | string | `"150m"` |  |
+| postgresqlusers.primary.resources.limits.memory | string | `"192Mi"` |  |
+| postgresqlusers.primary.resources.requests.cpu | string | `"100m"` |  |
+| postgresqlusers.primary.resources.requests.memory | string | `"128Mi"` |  |
+| postgresqlusers.username | string | `"supermq"` |  |
+| prometheus.alertmanager.enabled | bool | `true` |  |
+| prometheus.alertmanager.persistence.size | string | `"2Gi"` |  |
+| prometheus.configmapReload.prometheus.containerPort | int | `8080` |  |
+| prometheus.configmapReload.prometheus.containerPortName | string | `"metrics"` |  |
+| prometheus.configmapReload.prometheus.enabled | bool | `true` |  |
+| prometheus.configmapReload.prometheus.image.pullPolicy | string | `"IfNotPresent"` |  |
+| prometheus.configmapReload.prometheus.image.repository | string | `"quay.io/prometheus-operator/prometheus-config-reloader"` |  |
+| prometheus.configmapReload.prometheus.image.tag | string | `"v0.79.2"` |  |
+| prometheus.configmapReload.prometheus.name | string | `"configmap-reload"` |  |
+| prometheus.configmapReload.prometheus.resources | object | `{}` |  |
+| prometheus.enabled | bool | `true` |  |
+| prometheus.kubeStateMetrics.enabled | bool | `true` |  |
+| prometheus.nodeExporter.containerPort | int | `9100` |  |
+| prometheus.nodeExporter.enabled | bool | `true` |  |
+| prometheus.nodeExporter.extraArgs[0] | string | `"--web.listen-address=0.0.0.0:9100"` |  |
+| prometheus.nodeExporter.hostNetwork | bool | `true` |  |
+| prometheus.nodeExporter.hostPID | bool | `true` |  |
+| prometheus.nodeExporter.hostPort | int | `9100` |  |
+| prometheus.nodeExporter.image.pullPolicy | string | `"IfNotPresent"` |  |
+| prometheus.nodeExporter.image.repository | string | `"quay.io/prometheus/node-exporter"` |  |
+| prometheus.nodeExporter.image.tag | string | `"v1.8.2"` |  |
+| prometheus.nodeExporter.livenessProbe.httpGet.path | string | `"/metrics"` |  |
+| prometheus.nodeExporter.livenessProbe.httpGet.port | int | `9100` |  |
+| prometheus.nodeExporter.livenessProbe.httpGet.scheme | string | `"HTTP"` |  |
+| prometheus.nodeExporter.livenessProbe.initialDelaySeconds | int | `5` |  |
+| prometheus.nodeExporter.livenessProbe.periodSeconds | int | `10` |  |
+| prometheus.nodeExporter.nodeSelector."kubernetes.io/os" | string | `"linux"` |  |
+| prometheus.nodeExporter.readinessProbe.httpGet.path | string | `"/metrics"` |  |
+| prometheus.nodeExporter.readinessProbe.httpGet.port | int | `9100` |  |
+| prometheus.nodeExporter.readinessProbe.httpGet.scheme | string | `"HTTP"` |  |
+| prometheus.nodeExporter.readinessProbe.initialDelaySeconds | int | `5` |  |
+| prometheus.nodeExporter.readinessProbe.periodSeconds | int | `10` |  |
+| prometheus.nodeExporter.service.annotations."prometheus.io/scrape" | string | `"true"` |  |
+| prometheus.nodeExporter.service.clusterIP | string | `""` |  |
+| prometheus.nodeExporter.service.enabled | bool | `true` |  |
+| prometheus.nodeExporter.service.port | int | `9100` |  |
+| prometheus.nodeExporter.service.servicePort | int | `9100` |  |
+| prometheus.nodeExporter.service.targetPort | int | `9100` |  |
+| prometheus.nodeExporter.service.type | string | `"ClusterIP"` |  |
+| prometheus.nodeExporter.tolerations[0].effect | string | `"NoSchedule"` |  |
+| prometheus.nodeExporter.tolerations[0].key | string | `"node-role.kubernetes.io/master"` |  |
+| prometheus.nodeExporter.tolerations[0].operator | string | `"Exists"` |  |
+| prometheus.prometheusPushgateway.enabled | bool | `false` |  |
+| prometheus.pushgateway.enabled | bool | `false` |  |
+| prometheus.rbac.create | bool | `true` |  |
+| prometheus.server.extraFlags[0] | string | `"web.enable-lifecycle"` |  |
+| prometheus.server.image.pullPolicy | string | `"IfNotPresent"` |  |
+| prometheus.server.image.repository | string | `"quay.io/prometheus/prometheus"` |  |
+| prometheus.server.image.tag | string | `""` |  |
+| prometheus.server.ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
+| prometheus.server.ingress.enabled | bool | `false` |  |
+| prometheus.server.ingress.hosts[0] | string | `"prometheus.example.com"` |  |
+| prometheus.server.ingress.ingressClassName | string | `"nginx"` |  |
+| prometheus.server.livenessProbe.httpGet.path | string | `"/-/healthy"` |  |
+| prometheus.server.livenessProbe.httpGet.port | int | `9090` |  |
+| prometheus.server.livenessProbe.httpGet.scheme | string | `"HTTP"` |  |
+| prometheus.server.livenessProbe.initialDelaySeconds | int | `30` |  |
+| prometheus.server.livenessProbe.timeoutSeconds | int | `5` |  |
+| prometheus.server.name | string | `"server"` |  |
+| prometheus.server.persistentVolume.enabled | bool | `true` |  |
+| prometheus.server.persistentVolume.mountPath | string | `"/data"` |  |
+| prometheus.server.persistentVolume.size | string | `"8Gi"` |  |
+| prometheus.server.readinessProbe.httpGet.path | string | `"/-/ready"` |  |
+| prometheus.server.readinessProbe.httpGet.port | int | `9090` |  |
+| prometheus.server.readinessProbe.httpGet.scheme | string | `"HTTP"` |  |
+| prometheus.server.readinessProbe.initialDelaySeconds | int | `5` |  |
+| prometheus.server.readinessProbe.timeoutSeconds | int | `5` |  |
+| prometheus.server.resources | object | `{}` |  |
+| prometheus.server.securityContext.fsGroup | int | `65534` |  |
+| prometheus.server.securityContext.runAsGroup | int | `65534` |  |
+| prometheus.server.securityContext.runAsNonRoot | bool | `true` |  |
+| prometheus.server.securityContext.runAsUser | int | `65534` |  |
+| prometheus.server.service.annotations."prometheus.io/scrape" | string | `"true"` |  |
+| prometheus.server.service.clusterIP | string | `""` |  |
+| prometheus.server.service.enabled | bool | `true` |  |
+| prometheus.server.service.port | int | `9200` |  |
+| prometheus.server.service.portName | string | `"metrics"` |  |
+| prometheus.server.service.servicePort | int | `9200` |  |
+| prometheus.server.service.targetPort | int | `9090` |  |
+| prometheus.server.service.type | string | `"ClusterIP"` |  |
+| prometheus.serviceAccounts.server.annotations | object | `{}` |  |
+| prometheus.serviceAccounts.server.automountServiceAccountToken | bool | `true` |  |
+| prometheus.serviceAccounts.server.create | bool | `true` |  |
+| prometheus.serviceAccounts.server.name | string | `""` |  |
+| redisclients.auth.enabled | bool | `false` |  |
+| redisclients.cacheKeyduration | string | `"10m"` |  |
+| redisclients.enabled | bool | `true` |  |
+| redisclients.externalUrl | string | `""` |  |
+| redisclients.master.containerPorts.redis | int | `6379` |  |
+| redisclients.master.persistence.size | string | `"1Gi"` |  |
+| redisclients.master.service.ports.redis | int | `6379` |  |
+| redisclients.replica.replicaCount | int | `0` |  |
+| redisclients.volumePermissions.enabled | bool | `true` |  |
+| redisdomains.auth.enabled | bool | `false` |  |
+| redisdomains.cacheKeyDuration | string | `"10m"` |  |
+| redisdomains.enabled | bool | `true` |  |
+| redisdomains.externalUrl | string | `""` |  |
+| redisdomains.master.containerPorts.redis | int | `6379` |  |
+| redisdomains.master.persistence.size | string | `"1Gi"` |  |
+| redisdomains.master.service.ports.redis | int | `6379` |  |
+| redisdomains.replica.replicaCount | int | `0` |  |
+| redisdomains.volumePermissions.enabled | bool | `true` |  |
+| spicedb.affinity | object | `{}` |  |
+| spicedb.datastore.engine | string | `"postgres"` |  |
+| spicedb.dispatch.enabled | bool | `false` |  |
+| spicedb.dispatch.port | int | `50053` |  |
+| spicedb.grpc.port | int | `50051` |  |
+| spicedb.grpc.presharedKey | string | `"12345678"` |  |
+| spicedb.http.enabled | bool | `false` |  |
+| spicedb.http.port | int | `8443` |  |
+| spicedb.image.pullSecrets | object | `{}` |  |
+| spicedb.image.repository | string | `"authzed/spicedb"` |  |
+| spicedb.image.tag | string | `"latest"` |  |
+| spicedb.metrics.enabled | bool | `true` |  |
+| spicedb.metrics.port | int | `9090` |  |
+| spicedb.nodeSelector | object | `{}` |  |
+| spicedb.replicaCount | int | `1` |  |
+| spicedb.tolerations | object | `{}` |  |
+| ui.basePath | string | `"/"` |  |
+| ui.enabled | bool | `true` |  |
+| ui.googleClientID | string | `""` |  |
+| ui.googleClientSecret | string | `""` |  |
+| ui.googleState | string | `"somerandomstring"` |  |
+| ui.httpPort | int | `3000` |  |
+| ui.image.pullPolicy | string | `"IfNotPresent"` |  |
+| ui.image.pullSecrets | object | `{}` |  |
+| ui.image.repository | string | `"ghcr.io/absmach/magistrala/ui-smq"` |  |
+| ui.image.tag | string | `"latest"` |  |
+| ui.name | string | `"Magistrala UI"` |  |
+| ui.nextAuthSecret | string | `"4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="` |  |
+| ui.nextPublicBasePath | string | `"/"` |  |
+| ui.nextPublicNextAuthBasePath | string | `"/api/auth"` |  |
+| ui.nextauthSecret | string | `"4WdW0Z0tAOyQ/ZAI3YLVV/wNu+yUZXBLDDQ3AGrgfJ4="` |  |
+| ui.profilePicturesUrl.httpPort | int | `9097` |  |
+| ui.replicaCount | int | `1` |  |
+| ui.runtimeEnv | string | `"production"` |  |
+| ui.timescaleReader.httpPort | int | `9011` |  |
+| ui.type | string | `"smq"` |  |
+| uibackend.contentType | string | `"application/senml+json"` |  |
+| uibackend.enabled | bool | `true` |  |
+| uibackend.httpPort | int | `9097` |  |
+| uibackend.image.pullPolicy | string | `"IfNotPresent"` |  |
+| uibackend.image.repository | string | `"ghcr.io/absmach/magistrala/ui-backend"` |  |
+| uibackend.image.tag | string | `"latest"` |  |
+| uibackend.loglevel | string | `"error"` |  |
+| uibackend.replicaCount | int | `1` |  |
+| uibackend.serverCert | string | `""` |  |
+| uibackend.serverKey | string | `""` |  |
+| uibackend.sslCert | string | `""` |  |
+| uibackend.sslKey | string | `""` |  |
+| uibackend.sslMode | string | `"disable"` |  |
+| uibackend.sslRootCert | string | `""` |  |
+| uibackend.verificationTLS | string | `"false"` |  |
+| users.accessTokenDuration | string | `"15m"` |  |
+| users.admin.email | string | `"admin@example.com"` |  |
+| users.admin.firstname | string | `"super"` |  |
+| users.admin.lastname | string | `"admin"` |  |
+| users.admin.password | string | `"12345678"` |  |
+| users.admin.username | string | `"admin"` |  |
+| users.allowSelfRegister | bool | `true` |  |
+| users.deleteAfter | string | `"720h"` |  |
+| users.deleteInterval | string | `"24h"` |  |
+| users.httpPort | int | `9002` |  |
+| users.image | object | `{}` |  |
+| users.passwordRegex | string | `"^.{8,}$"` |  |
+| users.refreshTokenDuration | string | `"24h"` |  |
+| users.replicaCount | int | `1` |  |
+| users.secretKey | string | `"supersecret"` |  |
+| users.sslCert | string | `""` |  |
+| users.sslKey | string | `""` |  |
+| users.sslMode | string | `"disable"` |  |
+| users.sslRootCert | string | `""` |  |
+| users.tokenResetEndpoint | string | `"/reset-request"` |  |
+| vault.enabled | bool | `false` |  |
+>>>>>>> 28c115d (Update chart version)
+>>>>>>> 35a1e58 (Update chart version)
