@@ -72,6 +72,14 @@ spec:
               value: {{ .Values.postgresqlclients.password | quote }}
             - name: SMQ_CLIENTS_DB_NAME
               value: {{ .Values.postgresqlclients.database | quote }}
+            - name: SMQ_CLIENTS_DB_SSL_MODE
+              value: {{ .Values.clients.sslMode | quote }}
+            - name: SMQ_CLIENTS_DB_SSL_CERT
+              value: {{ .Values.clients.sslCert | quote }}
+            - name: SMQ_CLIENTS_DB_SSL_KEY
+              value: {{ .Values.clients.sslKey | quote }}
+            - name: SMQ_CLIENTS_DB_SSL_ROOT_CERT
+              value: {{ .Values.clients.sslRootCert | quote }}
             - name: SMQ_ES_URL
               value: {{ .Values.nats.enabled | ternary (printf "%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
             - name: SMQ_CLIENTS_HTTP_HOST
