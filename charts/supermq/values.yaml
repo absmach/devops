@@ -449,11 +449,11 @@ redisclients:
     replicaCount: 0
     resources:
       requests:
-        cpu: "250m"
-        memory: "256Mi"
-      limits:
         cpu: "500m"
         memory: "512Mi"
+      limits:
+        cpu: "1000m"
+        memory: "1Gi"
   volumePermissions:
     enabled: true
 
@@ -537,11 +537,11 @@ redisdomains:
         redis: 6379
     resources:
       requests:
-        cpu: "100m"
-        memory: "128Mi"
+        cpu: "500m"
+        memory: "512Mi"
       limits:
-        cpu: "200m"
-        memory: "256Mi"
+        cpu: "1000m"
+        memory: "1Gi"
   replica:
     replicaCount: 0
   volumePermissions:
