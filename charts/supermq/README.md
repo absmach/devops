@@ -35,7 +35,7 @@ Event-driven Infrastructure for Modern Cloud
 | @bitnami                                           | redisclients(redis)            | 19.6.2  |
 | @bitnami                                           | redisdomains(redis)            | 19.6.2  |
 | @hashicorp                                         | vault(vault)                   | 0.28.1  |
-| @jaegertracing                                     | jaeger                         | 3.1.1   |
+| @jaegertracing                                     | jaeger                         | 3.4.0   |
 | @nats                                              | nats                           | 1.2.1   |
 | https://charts.bitnami.com/bitnami                 | cassandra(cassandra)           | 12.1.3  |
 | https://prometheus-community.github.io/helm-charts | prometheus(prometheus)         | 27.3.0  |
