@@ -103,6 +103,26 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.groups.grpcPort }}
               protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.groups.httpPort }}
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.groups.httpPort }}
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
           volumeMounts:
             - mountPath: /schema.zed
               name: spicedb-schema-zed

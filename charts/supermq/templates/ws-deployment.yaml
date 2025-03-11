@@ -63,6 +63,26 @@ spec:
           ports:
             - containerPort: {{ .Values.adapter_ws.httpPort | int }}
               protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.adapter_ws.httpPort }}
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.adapter_ws.httpPort }}
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
       {{- with .Values.domains.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 6 }}
