@@ -6,7 +6,7 @@ name: Supermq
 description: Event-driven Infrastructure for Modern Cloud
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
-version: 0.16.4
+version: 0.16.5
 appVersion: "0.16.0"
 home: https://abstractmachines.fr/supermq.html
 sources:
@@ -27,7 +27,7 @@ dependencies:
     repository: "@nats"
 
   - name: jaeger
-    version: "3.1.1"
+    version: "3.4.0"
     repository: "@jaegertracing"
     condition: jaeger.enabled
 
