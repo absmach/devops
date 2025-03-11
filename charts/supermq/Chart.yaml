@@ -6,11 +6,7 @@ name: Supermq
 description: Event-driven Infrastructure for Modern Cloud
 icon: https://avatars1.githubusercontent.com/u/13207490
 type: application
-<<<<<<< HEAD
 version: 0.16.5
-=======
-version: 0.16.4
->>>>>>> cb53cae (Add readiness and liveliness probes)
 appVersion: "0.16.0"
 home: https://abstractmachines.fr/supermq.html
 sources:
