@@ -5,8 +5,8 @@ name: Generate Helm Docs
 
 on:
   push:
-    tags:
-      - "supermq-*"
+    branches:
+      - master
 
 jobs:
   generate-docs:
