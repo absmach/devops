@@ -3,6 +3,111 @@ entries:
   Supermq:
   - apiVersion: v2
     appVersion: 0.16.0
+    created: "2025-03-17T08:21:54.784058895Z"
+    dependencies:
+    - name: common
+      repository: '@bitnami'
+      version: 2.x.x
+    - name: nats
+      repository: '@nats'
+      version: 1.2.1
+    - condition: jaeger.enabled
+      name: jaeger
+      repository: '@jaegertracing'
+      version: 3.4.0
+    - alias: cassandra
+      condition: jaeger.enabled
+      name: cassandra
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.1.3
+    - alias: postgresqlauth
+      condition: postgresqlauth.enabled
+      name: postgresql
+      repository: '@bitnami'
+      version: 15.2.10
+    - alias: postgresqlspicedb
+      condition: postgresqlspicedb.enabled
+      name: postgresql
+      repository: '@bitnami'
+      version: 15.2.10
+    - alias: postgresqlchannels
+      condition: postgresqlchannels.enabled
+      name: postgresql
+      repository: '@bitnami'
+      version: 15.2.10
+    - alias: postgresqlclients
+      condition: postgresqlclients.enabled
+      name: postgresql
+      repository: '@bitnami'
+      version: 15.2.10
+    - alias: postgresqldomains
+      condition: postgresqldomains.enabled
+      name: postgresql
+      repository: '@bitnami'
+      version: 15.2.10
+    - alias: postgresqlgroups
+      condition: postgresqlgroups.enabled
+      name: postgresql
+      repository: '@bitnami'
+      version: 15.2.10
+    - alias: postgresqlusers
+      condition: postgresqlusers.enabled
+      name: postgresql
+      repository: '@bitnami'
+      version: 15.2.10
+    - alias: postgresqlcerts
+      condition: postgresqlcerts.enabled
+      name: postgresql
+      repository: '@bitnami'
+      version: 15.2.10
+    - alias: postgresqljournal
+      condition: postgresqljournal.enabled
+      name: postgresql
+      repository: '@bitnami'
+      version: 15.2.10
+    - alias: postgresqlbackend
+      condition: postgresqlbackend.enabled
+      name: postgresql
+      repository: '@bitnami'
+      version: 15.2.10
+    - alias: redisclients
+      condition: redisclients.enabled
+      name: redis
+      repository: '@bitnami'
+      version: 19.6.2
+    - alias: redisdomains
+      condition: redisdomains.enabled
+      name: redis
+      repository: '@bitnami'
+      version: 19.6.2
+    - alias: vault
+      condition: vault.enabled
+      name: vault
+      repository: '@hashicorp'
+      version: 0.28.1
+    - alias: prometheus
+      condition: prometheus.enabled
+      name: prometheus
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 27.3.0
+    description: Event-driven Infrastructure for Modern Cloud
+    digest: 23b3b2652ccdbeb8553572014e3dc33a9e4b2fcf1a4de8561fcde7fd19af27fc
+    home: https://abstractmachines.fr/supermq.html
+    icon: https://avatars1.githubusercontent.com/u/13207490
+    maintainers:
+    - email: drasko.draskovic@abstractmachines.fr
+      name: drasko
+    - email: dusan.borovcanin@abstractmachines.fr
+      name: dusan
+    name: Supermq
+    sources:
+    - https://hub.docker.com/u/supermq
+    type: application
+    urls:
+    - https://github.com/absmach/supermq-devops/releases/download/Supermq-0.16.6/Supermq-0.16.6.tgz
+    version: 0.16.6
+  - apiVersion: v2
+    appVersion: 0.16.0
     created: "2025-03-11T13:55:14.3404462Z"
     dependencies:
     - name: common
@@ -782,4 +887,4 @@ entries:
     urls:
     - https://github.com/absmach/devops/releases/download/magistrala-0.14.0/magistrala-0.14.0.tgz
     version: 0.14.0
-generated: "2025-03-11T13:55:14.340465837Z"
+generated: "2025-03-17T08:21:54.784108888Z"
