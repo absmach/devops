@@ -44,6 +44,11 @@ Event-driven Infrastructure for Modern Cloud
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| abRollout.canaryDomains | string | `"^(269c9fe9-4f13-42fd-a0fd-e6c064ee1cf6|f2513477-1288-4817-8a9c-52a57065ff2a)$"` |  |
+| abRollout.containerPort | int | `8080` |  |
+| abRollout.domainSuffix | string | `"mg.example.com"` |  |
+| abRollout.replicaCount | int | `10` |  |
+| abRollout.stableDomains | string | `".*"` |  |
 | adapter_coap.image | object | `{}` |  |
 | adapter_coap.jaegerTraceRatio | float | `1` |  |
 | adapter_coap.logLevel | string | `"error"` |  |
@@ -68,6 +73,7 @@ Event-driven Infrastructure for Modern Cloud
 | adapter_ws.resources.limits.memory | string | `"256Mi"` |  |
 | adapter_ws.resources.requests.cpu | string | `"100m"` |  |
 | adapter_ws.resources.requests.memory | string | `"128Mi"` |  |
+| analysis.prometheus.address | string | `"http://prometheus-operated.monitoring.svc.cluster.local:9090"` |  |
 | auth.accessTokenDuration | string | `"1h"` |  |
 | auth.adminEmail | string | `"admin@example.com"` |  |
 | auth.adminPassword | string | `"12345678"` |  |
@@ -204,7 +210,7 @@ Event-driven Infrastructure for Modern Cloud
 | groups.sslRootCert | string | `""` |  |
 | ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | ingress.enabled | bool | `true` |  |
-| ingress.hostname | string | `"localhost"` |  |
+| ingress.hostname | string | `"146.190.176.148"` |  |
 | ingress.labels | object | `{}` |  |
 | jaeger.agent.enabled | bool | `false` |  |
 | jaeger.allInOne.enabled | bool | `false` |  |

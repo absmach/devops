@@ -144,7 +144,8 @@ adapter_ws:
 abRollout:
   # A regex that matches the Domain IDs to be routed to canary.
   # For example, if you want domain-2 and domain-7 to get the new version:
-  canaryDomains: "^(domain-2|domain-7)$"
+  canaryDomains: "^(269c9fe9-4f13-42fd-a0fd-e6c064ee1cf6|f2513477-1288-4817-8a9c-52a57065ff2a)$"
+  stableDomains: ".*"
   # Domain suffix to form the full host for the VirtualService.
   # For example: if your domains are like "myrelease.mg.example.com"
   domainSuffix: "mg.example.com"

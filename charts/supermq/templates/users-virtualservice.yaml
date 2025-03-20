@@ -14,27 +14,23 @@ spec:
   hosts:
     - {{ .Values.users.host | default (printf "%s-users.local" .Release.Name) }}
   http:
-    - name: primary
+    - name: canary-route
       match:
         - headers:
             domain-id:
-              regex: {{ .Values.abRollout.canaryDomains | default "^$" | quote }}
+              regex: {{ .Values.abRollout.canaryDomains | quote }}
       route:
         - destination:
             host: {{ .Release.Name }}-users
             subset: canary
           weight: 100
-        - destination:
-            host: {{ .Release.Name }}-users
-            subset: stable
-          weight: 0
-    - name: default-traffic
+    - name: stable-route
+      match:
+        - headers:
+            domain-id:
+              regex: {{ .Values.abRollout.stableDomains | quote }}
       route:
         - destination:
             host: {{ .Release.Name }}-users
             subset: stable
           weight: 100
-        - destination:
-            host: {{ .Release.Name }}-users
-            subset: canary
-          weight: 0
