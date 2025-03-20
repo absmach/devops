@@ -4,17 +4,17 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
- name: {{ include "supermq.fullname" . | lower  }}-users-config
- labels:
-   app: {{ include "supermq.fullname" . | lower }}
-   component: users
+  name: {{ .Release.Name }}-users-config
+  labels:
+    app: {{ .Release.Name }}
+    component: users
 data:
- email.tmpl: |
-   To: {{`{{range $index, $v := .To}}{{if $index}},{{end}}{{$v}}{{end}}`}}
-   From: {{`{{.From}}`}}
-   Subject: {{`{{.Subject}}`}}
-   {{`{{.Header}}`}}
-   You have initiated password reset.
-   Follow the link below to reset password.
-   {{`{{.Content}}`}}
-   {{`{{.Footer}}`}}
+  email.tmpl: |
+    To: {{`{{range $index, $v := .To}}{{if $index}},{{end}}{{$v}}{{end}}`}}
+    From: {{`{{.From}}`}}
+    Subject: {{`{{.Subject}}`}}
+    {{`{{.Header}}`}}
+    You have initiated password reset.
+    Follow the link below to reset password.
+    {{`{{.Content}}`}}
+    {{`{{.Footer}}`}}

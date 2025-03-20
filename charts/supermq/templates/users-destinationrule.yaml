@@ -4,20 +4,20 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: {{ include "supermq.fullname" . | lower }}-users-dr
+  name: {{ .Release.Name }}-users-dr
   labels:
-    app: {{ include "supermq.fullname" . | lower }}
+    app: {{ .Release.Name }}
     component: users
 spec:
-  host: {{ include "supermq.fullname" . | lower }}-users
+  host: {{ .Release.Name }}-users
   subsets:
     - name: canary
       labels:
-        app: {{ include "supermq.fullname" . | lower }}
+        app: {{ .Release.Name }}
         component: users
         role: canary
     - name: stable
       labels:
-        app: {{ include "supermq.fullname" . | lower }}
+        app: {{ .Release.Name }}
         component: users
         role: stable

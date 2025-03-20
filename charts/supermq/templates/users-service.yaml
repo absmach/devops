@@ -4,16 +4,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "supermq.fullname" . | lower }}-users
+  name: {{ .Release.Name }}-users
   labels:
-    app: {{ include "supermq.fullname" . | lower }}
+    app: {{ .Release.Name }}
     component: users
 spec:
   selector:
-    app: {{ include "supermq.fullname" . | lower }}
+    app: {{ .Release.Name }}
     component: users
   ports:
     - protocol: TCP
       port: {{ .Values.users.httpPort }}
       targetPort: {{ .Values.users.httpPort }}
-      name: users-http
+      name: {{ .Release.Name }}-users-http

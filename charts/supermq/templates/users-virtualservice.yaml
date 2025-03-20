@@ -4,15 +4,15 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: {{ include "supermq.fullname" . | lower }}-users-vs
+  name: {{ .Release.Name }}-users-vs
   labels:
-    app: {{ include "supermq.fullname" . | lower }}
+    app: {{ .Release.Name }}
     component: users
 spec:
   gateways:
     - {{ .Values.users.istioGateway | default "mg-istio-gateway" }}
   hosts:
-    - {{ .Values.users.host | default (printf "%s-users.local" (include "supermq.fullname" .)) }}
+    - {{ .Values.users.host | default (printf "%s-users.local" .Release.Name) }}
   http:
     - name: primary
       match:
@@ -21,20 +21,20 @@ spec:
               regex: {{ .Values.abRollout.canaryDomains | default "^$" | quote }}
       route:
         - destination:
-            host: {{ include "supermq.fullname" . | lower }}-users
+            host: {{ .Release.Name }}-users
             subset: canary
           weight: 100
         - destination:
-            host: {{ include "supermq.fullname" . | lower }}-users
+            host: {{ .Release.Name }}-users
             subset: stable
           weight: 0
     - name: default-traffic
       route:
         - destination:
-            host: {{ include "supermq.fullname" . | lower }}-users
+            host: {{ .Release.Name }}-users
             subset: stable
           weight: 100
         - destination:
-            host: {{ include "supermq.fullname" . | lower }}-users
+            host: {{ .Release.Name }}-users
             subset: canary
           weight: 0

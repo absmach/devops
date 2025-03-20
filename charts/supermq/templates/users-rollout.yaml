@@ -4,9 +4,9 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: {{ include "supermq.fullname" . | lower }}-users-rollout
+  name: {{ .Release.Name }}-users-rollout
   labels:
-    app: {{ include "supermq.fullname" . | lower }}
+    app: {{ .Release.Name }}
     component: users
   annotations:
     rollouts.argoproj.io/track: users
@@ -18,7 +18,7 @@ spec:
   minReadySeconds: 30
   selector:
     matchLabels:
-      app: {{ include "supermq.fullname" . | lower }}
+      app: {{ .Release.Name }}
       component: users
   template:
     metadata:
@@ -27,18 +27,10 @@ spec:
         prometheus.io/port: "{{ .Values.users.httpPort }}"
         prometheus.io/scrape: "true"
       labels:
-        app: {{ include "supermq.fullname" . | lower }}
+        app: {{ .Release.Name }}
         component: users
         version: "{{ .Values.users.version | default "stable" }}"
     spec:
-      {{- if (or .Values.users.image.pullSecrets .Values.defaults.image.pullSecrets) }}
-      imagePullSecrets:
-        {{- range (or .Values.users.image.pullSecrets .Values.defaults.image.pullSecrets) }}
-        - name: {{ . }}
-        {{- end }}
-      {{- end }}
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
       containers:
         - name: users
           image: "{{ default (printf "%s/users" .Values.defaults.image.rootRepository) .Values.users.image.repository }}:{{ default .Values.defaults.image.tag .Values.users.image.tag }}"
@@ -151,8 +143,9 @@ spec:
         - name: users-config
           configMap:
             defaultMode: 256
-            name: {{ include "supermq.fullname" . | lower }}-users-config
+            name: {{ .Release.Name }}-users-config
             optional: false
+
       {{- with .Values.users.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -171,15 +164,14 @@ spec:
       trafficRouting:
         istio:
           virtualService:
-            name: {{ include "supermq.fullname" . | lower }}-users-vs
+            name: {{ .Release.Name }}-users-vs
             routes:
               - primary
           destinationRule:
-            name: {{ include "supermq.fullname" . | lower }}-users-dr
+            name: {{ .Release.Name }}-users-dr
             canarySubsetName: canary
             stableSubsetName: stable
-          managedRoutes:
-            - name: header-route-1
+
       scaleDownDelaySeconds: 30
       abortScaleDownDelaySeconds: 30
       maxSurge: "25%"
@@ -202,8 +194,6 @@ spec:
               - templateName: success-rate-check
             args:
               - name: service
-                value: {{ include "supermq.fullname" . | lower }}-users
+                value: {{ .Release.Name }}-users
               - name: namespace
                 value: {{ .Release.Namespace }}
-            failureLimit: 3
-            inconclusiveLimit: 2
