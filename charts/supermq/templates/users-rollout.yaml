@@ -1,0 +1,215 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+name: {{ include "supermq.fullname" . }}-users-rollout
+labels:
+ app: {{ include "supermq.fullname" . }}
+ component: users
+annotations:
+ rollouts.argoproj.io/track: users
+ prometheus.io/scrape: "true"
+spec:
+replicas: {{ default .Values.defaults.replicaCount .Values.users.replicaCount | int64 }}
+revisionHistoryLimit: 3
+progressDeadlineSeconds: 600
+minReadySeconds: 30
+selector:
+ matchLabels:
+   app: {{ include "supermq.fullname" . }}
+   component: users
+template:
+ metadata:
+   annotations:
+     prometheus.io/path: /metrics
+     prometheus.io/port: "{{ .Values.users.httpPort }}"
+     prometheus.io/scrape: "true"
+   labels:
+     app: {{ include "supermq.fullname" . }}
+     component: users
+     # We default to "stable" if .Values.users.version is unset
+     version: "{{ .Values.users.version | default "stable" }}"
+ spec:
+   {{- if (or .Values.users.image.pullSecrets .Values.defaults.image.pullSecrets) }}
+   imagePullSecrets:
+     {{- range (or .Values.users.image.pullSecrets .Values.defaults.image.pullSecrets) }}
+     - name: {{ . }}
+     {{- end }}
+   {{- end }}
+
+   dnsPolicy: ClusterFirst
+   restartPolicy: Always
+   containers:
+     - name: users
+       image: "{{ default (printf "%s/users" .Values.defaults.image.rootRepository) .Values.users.image.repository }}:{{ default .Values.defaults.image.tag .Values.users.image.tag }}"
+       imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}
+       env:
+         - name: SMQ_JAEGER_URL
+           value: {{ .Values.jaeger.enabled | ternary (printf "http://%s-jaeger-collector:%d/v1/traces" .Release.Name (.Values.jaeger.collector.service.otlp.http.port | int )) .Values.jaeger.externalUrl }}
+         - name: SMQ_JAEGER_TRACE_RATIO
+           value: {{ default .Values.jaeger.traceRatio .Values.users.jaegerTraceRatio | quote  }}
+         - name: SMQ_SEND_TELEMETRY
+           value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
+         - name: SMQ_ES_URL
+           value: {{ .Values.nats.enabled | ternary (printf "%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
+         - name: SMQ_USERS_LOG_LEVEL
+           value: {{ default .Values.defaults.logLevel .Values.users.logLevel  | quote }}
+         - name: SMQ_USERS_HTTP_HOST
+           value: "0.0.0.0"
+         - name: SMQ_USERS_HTTP_PORT
+           value: {{ .Values.users.httpPort  | quote  }}
+         - name: SMQ_TOKEN_RESET_ENDPOINT
+           value: {{ .Values.users.tokenResetEndpoint | quote }}
+         - name: SMQ_USERS_ADMIN_EMAIL
+           value: {{ .Values.users.admin.email | quote }}
+         - name: SMQ_USERS_ADMIN_PASSWORD
+           value: {{ .Values.users.admin.password | quote }}
+         - name: SMQ_USERS_ADMIN_USERNAME
+           value: {{ .Values.users.admin.username | quote }}
+         - name: SMQ_USERS_ADMIN_FIRST_NAME
+           value: {{ .Values.users.admin.firstname | quote }}
+         - name: SMQ_USERS_ADMIN_LAST_NAME
+           value: {{ .Values.users.admin.lastname | quote }}
+         - name: SMQ_USERS_ACCESS_TOKEN_DURATION
+           value: {{ .Values.users.accessTokenDuration | quote }}
+         - name: SMQ_USERS_REFRESH_TOKEN_DURATION
+           value: {{ .Values.users.refreshTokenDuration | quote }}
+         - name: SMQ_USERS_SECRET_KEY
+           value: {{ .Values.users.secretKey | quote }}
+         - name: SMQ_USERS_PASS_REGEX
+           value: {{ .Values.users.passwordRegex | quote }}
+         - name: SMQ_USERS_ALLOW_SELF_REGISTER
+           value: {{ .Values.users.allowSelfRegister | quote }}
+         - name: SMQ_USERS_DELETE_INTERVAL
+           value: {{ .Values.users.deleteInterval | quote  }}
+         - name: SMQ_USERS_DELETE_AFTER
+           value: {{ .Values.users.deleteAfter | quote  }}
+         - name: SMQ_DOMAINS_GRPC_CLIENT_KEY
+           value: {{ .Values.domains.grpcClientKey | quote }}
+         - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
+           value: {{ .Values.domains.grpcClientCert | quote }}
+         - name: SMQ_DOMAINS_GRPC_TIMEOUT
+           value: {{ .Values.domains.grpcTimeout | quote }}
+         - name: SMQ_DOMAINS_GRPC_URL
+           value: {{ .Release.Name }}-envoy:{{ .Values.domains.grpcPort }}
+         - name: SMQ_USERS_DB_HOST
+           {{- if .Values.postgresqlusers.enabled }}
+           value: "{{ .Release.Name }}-postgresqlusers"
+           {{- else }}
+           value: {{ .Values.postgresqlusers.host | quote }}
+           {{- end }}
+         - name: SMQ_USERS_DB_PORT
+           value: {{ .Values.postgresqlusers.port  | quote }}
+         - name: SMQ_USERS_DB_NAME
+           value: {{ .Values.postgresqlusers.database | quote }}
+         - name: SMQ_USERS_DB_USER
+           value: {{ .Values.postgresqlusers.username | quote }}
+         - name: SMQ_USERS_DB_PASS
+           value: {{ .Values.postgresqlusers.password | quote }}
+         - name: SMQ_USERS_DB_SSL_MODE
+           value: {{ .Values.users.sslMode | quote }}
+         - name: SMQ_USERS_DB_SSL_CERT
+           value: {{ .Values.users.sslCert | quote }}
+         - name: SMQ_USERS_DB_SSL_KEY
+           value: {{ .Values.users.sslKey | quote }}
+         - name: SMQ_USERS_DB_SSL_ROOT_CERT
+           value: {{ .Values.users.sslRootCert | quote }}
+         - name: SMQ_AUTH_GRPC_URL
+           value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
+         - name: SMQ_SPICEDB_HOST
+           value: {{ .Release.Name }}-spicedb-envoy
+         - name: SMQ_SPICEDB_PORT
+           value: {{ .Values.spicedb.grpc.port | quote}}
+       ports:
+         - containerPort: {{ .Values.users.httpPort }}
+           protocol: TCP
+       livenessProbe:
+         httpGet:
+           path: /health
+           port: {{ .Values.users.httpPort }}
+           scheme: HTTP
+         initialDelaySeconds: 90
+         periodSeconds: 10
+         failureThreshold: 3
+         successThreshold: 1
+         timeoutSeconds: 5
+       readinessProbe:
+         httpGet:
+           path: /health
+           port: {{ .Values.users.httpPort }}
+           scheme: HTTP
+         initialDelaySeconds: 90
+         periodSeconds: 10
+         failureThreshold: 3
+         successThreshold: 1
+         timeoutSeconds: 5
+       volumeMounts:
+         - mountPath: /email.tmpl
+           name: users-config
+           subPath: email.tmpl
+   volumes:
+     - name: users-config
+       configMap:
+         defaultMode: 256
+         name: {{ include "supermq.fullname" . }}-users-config
+         optional: false
+
+   {{- with .Values.users.nodeSelector }}
+   nodeSelector:
+     {{- toYaml . | nindent 8 }}
+   {{- end }}
+   {{- with .Values.users.affinity }}
+   affinity:
+     {{- toYaml . | nindent 8 }}
+   {{- end }}
+   {{- with .Values.users.tolerations }}
+   tolerations:
+     {{- toYaml . | nindent 8 }}
+   {{- end }}
+
+# ---------------------
+#   ROLLOUT STRATEGY
+# ---------------------
+strategy:
+ canary:
+   trafficRouting:
+     istio:
+       virtualService:
+         name: {{ include "supermq.fullname" . }}-users-vs
+         routes:
+           - primary
+       destinationRule:
+         name: {{ include "supermq.fullname" . }}-users-dr
+         canarySubsetName: canary
+         stableSubsetName: stable
+     managedRoutes:
+       - name: header-route-1
+   scaleDownDelaySeconds: 30
+   abortScaleDownDelaySeconds: 30
+   maxSurge: "25%"
+   maxUnavailable: 0
+   stableMetadata:
+     labels:
+       role: stable
+   canaryMetadata:
+     labels:
+       role: canary
+   steps:
+     - setWeight: 20
+     - pause: { duration: "5m" }
+     - setWeight: 50
+     - pause: { duration: "10m" }
+     - setWeight: 100
+     - pause: { duration: "5m" }
+     - analysis:
+         templates:
+           - templateName: success-rate-check
+         args:
+           - name: service
+             value: {{ include "supermq.fullname" . }}-users
+           - name: namespace
+             value: {{ .Release.Namespace }}
+         failureLimit: 3
+         inconclusiveLimit: 2

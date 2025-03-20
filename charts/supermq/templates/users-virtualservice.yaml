@@ -1,0 +1,47 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+name: {{ include "supermq.fullname" . }}-users-vs
+labels:
+ app: {{ include "supermq.fullname" . }}
+ component: users
+spec:
+{% comment %} Use your desired Istio Gateway reference: {% endcomment %}
+gateways:
+ - {{ .Values.users.istioGateway | default "mg-istio-gateway" }}
+
+{% comment %} The “host” can be something like users.example.com, or just “{{ .Release.Name }}-users” if you’re using mesh-only. {% endcomment %}
+hosts:
+ - {{ .Values.users.host | default (printf "%s-users.local" (include "supermq.fullname" .)) }}
+
+http:
+ - name: primary
+   {% comment %} This route block does A/B by checking an HTTP header named "domain-id". {% endcomment %}
+   match:
+     - headers:
+         domain-id:
+           regex: {{ .Values.abRollout.canaryDomains | default "^$" | quote }}
+   route:
+     - destination:
+         host: {{ include "supermq.fullname" . }}-users
+         subset: canary
+       weight: 100
+     - destination:
+         host: {{ include "supermq.fullname" . }}-users
+         subset: stable
+       weight: 0
+
+ - name: default-traffic
+   {% comment %} All other traffic goes here by default. {% endcomment %}
+   route:
+     - destination:
+         host: {{ include "supermq.fullname" . }}-users
+         subset: stable
+       weight: 100
+     - destination:
+         host: {{ include "supermq.fullname" . }}-users
+         subset: canary
+       weight: 0

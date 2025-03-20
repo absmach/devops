@@ -1,0 +1,20 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: {{ include "supermq.fullname" . }}-users-config
+ labels:
+   app: {{ include "supermq.fullname" . }}
+   component: users
+data:
+ email.tmpl: |
+   To: {{`{{range $index, $v := .To}}{{if $index}},{{end}}{{$v}}{{end}}`}}
+   From: {{`{{.From}}`}}
+   Subject: {{`{{.Subject}}`}}
+   {{`{{.Header}}`}}
+   You have initiated password reset.
+   Follow the link below to reset password.
+   {{`{{.Content}}`}}
+   {{`{{.Footer}}`}}

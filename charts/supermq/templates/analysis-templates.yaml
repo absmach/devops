@@ -1,0 +1,37 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: success-rate-check
+spec:
+  args:
+    - name: service
+    - name: namespace
+  metrics:
+    - name: success-rate
+      initialDelay: 60s
+      interval: 30s
+      count: 5
+      successCondition: result[0] >= 99
+      failureLimit: 3
+      inconclusiveLimit: 2
+      provider:
+        prometheus:
+          address: "{{ .Values.analysis.prometheus.address }}"
+          query: >-
+            sum(irate(
+              istio_requests_total{
+                reporter="source",
+                destination_service=~"{{`{{args.service}}`}}.{{`{{args.namespace}}`}}.svc.cluster.local",
+                response_code!~"5.*"
+              }[1m]
+            )) 
+            / 
+            sum(irate(
+              istio_requests_total{
+                reporter="source",
+                destination_service=~"{{`{{args.service}}`}}.{{`{{args.namespace}}`}}.svc.cluster.local"
+              }[1m]
+            )) * 100

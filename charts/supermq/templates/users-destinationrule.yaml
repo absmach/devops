@@ -1,0 +1,23 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ include "supermq.fullname" . }}-users-dr
+  labels:
+    app: {{ include "supermq.fullname" . }}
+    component: users
+spec:
+  host: {{ include "supermq.fullname" . }}-users
+  subsets:
+    - name: canary
+      labels:
+        app: {{ include "supermq.fullname" . }}
+        component: users
+        role: canary
+    - name: stable
+      labels:
+        app: {{ include "supermq.fullname" . }}
+        component: users
+        role: stable
