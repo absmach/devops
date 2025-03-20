@@ -141,6 +141,21 @@ adapter_ws:
   # affinity: {}
   # tolerations: {}
 
+abRollout:
+  # A regex that matches the Domain IDs to be routed to canary.
+  # For example, if you want domain-2 and domain-7 to get the new version:
+  canaryDomains: "^(269c9fe9-4f13-42fd-a0fd-e6c064ee1cf6|f2513477-1288-4817-8a9c-52a57065ff2a)$"
+  stableDomains: ".*"
+  # Domain suffix to form the full host for the VirtualService.
+  # For example: if your domains are like "myrelease.mg.example.com"
+  domainSuffix: "mg.example.com"
+  replicaCount: 10
+  containerPort: 8080
+
+analysis:
+  prometheus:
+    address: http://prometheus-operated.monitoring.svc.cluster.local:9090
+
 auth:
   image:
     {}
@@ -632,7 +647,7 @@ ingress:
     kubernetes.io/ingress.class: "nginx"
   labels: {}
   # Uncomment this block for TLS support in public ingress
-  hostname: "localhost"
+  hostname: "146.190.176.148"
   # tls:
   #   hostname: ""
   #   secret: "supermq-server"

@@ -1,27 +1,21 @@
 # Copyright (c) Abstract Machines
 # SPDX-License-Identifier: Apache-2.0
 
-apiVersion: v1
-kind: ConfigMap
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
-  name: {{ .Release.Name }}-users-config
-data:
-  email.tmpl: |
-    To: {{`{{range $index, $v := .To}}{{if $index}},{{end}}{{$v}}{{end}}`}}
-    From: {{`{{.From}}`}}
-    Subject: {{`{{.Subject}}`}}
-    {{`{{.Header}}`}}
-    You have initiated password reset.
-    Follow the link below to reset password.
-    {{`{{.Content}}`}}
-    {{`{{.Footer}}`}}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Release.Name }}-users
+  name: {{ .Release.Name }}-users-rollout
+  labels:
+    app: {{ .Release.Name }}
+    component: users
+  annotations:
+    rollouts.argoproj.io/track: users
+    prometheus.io/scrape: "true"
 spec:
   replicas: {{ default .Values.defaults.replicaCount .Values.users.replicaCount | int64 }}
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 600
+  minReadySeconds: 30
   selector:
     matchLabels:
       app: {{ .Release.Name }}
@@ -35,32 +29,27 @@ spec:
       labels:
         app: {{ .Release.Name }}
         component: users
+        version: "{{ .Values.users.version | default "stable" }}"
     spec:
-      {{- with (default .Values.defaults.image.pullSecrets .Values.users.image.pullSecrets) }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 12 }}
-      {{- end }}
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
       containers:
-        - name: {{ .Release.Name }}-users
+        - name: users
           image: "{{ default (printf "%s/users" .Values.defaults.image.rootRepository) .Values.users.image.repository }}:{{ default .Values.defaults.image.tag .Values.users.image.tag }}"
           imagePullPolicy: {{ default .Values.defaults.image.pullPolicy .Values.users.image.pullPolicy }}
           env:
             - name: SMQ_JAEGER_URL
               value: {{ .Values.jaeger.enabled | ternary (printf "http://%s-jaeger-collector:%d/v1/traces" .Release.Name (.Values.jaeger.collector.service.otlp.http.port | int )) .Values.jaeger.externalUrl }}
             - name: SMQ_JAEGER_TRACE_RATIO
-              value: {{ default .Values.jaeger.traceRatio .Values.users.jaegerTraceRatio | quote  }}
+              value: {{ default .Values.jaeger.traceRatio .Values.users.jaegerTraceRatio | quote }}
             - name: SMQ_SEND_TELEMETRY
-              value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote  }}
+              value: {{ default .Values.defaults.sendTelemetry .Values.users.sendTelemetry | quote }}
             - name: SMQ_ES_URL
               value: {{ .Values.nats.enabled | ternary (printf "%s-nats:%d" .Release.Name (.Values.nats.config.nats.port | int )) .Values.nats.externalAddress }}
             - name: SMQ_USERS_LOG_LEVEL
-              value: {{ default .Values.defaults.logLevel .Values.users.logLevel  | quote }}
+              value: {{ default .Values.defaults.logLevel .Values.users.logLevel | quote }}
             - name: SMQ_USERS_HTTP_HOST
               value: "0.0.0.0"
             - name: SMQ_USERS_HTTP_PORT
-              value: {{ .Values.users.httpPort  | quote  }}
+              value: {{ .Values.users.httpPort | quote }}
             - name: SMQ_TOKEN_RESET_ENDPOINT
               value: {{ .Values.users.tokenResetEndpoint | quote }}
             - name: SMQ_USERS_ADMIN_EMAIL
@@ -84,9 +73,9 @@ spec:
             - name: SMQ_USERS_ALLOW_SELF_REGISTER
               value: {{ .Values.users.allowSelfRegister | quote }}
             - name: SMQ_USERS_DELETE_INTERVAL
-              value: {{ .Values.users.deleteInterval | quote  }}
+              value: {{ .Values.users.deleteInterval | quote }}
             - name: SMQ_USERS_DELETE_AFTER
-              value: {{ .Values.users.deleteAfter | quote  }}
+              value: {{ .Values.users.deleteAfter | quote }}
             - name: SMQ_DOMAINS_GRPC_CLIENT_KEY
               value: {{ .Values.domains.grpcClientKey | quote }}
             - name: SMQ_DOMAINS_GRPC_CLIENT_CERT
@@ -96,13 +85,13 @@ spec:
             - name: SMQ_DOMAINS_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.domains.grpcPort }}
             - name: SMQ_USERS_DB_HOST
-            {{- if .Values.postgresqlusers.enabled }}
+              {{- if .Values.postgresqlusers.enabled }}
               value: "{{ .Release.Name }}-postgresqlusers"
-            {{- else }}
+              {{- else }}
               value: {{ .Values.postgresqlusers.host | quote }}
-            {{- end }}
+              {{- end }}
             - name: SMQ_USERS_DB_PORT
-              value: {{ .Values.postgresqlusers.port  | quote }}
+              value: {{ .Values.postgresqlusers.port | quote }}
             - name: SMQ_USERS_DB_NAME
               value: {{ .Values.postgresqlusers.database | quote }}
             - name: SMQ_USERS_DB_USER
@@ -117,12 +106,12 @@ spec:
               value: {{ .Values.users.sslKey | quote }}
             - name: SMQ_USERS_DB_SSL_ROOT_CERT
               value: {{ .Values.users.sslRootCert | quote }}
-            - name : SMQ_AUTH_GRPC_URL
+            - name: SMQ_AUTH_GRPC_URL
               value: {{ .Release.Name }}-envoy:{{ .Values.auth.grpcPort }}
             - name: SMQ_SPICEDB_HOST
               value: {{ .Release.Name }}-spicedb-envoy
             - name: SMQ_SPICEDB_PORT
-              value: {{ .Values.spicedb.grpc.port | quote}}
+              value: {{ .Values.spicedb.grpc.port | quote }}
           ports:
             - containerPort: {{ .Values.users.httpPort }}
               protocol: TCP
@@ -156,6 +145,7 @@ spec:
             defaultMode: 256
             name: {{ .Release.Name }}-users-config
             optional: false
+
       {{- with .Values.users.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -168,3 +158,26 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
+  strategy:
+    canary:
+      trafficRouting:
+        istio:
+          virtualService:
+            name: {{ .Release.Name }}-users-vs
+            routes: []
+          destinationRule:
+            name: {{ .Release.Name }}-users-dr
+            canarySubsetName: canary
+            stableSubsetName: stable
+
+      scaleDownDelaySeconds: 30
+      abortScaleDownDelaySeconds: 30
+      maxSurge: 0
+      maxUnavailable: 0
+      stableMetadata:
+        labels:
+          role: stable
+      canaryMetadata:
+        labels:
+          role: canary

@@ -1,0 +1,36 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ .Release.Name }}-users-vs
+  labels:
+    app: {{ .Release.Name }}
+    component: users
+spec:
+  gateways:
+    - {{ .Values.users.istioGateway | default "mg-istio-gateway" }}
+  hosts:
+    - {{ .Values.users.host | default (printf "%s-users.local" .Release.Name) }}
+  http:
+    - name: canary-route
+      match:
+        - headers:
+            domain-id:
+              regex: {{ .Values.abRollout.canaryDomains | quote }}
+      route:
+        - destination:
+            host: {{ .Release.Name }}-users
+            subset: canary
+          weight: 100
+    - name: stable-route
+      match:
+        - headers:
+            domain-id:
+              regex: {{ .Values.abRollout.stableDomains | quote }}
+      route:
+        - destination:
+            host: {{ .Release.Name }}-users
+            subset: stable
+          weight: 100

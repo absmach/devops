@@ -1,0 +1,23 @@
+# Copyright (c) Abstract Machines
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ .Release.Name }}-users-dr
+  labels:
+    app: {{ .Release.Name }}
+    component: users
+spec:
+  host: {{ .Release.Name }}-users
+  subsets:
+    - name: canary
+      labels:
+        app: {{ .Release.Name }}
+        component: users
+        role: canary
+    - name: stable
+      labels:
+        app: {{ .Release.Name }}
+        component: users
+        role: stable
