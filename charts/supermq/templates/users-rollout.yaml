@@ -165,8 +165,7 @@ spec:
         istio:
           virtualService:
             name: {{ .Release.Name }}-users-vs
-            routes:
-              - primary
+            routes: []
           destinationRule:
             name: {{ .Release.Name }}-users-dr
             canarySubsetName: canary
@@ -174,7 +173,7 @@ spec:
 
       scaleDownDelaySeconds: 30
       abortScaleDownDelaySeconds: 30
-      maxSurge: "25%"
+      maxSurge: 0
       maxUnavailable: 0
       stableMetadata:
         labels:
@@ -182,18 +181,3 @@ spec:
       canaryMetadata:
         labels:
           role: canary
-      steps:
-        - setWeight: 20
-        - pause: { duration: "5m" }
-        - setWeight: 50
-        - pause: { duration: "10m" }
-        - setWeight: 100
-        - pause: { duration: "5m" }
-        - analysis:
-            templates:
-              - templateName: success-rate-check
-            args:
-              - name: service
-                value: {{ .Release.Name }}-users
-              - name: namespace
-                value: {{ .Release.Namespace }}
